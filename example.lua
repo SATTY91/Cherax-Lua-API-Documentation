@@ -31,6 +31,7 @@ local features = FeatureMgr.AddPlayerFeature(Utils.Joaat("LUA_ExplodeLoop"), "Ex
 for _, hash in ipairs(features) do
     FeatureMgr.GetFeature(hash)
         :RegisterCallbackTrigger(eCallbackTrigger.OnTick)
+        :SetNoCallbackOnPress(true)
         :SetDefaultValue(100)
         :SetLimitValues(100, 1000)
         :SetSaveable(false)
