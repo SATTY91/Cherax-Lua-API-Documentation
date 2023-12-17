@@ -85,6 +85,13 @@ FeatureMgr.AddFeature(Utils.Joaat("LUA_InputColor4"), "InputColor4", eFeatureTyp
     :SetDefaultValue(0xFFFFCCAA)
     :Reset()
 
+FeatureMgr.AddFeature(Utils.Joaat("LUA_List"), "List", eFeatureType.List)
+    :SetList({"Eins", "Zwei", "Drei"})
+
+FeatureMgr.AddFeature(Utils.Joaat("LUA_ListWithInfo"), "ListWithInfo", eFeatureType.ListWithInfo)
+    :SetList({"Eins", "Zwei", "Drei"})
+    :AddInfoContentFeature(Utils.Joaat("LUA_Button"))
+
 FeatureMgr.AddFeature(Utils.Joaat("LUA_Combo"), "Combo", eFeatureType.Combo)
     :SetList({"Eins", "Zwei", "Drei"})
 
@@ -157,7 +164,20 @@ local function childWindow()
         ClickGUI.RenderFeature(Utils.Joaat("LUA_InputText"))
         ClickGUI.RenderFeature(Utils.Joaat("LUA_InputColor3"))
         ClickGUI.RenderFeature(Utils.Joaat("LUA_InputColor4"))
+        ClickGUI.RenderFeature(Utils.Joaat("LUA_ListWithInfo"))
         ClickGUI.RenderFeature(Utils.Joaat("LUA_Combo"))
+
+        ClickGUI.EndCustomChildWindow()
+    end
+
+    if ClickGUI.BeginCustomChildWindow("List") then
+        ClickGUI.RenderFeature(Utils.Joaat("LUA_List"))
+
+        ClickGUI.EndCustomChildWindow()
+    end
+
+    if ClickGUI.BeginCustomChildWindow("ListWithInfo") then
+        ClickGUI.RenderFeature(Utils.Joaat("LUA_ListWithInfo"))
 
         ClickGUI.EndCustomChildWindow()
     end

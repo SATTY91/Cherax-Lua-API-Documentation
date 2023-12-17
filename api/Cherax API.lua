@@ -143,6 +143,10 @@ function CPed:DisableInvincible() end
 
 function CPed:EnableInvincible() end
 
+---@return boolean
+---@nodiscard
+function CPed:IsPlayer() end
+
 ---@param address integer
 ---@return CPed
 ---@nodiscard
@@ -201,6 +205,16 @@ function CPed:IsVehicle() end
 ---@field public Position V3
 ---@field public ThicknessMultiplicator number
 ---@field public WidthMultiplicator number
+---@field public SteerAngle number
+---@field public SecondSteerAngle number # This is for 4 wheel steering.
+---@field public Throttle number
+---@field public Brake number
+---@field public Nitrous boolean
+---@field public DirtLevel number
+---@field public BodyDirtColor integer
+---@field public HeadlightMultiplier number
+---@field public VehicleTopSpeedPercent number
+---@field public CheatPowerIncrease number
 CVehicle = {}
 
 function CVehicle:DisableInvincible() end
@@ -662,6 +676,10 @@ function Feature:GetStringValue() end
 ---@return boolean visible
 ---@nodiscard
 function Feature:IsVisible() end
+
+--- Renders the feature in the current context. Return true if rendered.
+---@return boolean
+function Feature:Render() end
 
 --- Load the specific settings for this feature from a file.
 ---@param file string
@@ -1978,8 +1996,9 @@ function Utils.CreateObject(hash, x, y, z, dynamic, isNetworked) end
 ---@param z number
 ---@param heading number
 ---@param isNetworked? boolean
+---@param autoCleanup? boolean
 ---@return integer
-function Utils.CreatePed(hash, pedType, x, y, z, heading, isNetworked) end
+function Utils.CreatePed(hash, pedType, x, y, z, heading, isNetworked, autoCleanup) end
 
 --- Creates a random ped. Should only be executed in a native thread.
 ---@param x number
@@ -2187,8 +2206,9 @@ function Utils.SetSelectedPlayer(playerId) end
 ---@param z number
 ---@param heading number
 ---@param isNetworked? boolean
+---@param autoCleanup? boolean
 ---@return integer
-function Utils.SpawnVehicle(hash, x, y, z, heading, isNetworked) end
+function Utils.SpawnVehicle(hash, x, y, z, heading, isNetworked, autoCleanup) end
 
 --- Spawns a vehicle in front of the given player. Should only be executed in a native thread.
 ---@param hash integer|string
