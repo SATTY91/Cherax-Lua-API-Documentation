@@ -1,6 +1,6 @@
 
 -- !!! DO NOT MODIFY THIS FILE !!!
--- GTA 5 Natives for Cherax Mod Menu. Generated with NativeGenerator on 23-11-2023 21:19:51.
+-- GTA 5 Natives for Cherax Mod Menu. Generated with NativeGenerator on 22-12-2023 12:31:11.
 -- https://raw.githubusercontent.com/alloc8or/gta5-nativedb-data/master/natives.json
 
 ---@class integer*: integer
@@ -117,6 +117,7 @@ AUDIO::PLAY_PED_RINGTONE("Dial_and_Remote_Ring", PLAYER::PLAYER_PED_ID(), 1);
 	StopPedRingtone=function(ped--[[@param ped integer]])return InvokeVoid(0x6C5AE23EFA885092,ped)end;
 	IsMobilePhoneCallOngoing=function()return InvokeBool(0x7497D2CE2C30D24C)end;---@return boolean
 	IsMobileInterferenceActive=function()return InvokeBool(0xC8B1B2425604CDD0)end;---@return boolean
+	GetCurrentTvShowPlayTime=function()return InvokeInt(0xDD3AA743AB7D4D75)end;---@return integer
 	CreateNewScriptedConversation=function()return InvokeVoid(0xD2C91A0B572AAE56)end;
 	--[=[NOTE: ones that are -1, 0 - 35 are determined by a function where it gets a TextLabel from a global then runs,
 GET_CHARACTER_FROM_AUDIO_CONVERSATION_FILENAME and depending on what the result is it goes in check order of 0 - 9 then A - Z then z (lowercase). So it will then return 0 - 35 or -1 if it's 'z'. The func to handle that ^^ is func_67 in dialog_handler.c atleast in TU27 Xbox360 scripts.
@@ -656,6 +657,7 @@ Will give a boost-soundeffect.]=]
 	PlayVehicleDoorCloseSound=function(vehicle--[[@param vehicle integer]],doorId--[[@param doorId integer]])return InvokeVoid(0x62A456AA4769EF34,vehicle,doorId)end;
 	--[=[Works for planes only.]=]
 	EnableStallWarningSounds=function(vehicle--[[@param vehicle integer]],toggle--[[@param toggle boolean]])return InvokeVoid(0xC15907D667F7CFB2,vehicle,toggle)end;
+	EnableDragRaceStationaryWarningSounds=function(vehicle--[[@param vehicle integer]],enable--[[@param enable boolean]])return InvokeVoid(0xBEFB80290414FD4F,vehicle,enable)end;
 	--[=[Hardcoded to return 1]=]
 	IsGameInControlOfMusic=function()return InvokeBool(0x6D28DC1671E334FD)end;---@return boolean
 	SetGpsActive=function(active--[[@param active boolean]])return InvokeVoid(0x3BD3F52BA9B1E4E8,active)end;
@@ -1360,6 +1362,8 @@ CAM::SET_THIRD_PERSON_CAM_RELATIVE_PITCH_LIMITS_THIS_UPDATE(-60f, 0f);
 
 CAM::SET_THIRD_PERSON_CAM_ORBIT_DISTANCE_LIMITS_THIS_UPDATE(1f, 1f);]=]
 	SetThirdPersonCamOrbitDistanceLimitsThisUpdate=function(p0--[[@param p0 number]],distance--[[@param distance number]])return InvokeVoid(0xDF2E1F7742402E81,p0+.0,distance+.0)end;
+	GetThirdPersonCamMinOrbitDistanceSpring=function()return InvokeFloat(0xBC456FB703431785)end;---@return number
+	GetThirdPersonCamMaxOrbitDistanceSpring=function()return InvokeFloat(0xD4592A16D36673ED)end;---@return number
 	--[=[Forces gameplay cam to specified vehicle as if you were in it]=]
 	SetInVehicleCamStateThisUpdate=function(p0--[[@param p0 integer]],p1--[[@param p1 integer]])return InvokeVoid(0xE9EA16D6E54CDCA4,p0,p1)end;
 	--[=[Disables first person camera for the current frame.
@@ -2264,7 +2268,7 @@ Axis - Invert Axis Flags]=]
 	--[=[health >= 0
 male ped ~= 100 - 200
 female ped ~= 0 - 100]=]
-	SetEntityHealth=function(entity--[[@param entity integer]],health--[[@param health integer]],p2--[[@param p2 integer]])return InvokeVoid(0x6B76DC1F3AE6E6A3,entity,health,p2)end;
+	SetEntityHealth=function(entity--[[@param entity integer]],health--[[@param health integer]],instigator--[[@param instigator integer]],weaponType--[[@param weaponType integer]])return InvokeVoid(0x6B76DC1F3AE6E6A3,entity,health,instigator,weaponType)end;
 	--[=[Sets a ped or an object totally invincible. It doesn't take any kind of damage. Peds will not ragdoll on explosions and the tazer animation won't apply either.
 
 If you use this for a ped and you want Ragdoll to stay enabled, then do:
@@ -3408,6 +3412,7 @@ p4 = 0]=]
 	SetParticleFxLoopedAlpha=function(ptfxHandle--[[@param ptfxHandle integer]],alpha--[[@param alpha number]])return InvokeVoid(0x726845132380142E,ptfxHandle,alpha+.0)end;
 	SetParticleFxLoopedScale=function(ptfxHandle--[[@param ptfxHandle integer]],scale--[[@param scale number]])return InvokeVoid(0xB44250AAA456492D,ptfxHandle,scale+.0)end;
 	SetParticleFxLoopedFarClipDist=function(ptfxHandle--[[@param ptfxHandle integer]],range--[[@param range number]])return InvokeVoid(0xDCB194B85EF7B541,ptfxHandle,range+.0)end;
+	SetParticleFxLoopedCameraBias=function(ptfxHandle--[[@param ptfxHandle integer]],p1--[[@param p1 number]])return InvokeVoid(0x4100BF0346A8D2C3,ptfxHandle,p1+.0)end;
 	SetParticleFxCamInsideVehicle=function(p0--[[@param p0 boolean]])return InvokeVoid(0xEEC4047028426510,p0)end;
 	SetParticleFxCamInsideNonplayerVehicle=function(vehicle--[[@param vehicle integer]],p1--[[@param p1 boolean]])return InvokeVoid(0xACEE6F360FC1F6B6,vehicle,p1)end;
 	SetParticleFxShootoutBoat=function(p0--[[@param p0 any]])return InvokeVoid(0x96EF97DAEB89BEF5,p0)end;
@@ -3449,6 +3454,9 @@ Full list of particle effect dictionaries and effects by DurtyFree: https://gith
 
 Full list of particle effect dictionaries and effects by DurtyFree: https://github.com/DurtyFree/gta-v-data-dumps/blob/master/particleEffectsCompact.json]=]
 	ResetParticleFxOverride=function(name--[[@param name string]])return InvokeVoid(0x89C8553DD3274AAE,name)end;
+	--[=[Returns ptfxHandle
+effectName: scr_sv_drag_burnout]=]
+	StartVehicleParticleFxLooped=function(vehicle--[[@param vehicle integer]],effectName--[[@param effectName string]],frontBack--[[@param frontBack boolean]],leftRight--[[@param leftRight boolean]],localOnly--[[@param localOnly boolean]])return InvokeInt(0xDF269BE2909E181A,vehicle,effectName,frontBack,leftRight,localOnly)end;---@return integer
 	SetWeatherPtfxUseOverrideSettings=function(p0--[[@param p0 boolean]])return InvokeVoid(0xA46B73FAA3460AE1,p0)end;
 	SetWeatherPtfxOverrideCurrLevel=function(p0--[[@param p0 number]])return InvokeVoid(0xF78B803082D4386F,p0+.0)end;
 	WashDecalsInRange=function(x--[[@param x number]],y--[[@param y number]],z--[[@param z number]],range--[[@param range number]],p4--[[@param p4 number]])return InvokeVoid(0x9C30613D50A6ADEF,x+.0,y+.0,z+.0,range+.0,p4+.0)end;
@@ -3552,9 +3560,11 @@ public enum DecalTypes
 	RequestEarlyLightCheck=function()return InvokeVoid(0x98EDF76A7271E4F2)end;
 	--[=[Forces footstep tracks on all surfaces.]=]
 	UseSnowFootVfxWhenUnsheltered=function(toggle--[[@param toggle boolean]])return InvokeVoid(0xAEEDAD1420C65CC0,toggle)end;
+	ForceAllowSnowFootVfxOnIce=function(toggle--[[@param toggle boolean]])return InvokeVoid(0xA342A3763B3AFB6C,toggle)end;
 	--[=[Forces vehicle trails on all surfaces.]=]
 	UseSnowWheelVfxWhenUnsheltered=function(toggle--[[@param toggle boolean]])return InvokeVoid(0x4CC7F0FEA5283FE0,toggle)end;
 	DisableRegionVfx=function(p0--[[@param p0 any]])return InvokeVoid(0xEFD97FF47B745B8D,p0)end;
+	ForceGroundSnowPass=function(toggle--[[@param toggle boolean]])return InvokeVoid(0x6E9EF3A33C8899F8,toggle)end;
 	--[=[Only one match in the scripts:
 
 GRAPHICS::PRESET_INTERIOR_AMBIENT_CACHE("int_carrier_hanger");]=]
@@ -3794,6 +3804,7 @@ The above playlists work as intended, and are commonly used, but there are many 
 https://pastebin.com/zUzGB6h7]=]
 	SetTvChannelPlaylist=function(tvChannel--[[@param tvChannel integer]],playlistName--[[@param playlistName string]],restart--[[@param restart boolean]])return InvokeVoid(0xF7B38B8305F1FE8B,tvChannel,playlistName,restart)end;
 	SetTvChannelPlaylistAtHour=function(tvChannel--[[@param tvChannel integer]],playlistName--[[@param playlistName string]],hour--[[@param hour integer]])return InvokeVoid(0x2201C576FACAEBE8,tvChannel,playlistName,hour)end;
+	SetTvChannelPlaylistDirty=function(tvChannel--[[@param tvChannel integer]],p1--[[@param p1 boolean]])return InvokeVoid(0xEE831F15A8D0D94A,tvChannel,p1)end;
 	ClearTvChannelPlaylist=function(tvChannel--[[@param tvChannel integer]])return InvokeVoid(0xBEB3D46BB7F043C0,tvChannel)end;
 	IsPlaylistOnChannel=function(tvChannel--[[@param tvChannel integer]],p1--[[@param p1 any]])return InvokeBool(0x1F710BFF7DAE6261,tvChannel,p1)end;---@return boolean
 	IsTvshowCurrentlyPlaying=function(videoCliphash--[[@param videoCliphash integer]])return InvokeBool(0x0AD973CA1E077B60,videoCliphash)end;---@return boolean
@@ -4309,6 +4320,7 @@ For how to get the hashes, see PATHFIND::GET_STREET_NAME_AT_COORD.]=]
 	IsRadarHidden=function()return InvokeBool(0x157F93B036700462)end;---@return boolean
 	IsMinimapRendering=function()return InvokeBool(0xAF754F20EB5CD51A)end;---@return boolean
 	UseVehicleTargetingReticule=function(p0--[[@param p0 any]])return InvokeVoid(0x0C698D8F099174C7,p0)end;
+	UseVehicleTargetingReticuleOnVehicles=function(enable--[[@param enable boolean]])return InvokeVoid(0x1BC0EA2912708625,enable)end;
 	AddValidVehicleHitHash=function(p0--[[@param p0 any]])return InvokeVoid(0xE4C3B169876D33D7,p0)end;
 	ClearValidVehicleHitHashes=function()return InvokeVoid(0xEB81A3DADD503187)end;
 	--[=[Enable / disable showing route for the Blip-object.]=]
@@ -4360,6 +4372,7 @@ A: for some reason its R B G A]=]
 
 Right-Justify requires SET_TEXT_WRAP, otherwise it will draw to the far right of the screen]=]
 	SetTextJustification=function(justifyType--[[@param justifyType integer]])return InvokeVoid(0x4E096588B13FFECA,justifyType)end;
+	SetTextLineHeightMult=function(lineHeightMult--[[@param lineHeightMult number]])return InvokeVoid(0x9F4624F76E6953D1,lineHeightMult+.0)end;
 	--[=[It sets the text in a specified box and wraps the text if it exceeds the boundries. Both values are for X axis. Useful when positioning text set to center or aligned to the right.
 
 start - left boundry on screen position (0.0 - 1.0)
@@ -4622,6 +4635,8 @@ HUD::SET_WAYPOINT_OFF();]=]
 	SetupFakeConeData=function(blip--[[@param blip integer]],p1--[[@param p1 number]],p2--[[@param p2 number]],p3--[[@param p3 number]],p4--[[@param p4 number]],p5--[[@param p5 number]],p6--[[@param p6 number]],p7--[[@param p7 any]],p8--[[@param p8 integer]])return InvokeVoid(0xF83D0FEBE75E62C9,blip,p1+.0,p2+.0,p3+.0,p4+.0,p5+.0,p6+.0,p7,p8)end;
 	RemoveFakeConeData=function(blip--[[@param blip integer]])return InvokeVoid(0x35A3CD97B2C0A6D2,blip)end;
 	ClearFakeConeArray=function()return InvokeVoid(0x8410C5E0CD847B9D)end;
+	--[=[Applies to new eBlipParams _BLIP_CHANGE_46* and _BLIP_CHANGE_47*]=]
+	SetBlipGpsRouteDisplayDistance=function(blip--[[@param blip integer]],blipChangeParam46--[[@param blipChangeParam46 integer]],blipChangeParam47--[[@param blipChangeParam47 boolean]])return InvokeVoid(0x25D984CFB64ED6DE,blip,blipChangeParam46,blipChangeParam47)end;
 	--[=[This native is used to colorize certain map components like the army base at the top of the map.
 p2 appears to be always -1. If p2 is -1 then native wouldn't change the color. See https://gfycat.com/SkinnyPinkChupacabra]=]
 	SetMinimapComponent=function(componentId--[[@param componentId integer]],toggle--[[@param toggle boolean]],overrideColor--[[@param overrideColor integer]])return InvokeBool(0x75A9A10948D1DEA6,componentId,toggle,overrideColor)end;---@return boolean
@@ -6250,6 +6265,9 @@ If toggle is false, the ped's head is not shown in the pause menu]=]
 	UseActiveCameraForTimeslicingCentre=function()return InvokeVoid(0x693478ACBD7F18E7)end;
 	SetContentIdIndex=function(contentId--[[@param contentId integer]],index--[[@param index integer]])return InvokeVoid(0x4B82FA6F2D624634,contentId,index)end;
 	GetContentIdIndex=function(contentId--[[@param contentId integer]])return InvokeInt(0xECF041186C5A94DC,contentId)end;---@return integer
+	SetContentPropType=function(model--[[@param model integer]],type--[[@param type integer]])return InvokeVoid(0xBA4583AF4C678A9B,model,type)end;
+	--[=[Returns prop type for given model hash]=]
+	GetContentPropType=function(model--[[@param model integer]])return InvokeInt(0x8BAF8AD59F47AAFC,model)end;---@return integer
 }
 _G.Mobile={
 	--[=[Creates a mobile phone of the specified type.
@@ -6723,6 +6741,10 @@ The last 3 parameters are,
 	NetworkSpentStealthModule=function(amount--[[@param amount integer]],fromBank--[[@param fromBank boolean]],fromBankAndWallet--[[@param fromBankAndWallet boolean]],p3--[[@param p3 integer]])return InvokeVoid(0x95CE79A6939C537A,amount,fromBank,fromBankAndWallet,p3)end;
 	--[=[Hash p3 = MISSILE_JAMMER]=]
 	NetworkSpentMissileJammer=function(amount--[[@param amount integer]],fromBank--[[@param fromBank boolean]],fromBankAndWallet--[[@param fromBankAndWallet boolean]],p3--[[@param p3 integer]])return InvokeVoid(0xD687100F616163F4,amount,fromBank,fromBankAndWallet,p3)end;
+	NetworkSpentGeneric=function(price--[[@param price integer]],p1--[[@param p1 boolean]],p2--[[@param p2 boolean]],stat--[[@param stat integer]],spent--[[@param spent integer]],p5--[[@param p5 string]],p6--[[@param p6 string]],data--[[@param data any*]])return InvokeVoid(0x2803B027479FB640,price,p1,p2,stat,spent,p5,p6,data)end;
+	--[=[_NETWORK_EARN_G*]=]
+	NetworkEarnGeneric=function(amount--[[@param amount integer]],earn--[[@param earn integer]],p2--[[@param p2 string]],p3--[[@param p3 string]],data--[[@param data any*]])return InvokeVoid(0xBF7B5BB7ED890380,amount,earn,p2,p3,data)end;
+	NetworkClearTransactionTelemetryNonce=function()return InvokeVoid(0xE03B9F95556E48E9)end;
 	NetworkGetVcBankBalance=function()return InvokeInt(0x76EF28DA05EA395A)end;---@return integer
 	NetworkGetVcWalletBalance=function(characterSlot--[[@param characterSlot integer]])return InvokeInt(0xA40F9C2623F6A8B5,characterSlot)end;---@return integer
 	NetworkGetVcBalance=function()return InvokeInt(0x5CBAD97E059E1B94)end;---@return integer
@@ -6853,6 +6875,8 @@ Returns some sort of unavailable reason:
 	NetworkHasAgeRestrictions=function()return InvokeBool(0x1353F87E89946207)end;---@return boolean
 	NetworkHaveUserContentPrivileges=function(p0--[[@param p0 integer]])return InvokeBool(0x72D918C99BCACC54,p0)end;---@return boolean
 	NetworkHaveCommunicationPrivileges=function(p0--[[@param p0 integer]],player--[[@param player integer]])return InvokeBool(0xAEEF48CDF5B6CE7C,p0,player)end;---@return boolean
+	--[=[Appears to be PlayStation-specific. Always returns true on other platforms if signed in with the primary user profile]=]
+	NetworkHavePlatformCommunicationPrivileges=function()return InvokeBool(0xE1E02509169C124E)end;---@return boolean
 	NetworkCheckOnlinePrivileges=function(p0--[[@param p0 any]],p1--[[@param p1 boolean]])return InvokeBool(0x78321BEA235FD8CD,p0,p1)end;---@return boolean
 	NetworkCheckUserContentPrivileges=function(p0--[[@param p0 integer]],p1--[[@param p1 integer]],p2--[[@param p2 boolean]])return InvokeBool(0x595F028698072DD9,p0,p1,p2)end;---@return boolean
 	NetworkCheckCommunicationPrivileges=function(p0--[[@param p0 integer]],p1--[[@param p1 integer]],p2--[[@param p2 boolean]])return InvokeBool(0x83F28CE49FBBFFBA,p0,p1,p2)end;---@return boolean
@@ -6899,6 +6923,7 @@ Returns 1 if the multiplayer is loaded, otherwhise 0.]=]
 	NetworkSessionIsClosedCrew=function()return InvokeBool(0x74732C6CA90DA2B4)end;---@return boolean
 	NetworkSessionIsSolo=function()return InvokeBool(0xF3929C2379B60CCE)end;---@return boolean
 	NetworkSessionIsPrivate=function()return InvokeBool(0xCEF70AA5B3F89BA1)end;---@return boolean
+	NetworkSessionLeaveIncludingReason=function(leaveFlags--[[@param leaveFlags integer]],leaveReason--[[@param leaveReason integer]])return InvokeBool(0xE0128328CF1FD9F4,leaveFlags,leaveReason)end;---@return boolean
 	--[=[p0 is always false and p1 varies.
 NETWORK_SESSION_END(0, 1)
 NETWORK_SESSION_END(0, 0)
@@ -6920,6 +6945,7 @@ Results in: "Connection to session lost due to an unknown network error. Please 
 	--[=[groupId range: [0, 4]]=]
 	NetworkSessionAddActiveMatchmakingGroup=function(groupId--[[@param groupId integer]])return InvokeVoid(0xCAE55F48D3D7875C,groupId)end;
 	NetworkSessionSetUniqueCrewLimit=function(p0--[[@param p0 any]])return InvokeVoid(0xF49ABC20D8552257,p0)end;
+	NetworkSessionGetUniqueCrewLimit=function()return InvokeInt(0xCDC936BF35EDCB73)end;---@return integer
 	NetworkSessionSetUniqueCrewLimitTransition=function(p0--[[@param p0 any]])return InvokeVoid(0x4811BBAC21C5FCD5,p0)end;
 	NetworkSessionSetUniqueCrewOnlyCrewsTransition=function(p0--[[@param p0 boolean]])return InvokeVoid(0x5539C3EBF104A53A,p0)end;
 	NetworkSessionSetCrewLimitMaxMembersTransition=function(p0--[[@param p0 any]])return InvokeVoid(0x702BC4D605522539,p0)end;
@@ -6992,6 +7018,8 @@ Appears to be patched in gtav b757 (game gets terminated) alonside with most oth
 	NetworkIsGameInProgress=function()return InvokeBool(0x10FAB35428CCC9D7)end;---@return boolean
 	NetworkIsSessionActive=function()return InvokeBool(0xD83C2B94E7508980)end;---@return boolean
 	NetworkIsInSession=function()return InvokeBool(0xCA97246103B63917)end;---@return boolean
+	--[=[Hardcoded to return 0.]=]
+	NetworkIsAmericasVersion=function()return InvokeBool(0x0292BD7F3766CEBC)end;---@return boolean
 	--[=[This checks if player is playing on gta online or not.
 Please add an if and block your mod if this is "true".]=]
 	NetworkIsSessionStarted=function()return InvokeBool(0x9DE624D2FC4B603F)end;---@return boolean
@@ -7363,6 +7391,26 @@ Returns an entity handle or -1, value changes based on p0's value.]=]
 	NetworkGetPlayerOwnsWaypoint=function(player--[[@param player integer]])return InvokeBool(0x82377B65E943F72D,player)end;---@return boolean
 	NetworkCanSetWaypoint=function()return InvokeBool(0xC927EC229934AF60)end;---@return boolean
 	NetworkIgnoreRemoteWaypoints=function()return InvokeVoid(0x4C2A9FDC22377075)end;
+	--[=[communicationType: 0 = VOICE; 1 = TEXT_CHAT; 2 = TEXT_MESSAGE; 3 = EMAIL; 4 = USER_CONTENT;  5 = USER_TEXT]=]
+	NetworkDoesCommunicationGroupExist=function(communicationType--[[@param communicationType integer]])return InvokeBool(0xDBDF80673BBA3D65,communicationType)end;---@return boolean
+	--[=[Returns communicationGroupFlag
+communicationType: see 0xDBDF80673BBA3D65
+
+enum eCommunicationGroupFlag
+{
+	COMMUNICATION_GROUP_LOCAL_PLAYER = 1 << 0,
+	COMMUNICATION_GROUP_FRIENDS = 1 << 1,
+	COMMUNICATION_GROUP_SMALL_CREW = 1 << 2,
+	COMMUNICATION_GROUP_LARGE_CREW = 1 << 3,
+	COMMUNICATION_GROUP_RECENT_PLAYER = 1 << 4,
+	COMMUNICATION_GROUP_SAME_SESSION = 1 << 5,
+	COMMUNICATION_GROUP_SAME_TEAM = 1 << 6,
+	COMMUNICATION_GROUP_INVALID = 1 << 7,
+};]=]
+	NetworkGetCommunicationGroupFlags=function(communicationType--[[@param communicationType integer]])return InvokeInt(0x40DF02F371F40883,communicationType)end;---@return integer
+	--[=[communicationType: see 0xDBDF80673BBA3D65
+communicationGroupFlag: see 0x40DF02F371F40883]=]
+	NetworkSetCommunicationGroupFlags=function(communicationType--[[@param communicationType integer]],communicationGroupFlag--[[@param communicationGroupFlag integer]])return InvokeVoid(0xE549F846DE7D32D5,communicationType,communicationGroupFlag)end;
 	NetworkIsPlayerOnBlocklist=function(gamerHandle--[[@param gamerHandle any*]])return InvokeBool(0xAD4326FCA30D62F8,gamerHandle)end;---@return boolean
 	NetworkSetScriptAutomuted=function(p0--[[@param p0 any]])return InvokeBool(0xB309EBEA797E001F,p0)end;---@return boolean
 	NetworkHasAutomuteOverride=function()return InvokeBool(0x26F07DD83A5F7F98)end;---@return boolean
@@ -7510,7 +7558,7 @@ pc or last gen?
 	NetworkSetEntityOnlyExistsForParticipants=function(entity--[[@param entity integer]],toggle--[[@param toggle boolean]])return InvokeVoid(0xF1CA12B18AEF5298,entity,toggle)end;
 	SetNetworkIdVisibleInCutscene=function(netId--[[@param netId integer]],p1--[[@param p1 boolean]],p2--[[@param p2 boolean]])return InvokeVoid(0xA6928482543022B4,netId,p1,p2)end;
 	SetNetworkIdVisibleInCutsceneHack=function(netId--[[@param netId integer]],p1--[[@param p1 boolean]],p2--[[@param p2 boolean]])return InvokeVoid(0x32EBD154CB6B8B99,netId,p1,p2)end;
-	SetNetworkIdVisibleInCutsceneRemainHack=function(p0--[[@param p0 any]],p1--[[@param p1 any]])return InvokeVoid(0x76B3F29D3F967692,p0,p1)end;
+	SetNetworkIdVisibleInCutsceneRemainHack=function(p0--[[@param p0 any]],p1--[[@param p1 any]],p2--[[@param p2 any]])return InvokeVoid(0x76B3F29D3F967692,p0,p1,p2)end;
 	SetNetworkCutsceneEntities=function(toggle--[[@param toggle boolean]])return InvokeVoid(0xAAA553E7DD28A457,toggle)end;
 	--[=[Getter for SET_NETWORK_CUTSCENE_ENTITIES.]=]
 	AreCutsceneEntitiesNetworked=function()return InvokeBool(0x66D6A5E9C511214A)end;---@return boolean
@@ -7889,6 +7937,7 @@ Seems it's like ADD_EXPLOSION, etc. the first 2 params. The 3rd atm no need to w
 	UgcGetCachedDescription=function(p0--[[@param p0 any]],p1--[[@param p1 any]])return InvokeString(0x40F7E66472DF3E5C,p0,p1)end;---@return string
 	UgcReleaseCachedDescription=function(p0--[[@param p0 any]])return InvokeBool(0x5A34CD9C3C5BEC44,p0)end;---@return boolean
 	UgcReleaseAllCachedDescriptions=function()return InvokeVoid(0x68103E2247887242)end;
+	UgcHasPermissionToWrite=function()return InvokeBool(0xC33E7CBC06EC1A8D)end;---@return boolean
 	UgcPublish=function(contentId--[[@param contentId string]],baseContentId--[[@param baseContentId string]],contentTypeName--[[@param contentTypeName string]])return InvokeBool(0x1DE0F5F50D723CAA,contentId,baseContentId,contentTypeName)end;---@return boolean
 	UgcSetBookmarked=function(contentId--[[@param contentId string]],bookmarked--[[@param bookmarked boolean]],contentTypeName--[[@param contentTypeName string]])return InvokeBool(0x274A1519DFC1094F,contentId,bookmarked,contentTypeName)end;---@return boolean
 	UgcSetDeleted=function(p0--[[@param p0 any*]],p1--[[@param p1 boolean]],p2--[[@param p2 string]])return InvokeBool(0xD05D1A6C74DA3498,p0,p1,p2)end;---@return boolean
@@ -7938,6 +7987,10 @@ Seems it's like ADD_EXPLOSION, etc. the first 2 params. The 3rd atm no need to w
 	NetworkHasRosPrivilegeEndDate=function(privilege--[[@param privilege integer]],banType--[[@param banType integer*]],timeData--[[@param timeData any*]])return InvokeBool(0xC22912B1D85F26B1,privilege,banType,timeData)end;---@return boolean
 	NetworkHasRosPrivilegePlayedLastGen=function()return InvokeBool(0x593570C289A77688)end;---@return boolean
 	NetworkHasRosPrivilegeSpecialEditionContent=function()return InvokeBool(0x91B87C55093DE351)end;---@return boolean
+	--[=[Checks for privilege 29]=]
+	NetworkHasRosPrivilegeMpTextCommunication=function()return InvokeBool(0xD9719341663C385F)end;---@return boolean
+	--[=[Checks for privilege 30]=]
+	NetworkHasRosPrivilegeMpVoiceCommunication=function()return InvokeBool(0x8956A309BE90057C)end;---@return boolean
 	NetworkStartCommunicationPermissionsCheck=function(p0--[[@param p0 any]])return InvokeInt(0x36391F397731595D,p0)end;---@return integer
 	--[=[Always returns -1. Seems to be XB1 specific.]=]
 	NetworkStartUserContentPermissionsCheck=function(netHandle--[[@param netHandle any*]])return InvokeInt(0xDEB2B99A1AF1A2A6,netHandle)end;---@return integer
@@ -7999,7 +8052,7 @@ If false, moves the object towards the specified X, Y and Z coordinates with the
 See also: https://gtagmodding.com/opcode-database/opcode/034E/
 Has to be looped until it returns true.]=]
 	SlideObject=function(object--[[@param object integer]],toX--[[@param toX number]],toY--[[@param toY number]],toZ--[[@param toZ number]],speedX--[[@param speedX number]],speedY--[[@param speedY number]],speedZ--[[@param speedZ number]],collision--[[@param collision boolean]])return InvokeBool(0x2FDFF4107B8C1147,object,toX+.0,toY+.0,toZ+.0,speedX+.0,speedY+.0,speedZ+.0,collision)end;---@return boolean
-	SetObjectTargettable=function(object--[[@param object integer]],targettable--[[@param targettable boolean]])return InvokeVoid(0x8A7391690F5AFD81,object,targettable)end;
+	SetObjectTargettable=function(object--[[@param object integer]],targettable--[[@param targettable boolean]],p2--[[@param p2 any]])return InvokeVoid(0x8A7391690F5AFD81,object,targettable,p2)end;
 	--[=[Overrides a flag on the object which determines if the object should be avoided by a vehicle in task CTaskVehicleGoToPointWithAvoidanceAutomobile.]=]
 	SetObjectForceVehiclesToAvoid=function(object--[[@param object integer]],toggle--[[@param toggle boolean]])return InvokeVoid(0x77F33F2CCF64B3AA,object,toggle)end;
 	--[=[Has 8 params in the latest patches.
@@ -8978,6 +9031,7 @@ p1 is usually 0 in the scripts because it gets the ped id during the task sequen
 	IsPedGoingIntoCover=function(ped--[[@param ped integer]])return InvokeBool(0x9F65DBC537E59AD5,ped)end;---@return boolean
 	--[=[i could be time. Only example in the decompiled scripts uses it as -1.]=]
 	SetPedPinnedDown=function(ped--[[@param ped integer]],pinned--[[@param pinned boolean]],i--[[@param i integer]])return InvokeBool(0xAAD6D1ACF08F4612,ped,pinned,i)end;---@return boolean
+	HasPedClearLosToEntity=function(ped--[[@param ped integer]],entity--[[@param entity integer]],x--[[@param x number]],y--[[@param y number]],z--[[@param z number]],p5--[[@param p5 integer]],p6--[[@param p6 boolean]],p7--[[@param p7 boolean]])return InvokeBool(0xA32ABFEB2A03B306,ped,entity,x+.0,y+.0,z+.0,p5,p6,p7)end;---@return boolean
 	GetSeatPedIsTryingToEnter=function(ped--[[@param ped integer]])return InvokeInt(0x6F4C85ACD641BCD2,ped)end;---@return integer
 	GetVehiclePedIsTryingToEnter=function(ped--[[@param ped integer]])return InvokeInt(0x814FA8BE5449445D,ped)end;---@return integer
 	--[=[Returns the Entity (Ped, Vehicle, or ?Object?) that killed the 'ped'
@@ -9144,7 +9198,7 @@ PED::SET_PED_GRAVITY(PLAYER::PLAYER_PED_ID(), 0x00000001);
 PED::SET_PED_GRAVITY(Local_289[iVar0 /*20*/], 0x00000001);]=]
 	SetPedGravity=function(ped--[[@param ped integer]],toggle--[[@param toggle boolean]])return InvokeVoid(0x9FF447B6B6AD960A,ped,toggle)end;
 	--[=[damages a ped with the given amount]=]
-	ApplyDamageToPed=function(ped--[[@param ped integer]],damageAmount--[[@param damageAmount integer]],p2--[[@param p2 boolean]],p3--[[@param p3 any]])return InvokeVoid(0x697157CED63F18D4,ped,damageAmount,p2,p3)end;
+	ApplyDamageToPed=function(ped--[[@param ped integer]],damageAmount--[[@param damageAmount integer]],p2--[[@param p2 boolean]],p3--[[@param p3 any]],weaponType--[[@param weaponType integer]])return InvokeVoid(0x697157CED63F18D4,ped,damageAmount,p2,p3,weaponType)end;
 	GetTimePedDamagedByWeapon=function(ped--[[@param ped integer]],weaponHash--[[@param weaponHash integer]])return InvokeInt(0x36B77BB84687C318,ped,weaponHash)end;---@return integer
 	SetPedAllowedToDuck=function(ped--[[@param ped integer]],toggle--[[@param toggle boolean]])return InvokeVoid(0xDA1F1B7BE1A8766F,ped,toggle)end;
 	SetPedNeverLeavesGroup=function(ped--[[@param ped integer]],toggle--[[@param toggle boolean]])return InvokeVoid(0x3DBFC55D5C9BB447,ped,toggle)end;
@@ -10031,7 +10085,7 @@ GIVE_PED_NM_MESSAGE(ped); // Dispatch message to Ped.
 CREATE_NM_MESSAGE(true, 372); // armsWindmill - Swing arms around.
 GIVE_PED_NM_MESSAGE(ped); // Dispatch message to Ped.]=]
 	GivePedNmMessage=function(ped--[[@param ped integer]])return InvokeVoid(0xB158DFCCC56E5C5B,ped)end;
-	AddScenarioBlockingArea=function(x1--[[@param x1 number]],y1--[[@param y1 number]],z1--[[@param z1 number]],x2--[[@param x2 number]],y2--[[@param y2 number]],z2--[[@param z2 number]],p6--[[@param p6 boolean]],p7--[[@param p7 boolean]],p8--[[@param p8 boolean]],p9--[[@param p9 boolean]])return InvokeInt(0x1B5C85C612E5256E,x1+.0,y1+.0,z1+.0,x2+.0,y2+.0,z2+.0,p6,p7,p8,p9)end;---@return integer
+	AddScenarioBlockingArea=function(x1--[[@param x1 number]],y1--[[@param y1 number]],z1--[[@param z1 number]],x2--[[@param x2 number]],y2--[[@param y2 number]],z2--[[@param z2 number]],p6--[[@param p6 boolean]],p7--[[@param p7 boolean]],p8--[[@param p8 boolean]],p9--[[@param p9 boolean]],p10--[[@param p10 any]])return InvokeInt(0x1B5C85C612E5256E,x1+.0,y1+.0,z1+.0,x2+.0,y2+.0,z2+.0,p6,p7,p8,p9,p10)end;---@return integer
 	RemoveScenarioBlockingAreas=function()return InvokeVoid(0xD37401D78A929A49)end;
 	RemoveScenarioBlockingArea=function(p0--[[@param p0 any]],p1--[[@param p1 boolean]])return InvokeVoid(0x31D16B74C6E29D66,p0,p1)end;
 	SetScenarioPedsSpawnInSphereArea=function(x--[[@param x number]],y--[[@param y number]],z--[[@param z number]],range--[[@param range number]],p4--[[@param p4 integer]])return InvokeVoid(0x28157D43CF600981,x+.0,y+.0,z+.0,range+.0,p4)end;
@@ -11636,6 +11690,8 @@ No need to confirm it says PLAYER_ID() so it uses PLAYER_ID() lol.]=]
 2 = Free Aim - Assisted
 3 = Free Aim]=]
 	SetPlayerTargetingMode=function(targetMode--[[@param targetMode integer]])return InvokeVoid(0xB1906895227793F3,targetMode)end;
+	--[=[Returns targeting mode. See SET_PLAYER_TARGETING_MODE]=]
+	GetPlayerTargetingMode=function()return InvokeInt(0x875BDD898B99C8CE)end;---@return integer
 	SetPlayerTargetLevel=function(targetLevel--[[@param targetLevel integer]])return InvokeVoid(0x5702B917B99DB1CD,targetLevel)end;
 	--[=[Returns profile setting 237.]=]
 	GetIsUsingFpsThirdPersonCover=function()return InvokeBool(0xB9CF1F793A9F1BF1)end;---@return boolean
@@ -12068,8 +12124,9 @@ playerBits (also known as playersToBroadcastTo) is a bitset that indicates which
 	BgDoesLaunchParamExist=function(scriptIndex--[[@param scriptIndex integer]],p1--[[@param p1 string]])return InvokeBool(0x0F6F1EBBC4E1D5E6,scriptIndex,p1)end;---@return boolean
 	BgGetLaunchParamValue=function(scriptIndex--[[@param scriptIndex integer]],p1--[[@param p1 string]])return InvokeInt(0x22E21FBCFC88C149,scriptIndex,p1)end;---@return integer
 	BgGetScriptIdFromNameHash=function(p0--[[@param p0 integer]])return InvokeInt(0x829CD22E043A2577,p0)end;---@return integer
-	--[=[See TRIGGER_SCRIPT_EVENT]=]
-	SendTuScriptEvent=function(eventGroup--[[@param eventGroup integer]],eventData--[[@param eventData any*]],eventDataSize--[[@param eventDataSize integer]],playerBits--[[@param playerBits integer]])return InvokeVoid(0xA40CC53DF8E50837,eventGroup,eventData,eventDataSize,playerBits)end;
+	--[=[New variant of SEND_TU_SCRIPT_EVENT that automatically initializes the event data header.
+See TRIGGER_SCRIPT_EVENT for more info.]=]
+	SendTuScriptEventNew=function(eventGroup--[[@param eventGroup integer]],eventData--[[@param eventData any*]],eventDataSize--[[@param eventDataSize integer]],playerBits--[[@param playerBits integer]],eventType--[[@param eventType integer]])return InvokeVoid(0x71A6F836422FDD2B,eventGroup,eventData,eventDataSize,playerBits,eventType)end;
 }
 _G.Security={
 	--[=[Registers a protected variable that will be checked for modifications by the anticheat]=]
@@ -12132,7 +12189,6 @@ _G.Socialclub={
 	ScInboxMessagePushGamerT0RecipList=function(gamerHandle--[[@param gamerHandle any*]])return InvokeVoid(0xDA024BDBD600F44A,gamerHandle)end;
 	ScInboxSendUgcstatupdateToRecipList=function(data--[[@param data any*]])return InvokeVoid(0xA68D3D229F4F3B06,data)end;
 	ScInboxMessageGetUgcdata=function(p0--[[@param p0 integer]],p1--[[@param p1 any*]])return InvokeBool(0x69D82604A1A5A254,p0,p1)end;---@return boolean
-	ScInboxSendBountyToRecipList=function(data--[[@param data any*]])return InvokeBool(0x6AFD2CD753FEEF83,data)end;---@return boolean
 	ScInboxGetBountyDataAtIndex=function(index--[[@param index integer]],outData--[[@param outData any*]])return InvokeBool(0x87E0052F08BD64E6,index,outData)end;---@return boolean
 	ScEmailRetrieveEmails=function(offset--[[@param offset integer]],limit--[[@param limit integer]])return InvokeVoid(0x040ADDCBAFA1018A,offset,limit)end;
 	ScEmailGetRetrievalStatus=function()return InvokeInt(0x16DA8172459434AA)end;---@return integer
@@ -12398,11 +12454,13 @@ section - values used in the decompiled scripts:
 	--[=[p3: VehicleConversion, SCAdminCashGift
 p4: 0]=]
 	PlaystatsFlowLow=function(posX--[[@param posX number]],posY--[[@param posY number]],posZ--[[@param posZ number]],p3--[[@param p3 string]],p4--[[@param p4 any]],amount--[[@param amount integer]])return InvokeVoid(0xE6A27CDA42887F93,posX+.0,posY+.0,posZ+.0,p3,p4,amount)end;
+	--[=[interiorAction: can either be InteriorEntry or InteriorExit]=]
+	PlaystatsFlowMedium=function(x--[[@param x number]],y--[[@param y number]],z--[[@param z number]],interiorAction--[[@param interiorAction string]],p4--[[@param p4 integer]],p5--[[@param p5 integer]])return InvokeVoid(0xC4493521BAA12CCE,x+.0,y+.0,z+.0,interiorAction,p4,p5)end;
 	PlaystatsNpcInvite=function(p0--[[@param p0 string]])return InvokeVoid(0x93054C88E6AA7C44,p0)end;
 	PlaystatsAwardXp=function(amount--[[@param amount integer]],type--[[@param type integer]],category--[[@param category integer]])return InvokeVoid(0x46F917F6B4128FE4,amount,type,category)end;
 	PlaystatsRankUp=function(rank--[[@param rank integer]])return InvokeVoid(0xC7F2DE41D102BFB4,rank)end;
 	PlaystatsStartedSessionInOfflinemode=function()return InvokeVoid(0x098760C7461724CD)end;
-	PlaystatsActivityDone=function(p0--[[@param p0 integer]],activityId--[[@param activityId integer]])return InvokeVoid(0xA071E0ED98F91286,p0,activityId)end;
+	PlaystatsActivityDone=function(p0--[[@param p0 integer]],activityId--[[@param activityId integer]],p2--[[@param p2 any]])return InvokeVoid(0xA071E0ED98F91286,p0,activityId,p2)end;
 	PlaystatsLeaveJobChain=function(p0--[[@param p0 any]],p1--[[@param p1 any]],p2--[[@param p2 any]],p3--[[@param p3 any]],p4--[[@param p4 any]])return InvokeVoid(0xC5BE134EC7BA96A0,p0,p1,p2,p3,p4)end;
 	PlaystatsMissionStarted=function(p0--[[@param p0 string]],p1--[[@param p1 any]],p2--[[@param p2 any]],p3--[[@param p3 boolean]])return InvokeVoid(0xC19A2925C34D2231,p0,p1,p2,p3)end;
 	PlaystatsMissionOver=function(p0--[[@param p0 string]],p1--[[@param p1 any]],p2--[[@param p2 any]],p3--[[@param p3 boolean]],p4--[[@param p4 boolean]],p5--[[@param p5 boolean]])return InvokeVoid(0x7C4BB33A8CED7324,p0,p1,p2,p3,p4,p5)end;
@@ -12439,7 +12497,7 @@ p4: 0]=]
 	PlaystatsAppendDirectorMetric=function(p0--[[@param p0 any*]])return InvokeVoid(0x46326E13DA4E0546,p0)end;
 	PlaystatsAwardBadSport=function(id--[[@param id integer]])return InvokeVoid(0x47B32F5611E6E483,id)end;
 	PlaystatsPegasusAsPersonalAircraft=function(modelHash--[[@param modelHash integer]])return InvokeVoid(0x9572BD4DD6B72122,modelHash)end;
-	PlaystatsShopmenuNav=function(p0--[[@param p0 any]],p1--[[@param p1 any]],p2--[[@param p2 any]])return InvokeVoid(0xF96E9EA876D9DC92,p0,p1,p2)end;
+	PlaystatsShopmenuNav=function(p0--[[@param p0 any]],p1--[[@param p1 any]],p2--[[@param p2 any]],p3--[[@param p3 any]])return InvokeVoid(0xF96E9EA876D9DC92,p0,p1,p2,p3)end;
 	PlaystatsFmEventChallenges=function(p0--[[@param p0 any]])return InvokeVoid(0x6A60E43998228229,p0)end;
 	PlaystatsFmEventVehicletarget=function(p0--[[@param p0 any]])return InvokeVoid(0xBFAFDB5FAAA5C5AB,p0)end;
 	PlaystatsFmEventUrbanwarfare=function(p0--[[@param p0 any]])return InvokeVoid(0x8C9D11605E59D955,p0)end;
@@ -12464,7 +12522,6 @@ p4: 0]=]
 	LeaderboardsReadSuccessful=function(p0--[[@param p0 any]],p1--[[@param p1 any]],p2--[[@param p2 any]])return InvokeBool(0x2FB19228983E832C,p0,p1,p2)end;---@return boolean
 	Leaderboards2ReadFriendsByRow=function(p0--[[@param p0 any*]],p1--[[@param p1 any*]],p2--[[@param p2 any]],p3--[[@param p3 boolean]],p4--[[@param p4 any]],p5--[[@param p5 any]])return InvokeBool(0x918B101666F9CB83,p0,p1,p2,p3,p4,p5)end;---@return boolean
 	Leaderboards2ReadByHandle=function(p0--[[@param p0 any*]],p1--[[@param p1 any*]])return InvokeBool(0xC30713A383BFBF0E,p0,p1)end;---@return boolean
-	Leaderboards2ReadByRow=function(p0--[[@param p0 any*]],p1--[[@param p1 any*]],p2--[[@param p2 any]],p3--[[@param p3 any*]],p4--[[@param p4 any]],p5--[[@param p5 any*]],p6--[[@param p6 any]])return InvokeBool(0xA9CDB1E3F0A49883,p0,p1,p2,p3,p4,p5,p6)end;---@return boolean
 	Leaderboards2ReadByRank=function(p0--[[@param p0 any*]],p1--[[@param p1 any]],p2--[[@param p2 any]])return InvokeBool(0xBA2C7DB0C129449A,p0,p1,p2)end;---@return boolean
 	Leaderboards2ReadByRadius=function(p0--[[@param p0 any*]],p1--[[@param p1 any]],p2--[[@param p2 any*]])return InvokeBool(0x5CE587FB5A42C8C4,p0,p1,p2)end;---@return boolean
 	Leaderboards2ReadByScoreInt=function(p0--[[@param p0 any*]],p1--[[@param p1 any]],p2--[[@param p2 any]])return InvokeBool(0x7EEC7E4F6984A16A,p0,p1,p2)end;---@return boolean
@@ -12623,7 +12680,7 @@ enum StatTrackingValueType
 	PlaystatsDefendContrabandMission=function(data--[[@param data any*]])return InvokeVoid(0x2605663BD4F23B5D,data)end;
 	PlaystatsRecoverContrabandMission=function(data--[[@param data any*]])return InvokeVoid(0x04D90BA8207ADA2D,data)end;
 	PlaystatsHitContrabandDestroyLimit=function(p0--[[@param p0 any]])return InvokeVoid(0x60EEDC12AF66E846,p0)end;
-	StartBeingBoss=function(p0--[[@param p0 any]],p1--[[@param p1 any]])return InvokeVoid(0x3EBEAC6C3F81F6BD,p0,p1)end;
+	StartBeingBoss=function(p0--[[@param p0 any]],p1--[[@param p1 any]],p2--[[@param p2 any]])return InvokeVoid(0x3EBEAC6C3F81F6BD,p0,p1,p2)end;
 	StartBeingGoon=function(p0--[[@param p0 any]],p1--[[@param p1 any]],p2--[[@param p2 any]])return InvokeVoid(0x96E6D5150DBF1C09,p0,p1,p2)end;
 	EndBeingBoss=function(p0--[[@param p0 any]],p1--[[@param p1 any]],p2--[[@param p2 any]])return InvokeVoid(0xA3C53804BDB68ED2,p0,p1,p2)end;
 	EndBeingGoon=function(p0--[[@param p0 any]],p1--[[@param p1 any]],p2--[[@param p2 any]],p3--[[@param p3 any]],p4--[[@param p4 any]])return InvokeVoid(0x6BCCF9948492FD85,p0,p1,p2,p3,p4)end;
@@ -12699,7 +12756,7 @@ enum StatTrackingValueType
 	PlaystatsMissionVote=function(p0--[[@param p0 any]])return InvokeVoid(0xC03FAB2C2F92289B,p0)end;
 	PlaystatsNjvsVote=function(p0--[[@param p0 any]])return InvokeVoid(0x5CDAED54B34B0ED0,p0)end;
 	PlaystatsKillYourself=function()return InvokeVoid(0x4AFF7E02E485E92B)end;
-	PlaystatsFmMissionEnd=function(p0--[[@param p0 any]],p1--[[@param p1 any]],p2--[[@param p2 any]])return InvokeVoid(0x46A70777BE6CEAB9,p0,p1,p2)end;
+	PlaystatsFmMissionEnd=function(p0--[[@param p0 any]],p1--[[@param p1 any]],p2--[[@param p2 any]],p3--[[@param p3 any]])return InvokeVoid(0x46A70777BE6CEAB9,p0,p1,p2,p3)end;
 	PlaystatsHeist4Prep=function(p0--[[@param p0 any]])return InvokeVoid(0xDFCDB14317A9B361,p0)end;
 	PlaystatsHeist4Finale=function(p0--[[@param p0 any]])return InvokeVoid(0xC1E963C58664B556,p0)end;
 	PlaystatsHeist4Hack=function(p0--[[@param p0 any]],p1--[[@param p1 any]],p2--[[@param p2 any]],p3--[[@param p3 any]],p4--[[@param p4 any]])return InvokeVoid(0x2FA3173480008493,p0,p1,p2,p3,p4)end;
@@ -12723,6 +12780,7 @@ enum StatTrackingValueType
 	PlaystatsIdle=function(p0--[[@param p0 any]],p1--[[@param p1 any]],p2--[[@param p2 any]])return InvokeVoid(0xEC9553A178E8F1D1,p0,p1,p2)end;
 	PlaystatsPlayerStyle=function(p0--[[@param p0 any]])return InvokeVoid(0x48FAC5DC7AC6EA99,p0)end;
 	PlaystatsRandomEvent=function(p0--[[@param p0 any]])return InvokeVoid(0x7EA06F970F999394,p0)end;
+	PlaystatsAlert=function(data--[[@param data any*]])return InvokeVoid(0x5649CA22AF74E019,data)end;
 	PlaystatsAttritionStageEnd=function(p0--[[@param p0 any]])return InvokeVoid(0xBD642335A732F1A8,p0)end;
 	PlaystatsShowroomNav=function(p0--[[@param p0 any]],p1--[[@param p1 any]],entity--[[@param entity integer]])return InvokeVoid(0x961D4157B9B428DB,p0,p1,entity)end;
 	--[=[Data struct contains various tunables related to test drives at Simeons Showroom or Luxury Showcase.]=]
@@ -13041,7 +13099,7 @@ Usage of seat
 2 = right back seat
 3 = outside left
 4 = outside right]=]
-	TaskEnterVehicle=function(ped--[[@param ped integer]],vehicle--[[@param vehicle integer]],timeout--[[@param timeout integer]],seat--[[@param seat integer]],speed--[[@param speed number]],flag--[[@param flag integer]],overrideEntryClipsetName--[[@param overrideEntryClipsetName string]])return InvokeVoid(0xC20E50AA46D09CA8,ped,vehicle,timeout,seat,speed+.0,flag,overrideEntryClipsetName)end;
+	TaskEnterVehicle=function(ped--[[@param ped integer]],vehicle--[[@param vehicle integer]],timeout--[[@param timeout integer]],seat--[[@param seat integer]],speed--[[@param speed number]],flag--[[@param flag integer]],overrideEntryClipsetName--[[@param overrideEntryClipsetName string]],p7--[[@param p7 any]])return InvokeVoid(0xC20E50AA46D09CA8,ped,vehicle,timeout,seat,speed+.0,flag,overrideEntryClipsetName,p7)end;
 	--[=[Flags from decompiled scripts:
 0 = normal exit and closes door.
 1 = normal exit and closes door.
@@ -13667,7 +13725,7 @@ usePlayerLaunchForce is unused.]=]
 	TaskClimbLadder=function(ped--[[@param ped integer]],fast--[[@param fast boolean]])return InvokeVoid(0xB6C987F9285A3814,ped,fast)end;
 	--[=[Attaches a ped to a rope and allows player control to rappel down a wall. Disables all collisions while on the rope.
 p10: Usually 1 in the scripts, clipSet: Clipset to use for the task, minZ: Minimum Z that the player can descend to, ropeHandle: Rope to attach this task to created with ADD_ROPE]=]
-	TaskRappelDownWallUsingClipsetOverride=function(ped--[[@param ped integer]],x1--[[@param x1 number]],y1--[[@param y1 number]],z1--[[@param z1 number]],x2--[[@param x2 number]],y2--[[@param y2 number]],z2--[[@param z2 number]],minZ--[[@param minZ number]],ropeHandle--[[@param ropeHandle integer]],clipSet--[[@param clipSet string]],p10--[[@param p10 any]])return InvokeVoid(0xEAF66ACDDC794793,ped,x1+.0,y1+.0,z1+.0,x2+.0,y2+.0,z2+.0,minZ+.0,ropeHandle,clipSet,p10)end;
+	TaskRappelDownWallUsingClipsetOverride=function(ped--[[@param ped integer]],x1--[[@param x1 number]],y1--[[@param y1 number]],z1--[[@param z1 number]],x2--[[@param x2 number]],y2--[[@param y2 number]],z2--[[@param z2 number]],minZ--[[@param minZ number]],ropeHandle--[[@param ropeHandle integer]],clipSet--[[@param clipSet string]],p10--[[@param p10 any]],p11--[[@param p11 any]])return InvokeVoid(0xEAF66ACDDC794793,ped,x1+.0,y1+.0,z1+.0,x2+.0,y2+.0,z2+.0,minZ+.0,ropeHandle,clipSet,p10,p11)end;
 	GetTaskRappelDownWallState=function(ped--[[@param ped integer]])return InvokeInt(0x9D252648778160DF,ped)end;---@return integer
 	--[=[Immediately stops the pedestrian from whatever it's doing. They stop fighting, animations, etc. they forget what they were doing.]=]
 	ClearPedTasksImmediately=function(ped--[[@param ped integer]])return InvokeVoid(0xAAA34F8A7CB32098,ped)end;
@@ -14281,6 +14339,7 @@ Example: TASK::SET_TASK_MOVE_NETWORK_SIGNAL_FLOAT(PLAYER::PLAYER_PED_ID(), "Phas
 	GetTaskMoveNetworkEvent=function(ped--[[@param ped integer]],eventName--[[@param eventName string]])return InvokeBool(0xB4F47213DF45A64C,ped,eventName)end;---@return boolean
 	--[=[Doesn't actually return anything.]=]
 	SetTaskMoveNetworkEnableCollisionOnNetworkCloneWhenFixed=function(ped--[[@param ped integer]],enable--[[@param enable boolean]])return InvokeBool(0x0FFB3C758E8C07B9,ped,enable)end;---@return boolean
+	SetScriptTaskEnableCollisionOnNetworkCloneWhenFixed=function(ped--[[@param ped integer]],enable--[[@param enable boolean]])return InvokeVoid(0x32F6EEF031F943DC,ped,enable)end;
 	IsMoveBlendRatioStill=function(ped--[[@param ped integer]])return InvokeBool(0x349CE7B56DAFD95C,ped)end;---@return boolean
 	IsMoveBlendRatioWalking=function(ped--[[@param ped integer]])return InvokeBool(0xF133BBBE91E1691F,ped)end;---@return boolean
 	IsMoveBlendRatioRunning=function(ped--[[@param ped integer]])return InvokeBool(0xD4D8636C0199A939,ped)end;---@return boolean
@@ -14448,6 +14507,10 @@ VEHICLE::SET_VEHICLE_DOORS_LOCKED_FOR_ALL_PLAYERS(l_11A1, 1);]=]
 	SetVehicleDoorsLockedForTeam=function(vehicle--[[@param vehicle integer]],team--[[@param team integer]],toggle--[[@param toggle boolean]])return InvokeVoid(0xB81F6D4A8F5EEBA8,vehicle,team,toggle)end;
 	SetVehicleDoorsLockedForAllTeams=function(vehicle--[[@param vehicle integer]],toggle--[[@param toggle boolean]])return InvokeVoid(0x203B527D1B77904C,vehicle,toggle)end;
 	SetVehicleDontTerminateTaskWhenAchieved=function(vehicle--[[@param vehicle integer]])return InvokeVoid(0x76D26A22750E849E,vehicle)end;
+	--[=[0.0f = engine rev minimum
+1.0f = engine rev limit]=]
+	SetVehicleMaxLaunchEngineRevs=function(vehicle--[[@param vehicle integer]],modifier--[[@param modifier number]])return InvokeVoid(0x5AE614ECA5FDD423,vehicle,modifier+.0)end;
+	GetVehicleThrottle=function(vehicle--[[@param vehicle integer]])return InvokeFloat(0x92D96892FC06AF22,vehicle)end;---@return number
 	--[=[Explodes a selected vehicle.
 
 Vehicle vehicle = Vehicle you want to explode.
@@ -15339,6 +15402,10 @@ Returns the current state of the vehicles landing gear.]=]
 	GetLandingGearState=function(vehicle--[[@param vehicle integer]])return InvokeInt(0x9B0F3DCA3DB0F4CD,vehicle)end;---@return integer
 	IsAnyVehicleNearPoint=function(x--[[@param x number]],y--[[@param y number]],z--[[@param z number]],radius--[[@param radius number]])return InvokeBool(0x61E1DD6125A3EEE6,x+.0,y+.0,z+.0,radius+.0)end;---@return boolean
 	RequestVehicleHighDetailModel=function(vehicle--[[@param vehicle integer]])return InvokeVoid(0xA6E9FDCB2C76785E,vehicle)end;
+	GetVehicleModelNumDriveGears=function(vehicleModel--[[@param vehicleModel integer]])return InvokeInt(0x61F02E4E9A7A61EA,vehicleModel)end;---@return integer
+	GetVehicleMaxDriveGearCount=function(vehicle--[[@param vehicle integer]])return InvokeInt(0x24910C3D66BA770D,vehicle)end;---@return integer
+	GetVehicleCurrentDriveGear=function(vehicle--[[@param vehicle integer]])return InvokeInt(0x56185A25D45A0DCD,vehicle)end;---@return integer
+	GetVehicleCurrentRevRatio=function(vehicle--[[@param vehicle integer]])return InvokeFloat(0xF9DDA40BC293A61E,vehicle)end;---@return number
 	RemoveVehicleHighDetailModel=function(vehicle--[[@param vehicle integer]])return InvokeVoid(0x00689CDE5F7C6787,vehicle)end;
 	IsVehicleHighDetail=function(vehicle--[[@param vehicle integer]])return InvokeBool(0x1F25887F3C104278,vehicle)end;---@return boolean
 	--[=[REQUEST_VEHICLE_ASSET(GET_HASH_KEY(cargobob3), 3);
@@ -15352,6 +15419,7 @@ blazer]=]
 	RemoveVehicleAsset=function(vehicleAsset--[[@param vehicleAsset integer]])return InvokeVoid(0xACE699C71AB9DEB5,vehicleAsset)end;
 	--[=[Sets how much the crane on the tow truck is raised, where 0.0 is fully lowered and 1.0 is fully raised.]=]
 	SetVehicleTowTruckArmPosition=function(vehicle--[[@param vehicle integer]],position--[[@param position number]])return InvokeVoid(0xFE54B92A344583CA,vehicle,position+.0)end;
+	SetAttachedVehicleToTowTruckArm=function(towTruck--[[@param towTruck integer]],vehicle--[[@param vehicle integer]])return InvokeVoid(0x48BD57D0DD17786A,towTruck,vehicle)end;
 	--[=[HookOffset defines where the hook is attached. leave at 0 for default attachment.]=]
 	AttachVehicleToTowTruck=function(towTruck--[[@param towTruck integer]],vehicle--[[@param vehicle integer]],rear--[[@param rear boolean]],hookOffsetX--[[@param hookOffsetX number]],hookOffsetY--[[@param hookOffsetY number]],hookOffsetZ--[[@param hookOffsetZ number]])return InvokeVoid(0x29A16F8D621C4508,towTruck,vehicle,rear,hookOffsetX+.0,hookOffsetY+.0,hookOffsetZ+.0)end;
 	--[=[First two parameters swapped. Scripts verify that towTruck is the first parameter, not the second.]=]
@@ -15688,6 +15756,8 @@ if (iVar3 == joaat("weapon_stickybomb"))
 	GetVehicleCauseOfDestruction=function(vehicle--[[@param vehicle integer]])return InvokeInt(0xE495D1EF4C91FD20,vehicle)end;---@return integer
 	--[=[Used for helis.]=]
 	OverridePlaneDamageThrehsold=function(vehicle--[[@param vehicle integer]],health--[[@param health number]])return InvokeVoid(0x5EE5632F47AE9695,vehicle,health+.0)end;
+	SetTransmissionReducedGearRatio=function(vehicle--[[@param vehicle integer]],toggle--[[@param toggle boolean]])return InvokeVoid(0x337EF33DA3DDB990,vehicle,toggle)end;
+	GetVehicleDesiredDriveGear=function(vehicle--[[@param vehicle integer]])return InvokeInt(0xFD8CE53356B5D745,vehicle)end;---@return integer
 	--[=[From the driver's perspective, is the left headlight broken.]=]
 	GetIsLeftVehicleHeadlightDamaged=function(vehicle--[[@param vehicle integer]])return InvokeBool(0x5EF77C9ADD3B11A3,vehicle)end;---@return boolean
 	--[=[From the driver's perspective, is the right headlight broken.]=]
@@ -16097,6 +16167,7 @@ ammoAmount -1 = infinite ammo (default value for any spawned vehicle tho)]=]
 	SetVehicleWeaponCanTargetObjects=function(vehicle--[[@param vehicle integer]],toggle--[[@param toggle boolean]])return InvokeVoid(0x86B4B6212CB8B627,vehicle,toggle)end;
 	--[=[Used for blazer5. Changes the quadbike-jetski transformation input from raise/lower convertible roof (hold H by default) to horn (press E by default.)]=]
 	SetVehicleUseBoostButtonForWheelRetract=function(toggle--[[@param toggle boolean]])return InvokeVoid(0x41290B40FA63E6DA,toggle)end;
+	SetVehicleUseHornButtonForNitrous=function(toggle--[[@param toggle boolean]])return InvokeVoid(0x1980F68872CC2C3D,toggle)end;
 	--[=[Parachute models:
 - sr_prop_specraces_para_s_01
 - imp_prop_impexp_para_s (SecuroServ; Default)
@@ -16222,6 +16293,15 @@ The 'point' is either 400.0 or 250.0 units away from the Ped's current coordinat
 	GetLastShuntVehicle=function(vehicle--[[@param vehicle integer]])return InvokeInt(0x04F2FA6E234162F7,vehicle)end;---@return integer
 	SetDisableVehicleExplosionsDamage=function(toggle--[[@param toggle boolean]])return InvokeVoid(0x143921E45EC44D62,toggle)end;
 	SetOverrideNitrousLevel=function(vehicle--[[@param vehicle integer]],toggle--[[@param toggle boolean]],level--[[@param level number]],power--[[@param power number]],rechargeTime--[[@param rechargeTime number]],disableSound--[[@param disableSound boolean]])return InvokeVoid(0xC8E9B6B71B8E660D,vehicle,toggle,level+.0,power+.0,rechargeTime+.0,disableSound)end;
+	SetNitrousIsActive=function(vehicle--[[@param vehicle integer]],enabled--[[@param enabled boolean]])return InvokeVoid(0x465EEA70AF251045,vehicle,enabled)end;
+	SetOverrideTractionLossMultiplier=function(vehicle--[[@param vehicle integer]],modifier--[[@param modifier number]])return InvokeVoid(0xAFD262ACCA64479A,vehicle,modifier+.0)end;
+	--[=[First two floats relate to rumble, the last is a threshold]=]
+	SetDriftSlipAngleLimits=function(vehicle--[[@param vehicle integer]],durationScalar--[[@param durationScalar number]],amplitudeScalar--[[@param amplitudeScalar number]],slipAngleLimit--[[@param slipAngleLimit number]])return InvokeVoid(0xDAF4C98C18AC6F06,vehicle,durationScalar+.0,amplitudeScalar+.0,slipAngleLimit+.0)end;
+	SetMinimumTimeBetweenGearShifts=function(vehicle--[[@param vehicle integer]],time--[[@param time integer]])return InvokeVoid(0x16CFBC5E7EB32861,vehicle,time)end;
+	FullyChargeNitrous=function(vehicle--[[@param vehicle integer]])return InvokeVoid(0x1A2BCC8C636F9226,vehicle)end;
+	GetRemainingNitrousDuration=function(vehicle--[[@param vehicle integer]])return InvokeFloat(0xBEC4B8653462450E,vehicle)end;---@return number
+	IsNitrousActive=function(vehicle--[[@param vehicle integer]])return InvokeBool(0x491E822B2C464FE4,vehicle)end;---@return boolean
+	ClearNitrous=function(vehicle--[[@param vehicle integer]])return InvokeVoid(0xC889AE921400E1ED,vehicle)end;
 	SetIncreaseWheelCrushDamage=function(vehicle--[[@param vehicle integer]],toggle--[[@param toggle boolean]])return InvokeVoid(0x2970EAA18FD5E42F,vehicle,toggle)end;
 	--[=[Sets some global vehicle related bool]=]
 	SetDisableWeaponBladeForces=function(toggle--[[@param toggle boolean]])return InvokeVoid(0x211E95CE9903940C,toggle)end;
@@ -16231,6 +16311,7 @@ The 'point' is either 400.0 or 250.0 units away from the Ped's current coordinat
 	GetDoesVehicleHaveTombstone=function(vehicle--[[@param vehicle integer]])return InvokeBool(0x71AFB258CCED3A27,vehicle)end;---@return boolean
 	--[=[Disables detachable bumber from domnator4, dominator5, dominator6, see https://gfycat.com/SecondUnluckyGosling]=]
 	HideTombstone=function(vehicle--[[@param vehicle integer]],toggle--[[@param toggle boolean]])return InvokeVoid(0xAE71FB656C600587,vehicle,toggle)end;
+	ApplyEmpEffect=function(vehicle--[[@param vehicle integer]])return InvokeVoid(0x249249D74F813EB2,vehicle)end;
 	--[=[Returns whether this vehicle is currently disabled by an EMP mine.]=]
 	GetIsVehicleDisabledByEmp=function(vehicle--[[@param vehicle integer]])return InvokeBool(0x0506ED94363AD905,vehicle)end;---@return boolean
 	SetDisableRetractingWeaponBlades=function(toggle--[[@param toggle boolean]])return InvokeVoid(0x8F0D5BA1C2CC91D7,toggle)end;
@@ -16312,6 +16393,11 @@ Usable wheels:
 	NetworkUseHighPrecisionTrainBlending=function(vehicle--[[@param vehicle integer]],toggle--[[@param toggle boolean]])return InvokeVoid(0xEC0C1D4922AF9754,vehicle,toggle)end;
 	--[=[Only used in R* Script fm_content_cargo]=]
 	SetCheckForEnoughRoomForPed=function(vehicle--[[@param vehicle integer]],p1--[[@param p1 boolean]])return InvokeVoid(0xEF9D388F8D377F44,vehicle,p1)end;
+	--[=[_SET_ALLOW_R* - _SET_ALLOW_V*]=]
+	SetAllowCollisionWhenInVehicle=function(vehicle--[[@param vehicle integer]],toggle--[[@param toggle boolean]])return InvokeVoid(0x27D27223E8EF22ED,vehicle,toggle)end;
+	IsVehicleGen9ExclusiveModel=function(vehicleModel--[[@param vehicleModel integer]])return InvokeBool(0x6638C0F19DE692FE,vehicleModel)end;---@return boolean
+	GetVehicleMaxExhaustBoneCount=function()return InvokeInt(0x3EE18B00CD86C54F)end;---@return integer
+	GetVehicleExhaustBone=function(vehicle--[[@param vehicle integer]],index--[[@param index integer]],boneIndex--[[@param boneIndex integer*]],axisX--[[@param axisX boolean*]])return InvokeBool(0xE728F090D538CB18,vehicle,index,boneIndex,axisX)end;---@return boolean
 }
 _G.Water={
 	--[=[This function set height to the value of z-axis of the water surface.
@@ -16730,6 +16816,7 @@ Full list of weapons by DurtyFree: https://github.com/DurtyFree/gta-v-data-dumps
 	--[=[Returns handle of the projectile.]=]
 	SetPedShootOrdnanceWeapon=function(ped--[[@param ped integer]],p1--[[@param p1 number]])return InvokeInt(0xB4C8D77C80C0421E,ped,p1+.0)end;---@return integer
 	RequestWeaponHighDetailModel=function(weaponObject--[[@param weaponObject integer]])return InvokeVoid(0x48164DBB970AC3F0,weaponObject)end;
+	SetWeaponPedDamageModifier=function(weapon--[[@param weapon integer]],damageModifier--[[@param damageModifier number]])return InvokeVoid(0x1091922715B68DF0,weapon,damageModifier+.0)end;
 	--[=[Changes the weapon damage output by the given multiplier value. Must be run every frame.
 Full list of weapons by DurtyFree: https://github.com/DurtyFree/gta-v-data-dumps/blob/master/weapons.json]=]
 	SetWeaponDamageModifier=function(weaponHash--[[@param weaponHash integer]],damageMultiplier--[[@param damageMultiplier number]])return InvokeVoid(0x4757F00BC6323CFE,weaponHash,damageMultiplier+.0)end;
