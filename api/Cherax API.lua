@@ -210,7 +210,7 @@ function CPed:IsVehicle() end
 ---@field public Throttle number
 ---@field public Brake number
 ---@field public Nitrous boolean
----@field public DirtLevel number
+---@field public DirtLevel number # 0.0=fully clean, 15.0=maximum dirt visible
 ---@field public BodyDirtColor integer
 ---@field public HeadlightMultiplier number
 ---@field public VehicleTopSpeedPercent number
@@ -1840,33 +1840,33 @@ SpecificPedTask = {}
 Stats = {}
 
 ---@param hash integer
----@return boolean, integer
+---@return boolean success, integer value
 ---@nodiscard
 function Stats.GetBool(hash) end
 
 ---@param hash integer
----@return boolean, number
+---@return boolean success, number value
 ---@nodiscard
 function Stats.GetFloat(hash) end
 
 ---@param hash integer
----@return boolean, integer
+---@return boolean success, integer value
 ---@nodiscard
 function Stats.GetInt(hash) end
 
 ---@param hash integer
 ---@param value integer
----@return boolean
+---@return boolean success
 function Stats.SetBool(hash, value) end
 
 ---@param hash integer
 ---@param value number
----@return boolean
+---@return boolean success
 function Stats.SetFloat(hash, value) end
 
 ---@param hash integer
 ---@param value integer
----@return boolean
+---@return boolean success
 function Stats.SetInt(hash, value) end
 
 ---@class Tab
@@ -1985,10 +1985,11 @@ function Utils.ConvertWorldToSectorPosition(pos) end
 ---@param z number
 ---@param dynamic boolean
 ---@param isNetworked? boolean
+---|> true
 ---@return integer
 function Utils.CreateObject(hash, x, y, z, dynamic, isNetworked) end
 
---- Spawns a vehicle in front of the given player. Should only be executed in a native thread.
+--- Spawns a ped. Should only be executed in a native thread.
 ---@param hash integer
 ---@param pedType integer
 ---@param x number
@@ -1996,7 +1997,9 @@ function Utils.CreateObject(hash, x, y, z, dynamic, isNetworked) end
 ---@param z number
 ---@param heading number
 ---@param isNetworked? boolean
----@param autoCleanup? boolean
+---|> true
+---@param autoCleanup? boolean # if set to false model won't be set as no longer needed
+---|> true
 ---@return integer
 function Utils.CreatePed(hash, pedType, x, y, z, heading, isNetworked, autoCleanup) end
 
@@ -2014,6 +2017,7 @@ function Utils.CreateRandomPed(x, y, z) end
 ---@param z number
 ---@param dynamic boolean
 ---@param isNetworked? boolean
+---|> true
 ---@return integer
 function Utils.CreateWorldObject(hash, x, y, z, dynamic, isNetworked) end
 
@@ -2206,7 +2210,9 @@ function Utils.SetSelectedPlayer(playerId) end
 ---@param z number
 ---@param heading number
 ---@param isNetworked? boolean
----@param autoCleanup? boolean
+---|> true
+---@param autoCleanup? boolean # if set to false model won't be set as no longer needed
+---|> true
 ---@return integer
 function Utils.SpawnVehicle(hash, x, y, z, heading, isNetworked, autoCleanup) end
 
@@ -2214,6 +2220,7 @@ function Utils.SpawnVehicle(hash, x, y, z, heading, isNetworked, autoCleanup) en
 ---@param hash integer|string
 ---@param player integer
 ---@param forward? number
+---|> 5.0
 ---@return integer
 function Utils.SpawnVehicleForPlayer(hash, player, forward) end
 
