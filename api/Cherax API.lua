@@ -1998,7 +1998,7 @@ function Utils.CreateObject(hash, x, y, z, dynamic, isNetworked) end
 ---@param heading number
 ---@param isNetworked? boolean
 ---|> true
----@param autoCleanup? boolean # if set to false model won't be set as no longer needed
+---@param autoCleanup? boolean # if set to false entity won't be set as no longer needed
 ---|> true
 ---@return integer
 function Utils.CreatePed(hash, pedType, x, y, z, heading, isNetworked, autoCleanup) end
@@ -2211,7 +2211,7 @@ function Utils.SetSelectedPlayer(playerId) end
 ---@param heading number
 ---@param isNetworked? boolean
 ---|> true
----@param autoCleanup? boolean # if set to false model won't be set as no longer needed
+---@param autoCleanup? boolean # if set to false entity won't be set as no longer needed
 ---|> true
 ---@return integer
 function Utils.SpawnVehicle(hash, x, y, z, heading, isNetworked, autoCleanup) end
