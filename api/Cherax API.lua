@@ -172,10 +172,6 @@ function CPed:IsInvincible() end
 
 ---@return boolean
 ---@nodiscard
-function CPed:IsLocalPed() end
-
----@return boolean
----@nodiscard
 function CPed:IsObject() end
 
 ---@return boolean
@@ -527,8 +523,6 @@ function EventMgr.RegisterHandler(event, func) end
 function EventMgr.RemoveHandler(id) end
 
 ---@class Feature
----@field public Name string
----@field public Desc string
 Feature = {}
 
 --- Adds a hotkey for the feature and returns itself.
@@ -572,6 +566,18 @@ function Feature:GetBoolValue() end
 ---@return integer r, integer g, integer b, integer a
 ---@nodiscard
 function Feature:GetColor() end
+
+--- Get the description of the feature.
+---@param translate? boolean
+---|> true
+---@return string
+function Feature:GetDesc(translate) end
+
+--- Get the name of the feature.
+---@param translate? boolean
+---|> true
+---@return string
+function Feature:GetName(translate) end
 
 --- Returns the minimum and maximum floating value.
 ---@return number min, number max
@@ -651,6 +657,12 @@ function Feature:GetRenderBefore() end
 ---@return eFeatureType _type
 ---@nodiscard
 function Feature:GetType() end
+
+--- Returns whether the list index has been toggled for types like ComboToggles.
+---@param index integer
+---@return boolean
+---@nodiscord
+function Feature:IsListIndexToggled(index) end
 
 --- Returns whether the feature should be saved in settings or not.
 ---@return boolean
@@ -735,6 +747,16 @@ function Feature:SetColor(r, g, b, a) end
 ---@return self
 function Feature:SetDefaultValue(value) end
 
+--- Set the description of the feature.
+---@param desc string
+----@return self
+function Feature:SetDesc(desc) end
+
+--- Set the name of the feature.
+---@param name string
+----@return self
+function Feature:SetName(name) end
+
 --- Sets the feature fast step size used in a slider.
 ---@param step number
 ---@return self
@@ -813,6 +835,12 @@ function Feature:SetVisible(visible) end
 
 --- Flips the current boolean value of this feature.
 function Feature:Toggle() end
+
+--- Toggles the list index for types like ComboToggles.
+---@param index integer
+---@param toggle boolean
+---@return self
+function Feature:ToggleListIndex(index, toggle) end
 
 function Feature:TriggerCallback() end
 
@@ -911,6 +939,13 @@ function FeatureMgr.GetFeatureFloat(hash) end
 ---@return integer value
 ---@nodiscard
 function FeatureMgr.GetFeatureInt(hash) end
+
+--- Returns all string items of the feature list.
+---@overload fun(hash: integer, index: integer): integer
+---@param hash integer
+---@return string[]
+---@nodiscard
+function FeatureMgr.GetFeatureList(hash) end
 
 --- Returns the current index of the feature list.
 ---@overload fun(hash: integer, index: integer): integer
@@ -1556,6 +1591,12 @@ function Players.GetByPeerId(peerId) end
 ---@nodiscard
 function Players.GetByRockstarId(rid) end
 
+--- Gets the player's CPed
+---@param rid integer
+---@return CPed?
+---@nodiscard
+function Players.GetCPed(rid) end
+
 --- Returns the player SocketAddress.
 ---@param playerId integer
 ---@return SocketAddress
@@ -1715,8 +1756,10 @@ function Script.ExecuteAsScript(scriptName, fn) end
 function Script.QueueJob(func, ...) end
 
 --- Register a script that will be called in a loop.
----@param func function
-function Script.RegisterLooped(func) end
+---@generic var_args: any
+---@param func fun(...: var_args)
+---@param ...var_args
+function Script.RegisterLooped(func, ...) end
 
 --- Sleeps for the given time in milliseconds. Should only be executed in a native thread.
 ---@param ms? integer
@@ -1749,6 +1792,12 @@ function ScriptGlobal.GetPtr(global) end
 ---@return string
 ---@nodiscard
 function ScriptGlobal.GetString(global) end
+
+--- Returns a pointer to the tunable. Returns 0 if not found.
+---@param hash integer
+---@return integer
+---@nodiscard
+function ScriptGlobal.GetTunableByHash(hash) end
 
 ---@param global integer
 ---@param value boolean
@@ -2169,7 +2218,7 @@ function Utils.MciSendString(str) end
 function Utils.PlaySound(str, looped) end
 
 --- Converts a CEntity pointer into an entity handle.
----@param ptr CEntity
+---@param ptr CEntity|CPed|CVehicle
 ---@return integer
 ---@nodiscard
 function Utils.PointerToHandle(ptr) end
@@ -2463,8 +2512,8 @@ eFeatureType = {
     List = 11,
     ListWithInfo = 12,
     Combo = 13,
-    TreeNode = 14,
-    Custom = 15
+    ComboToggles = 14,
+    Custom = 16
 }
 
 ---@enum eToastPos

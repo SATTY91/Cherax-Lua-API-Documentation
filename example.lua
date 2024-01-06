@@ -5,6 +5,23 @@ require("natives/natives")
 local MAXN_PLAYERS = 32
 local INVALID_PLAYER_INDEX = -1
 
+local playerExplodeLoopTimer = {} ---@type integer[]
+for playerId = 0, MAXN_PLAYERS - 1 do
+    playerExplodeLoopTimer[playerId] = Utils.GetTimeEpocheMs()
+end
+
+---@param playerId integer
+---@param time integer
+---@return boolean
+local function hasPlayerExplodeLoopTimerElapsedWithReset(playerId, time)
+    if playerExplodeLoopTimer[playerId] > Utils.GetTimeEpocheMs() - time then
+        return false
+    end
+
+    playerExplodeLoopTimer[playerId] = Utils.GetTimeEpocheMs()
+    return true
+end
+
 ---@param playerId integer
 local function explodePlayer(playerId)
     local pedHnd = PLAYER.GET_PLAYER_PED_SCRIPT_INDEX(playerId)
@@ -19,12 +36,13 @@ FeatureMgr.AddPlayerFeature(Utils.Joaat("LUA_BlockSEs"), "Block Incoming SEs", e
 
 local features = FeatureMgr.AddPlayerFeature(Utils.Joaat("LUA_ExplodeLoop"), "Explode Loop", eFeatureType.SliderIntToggle, "Use slider to set explosions delay",
     function(f)
-        if f:IsToggled() then
-            local playerId = f:GetPlayerIndex()
-            explodePlayer(playerId)
+        local playerId = f:GetPlayerIndex()
+        local delay = f:GetIntValue()
 
-            local delay = f:GetIntValue()
-            Script.Yield(delay)
+        if f:IsToggled() and
+            hasPlayerExplodeLoopTimerElapsedWithReset(playerId, delay)
+        then
+            explodePlayer(playerId)
         end
     end)
 
