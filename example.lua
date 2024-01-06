@@ -114,6 +114,10 @@ FeatureMgr.AddFeature(Utils.Joaat("LUA_ListWithInfo"), "ListWithInfo", eFeatureT
 FeatureMgr.AddFeature(Utils.Joaat("LUA_Combo"), "Combo", eFeatureType.Combo)
     :SetList({"Eins", "Zwei", "Drei"})
 
+FeatureMgr.AddFeature(Utils.Joaat("LUA_ComboToggles"), "ComboToggles", eFeatureType.ComboToggles)
+    :SetList({"Eins", "Zwei", "Drei"})
+    :ToggleListIndex(0, true)
+
 ---@param sender? NetGamePlayer
 ---@param args integer[]
 ---@return boolean # return true to block
@@ -183,8 +187,8 @@ local function childWindow()
         ClickGUI.RenderFeature(Utils.Joaat("LUA_InputText"))
         ClickGUI.RenderFeature(Utils.Joaat("LUA_InputColor3"))
         ClickGUI.RenderFeature(Utils.Joaat("LUA_InputColor4"))
-        ClickGUI.RenderFeature(Utils.Joaat("LUA_ListWithInfo"))
         ClickGUI.RenderFeature(Utils.Joaat("LUA_Combo"))
+        ClickGUI.RenderFeature(Utils.Joaat("LUA_ComboToggles"))
 
         ClickGUI.EndCustomChildWindow()
     end
