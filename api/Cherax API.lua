@@ -410,7 +410,9 @@ function Curl:AddHeader(header) end
 
 --- Create a new curl object.  
 --- ```lua
---- Curl.Easy():Setopt(eCurlOption.CURLOPT_URL, "https://www.google.com/"):Perform()
+--- local luaCurl = Curl.Easy()
+--- luaCurl:Setopt(eCurlOption.CURLOPT_URL, "https://www.google.com/")
+--- luaCurl:Perform()
 --- ```
 ---@return Curl
 ---@nodiscard
@@ -669,6 +671,11 @@ function Feature:IsListIndexToggled(index) end
 ---@nodiscard
 function Feature:IsSaveable() end
 
+--- Gets whether a feature can be found by search or not.
+---@return boolean
+---@nodiscard
+function Feature:IsSearchable() end
+
 --- Returns whether the feature can be toggled or not.
 ---@return boolean
 ---@nodiscard
@@ -807,6 +814,11 @@ function Feature:SetNoCallbackOnPress(disable) end
 ---@param saveable boolean
 ---@return self
 function Feature:SetSaveable(saveable) end
+
+--- Sets whether a feature can be found by search or not.
+---@param searchable boolean
+---@return self
+function Feature:SetSearchable(searchable) end
 
 --- This disables the callback for OnSettingsLoad.
 ---@param disable boolean
@@ -1011,6 +1023,14 @@ function FeatureMgr.ResetFeature(hash) end
 --- Resets all player features for given player id.
 ---@param playerIndex integer
 function FeatureMgr.ResetPlayerFeatures(playerIndex) end
+
+--- Searches the best matching features for a given result. Uses translations for results. You should cache results whenever input changes. Expensive execution time.
+---@param input string
+---@param maxResults integer
+---@param cutoffPercent number
+---@return integer[]
+---@nodiscard
+function FeatureMgr.SearchFeature(input, maxResults, cutoffPercent) end
 
 --- Sets the color value of the feature.
 ---@overload fun(hash: integer, index: integer, r: integer, g: integer, b: integer, a: integer)
@@ -1548,6 +1568,13 @@ PlayerGameStateFlags = {}
 
 ---@class Players
 Players = {}
+
+--- Returns the players for a given filter.
+---@param filter ePlayerListSort
+---@param search string
+---@return integer[]
+---@nodiscard
+function Players.Get(filter, search) end
 
 --- Returns the NetGamePlayer for a given connection id.
 ---@param cxn integer
@@ -2574,4 +2601,12 @@ eReportReason = {
     GAME_SERVER_SERVER_INTEGRITY = 9,
     SCRIPT_CHEAT_DETECTION = 10,
     TELEMETRY_BLOCK = 11
+}
+
+---@enum ePlayerListSort
+ePlayerListSort = {
+    PLAYER_ID = 0,
+    HOST_QUEUE = 1,
+    ALPHABETICAL = 2,
+    DISTANCE = 3
 }
