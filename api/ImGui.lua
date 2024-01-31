@@ -160,7 +160,7 @@ function ImGui.AddTriangleFilled(x1, y1, x2, y2, x3, y3, r, g, b, a) end
 
 ---@param strId string
 ---@param columns integer
----@param flags ImGuiTableFlags|integer
+---@param flags ImGuiTableFlags | integer
 ---@return boolean
 function ImGui.BeginTable(strId, columns, flags) end
 
@@ -196,7 +196,7 @@ function ImGui.TableNextRow() end
 function ImGui.TableSetColumnIndex(column) end
 
 ---@param strId string
----@param flags ImGuiTableColumnFlags|integer
+---@param flags ImGuiTableColumnFlags | integer
 function ImGui.TableSetupColumn(strId, flags) end
 
 --------------------------------------------------------------
@@ -205,8 +205,7 @@ function ImGui.TableSetupColumn(strId, flags) end
 
 ---@param name string
 ---@param open? boolean
----@param flags? ImGuiWindowFlags|integer
----@return boolean open, boolean shouldDraw
+---@param flags? ImGuiWindowFlags | integer
 function ImGui.Begin(name, open, flags) end
 
 function ImGui.End() end
@@ -219,7 +218,7 @@ function ImGui.End() end
 ---@param size_x? number
 ---@param size_y? number
 ---@param border? boolean
----@param flags? ImGuiWindowFlags|integer
+---@param flags? ImGuiWindowFlags | integer
 ---@return boolean shouldDraw
 function ImGui.BeginChild(name, size_x, size_y, border , flags) end
 
@@ -237,12 +236,12 @@ function ImGui.IsWindowAppearing() end
 ---@nodiscard
 function ImGui.IsWindowCollapsed() end
 
----@param flags? ImGuiFocusedFlags|integer
+---@param flags? ImGuiFocusedFlags | integer
 ---@return boolean focused
 ---@nodiscard
 function ImGui.IsWindowFocused(flags) end
 
----@param flags? ImGuiHoveredFlags|integer
+---@param flags? ImGuiHoveredFlags | integer
 ---@return boolean hovered
 ---@nodiscard
 function ImGui.IsWindowHovered(flags) end
@@ -581,8 +580,8 @@ function ImGui.GetID(str_id) end
 ---@param text_end? string
 function ImGui.TextUnformatted(text, text_end) end
 
----@param text string
-function ImGui.Text(text) end
+---@param fmt string
+function ImGui.Text(fmt, ...) end
 
 ---@param color_r number
 ---@param color_g number
@@ -591,18 +590,18 @@ function ImGui.Text(text) end
 ---@param text string
 function ImGui.TextColored(color_r, color_g, color_b, color_a, text) end
 
----@param text string
-function ImGui.TextDisabled(text) end
+---@param fmt string
+function ImGui.TextDisabled(fmt, ...) end
 
----@param text string
-function ImGui.TextWrapped(text) end
+---@param fmt string
+function ImGui.TextWrapped(fmt, ...) end
 
 ---@param label string
 ---@param text string
 function ImGui.LabelText(label, text) end
 
----@param text string
-function ImGui.BulletText(text) end
+---@param fmt string
+function ImGui.BulletText(fmt, ...) end
 
 --------------------------------------------------------------
 --- Widgets: Main
@@ -654,7 +653,7 @@ function ImGui.Bullet() end
 
 ---@param label string
 ---@param previewValue string
----@param flags? ImGuiComboFlags|integer
+---@param flags? ImGuiComboFlags | integer
 ---@return boolean shouldDraw
 function ImGui.BeginCombo(label, previewValue, flags) end
 
@@ -856,7 +855,7 @@ function ImGui.VSliderInt(label, size_x, size_y, value, value_min, value_max, fo
 
 ---@param label string
 ---@param text string
----@param flags? ImGuiInputTextFlags|integer
+---@param flags? ImGuiInputTextFlags | integer
 ---@return string text, boolean selected
 function ImGui.InputText(label, text, flags) end
 
@@ -864,14 +863,14 @@ function ImGui.InputText(label, text, flags) end
 ---@param text string
 ---@param size_x? number
 ---@param size_y? number
----@param flags? ImGuiInputTextFlags|integer
+---@param flags? ImGuiInputTextFlags | integer
 ---@return string text, boolean selected
 function ImGui.InputTextMultiline(label, text, size_x, size_y, flags) end
 
 ---@param label string
 ---@param hint string
 ---@param text string
----@param flags? ImGuiInputTextFlags|integer
+---@param flags? ImGuiInputTextFlags | integer
 ---@return string text, boolean selected
 function ImGui.InputTextWithHint(label, hint, text, flags) end
 
@@ -880,28 +879,28 @@ function ImGui.InputTextWithHint(label, hint, text, flags) end
 ---@param step? number
 ---@param step_fast? number
 ---@param format? string
----@param flags? ImGuiInputTextFlags|integer
+---@param flags? ImGuiInputTextFlags | integer
 ---@return number value, boolean used
 function ImGui.InputFloat(label, value, step, step_fast, format, flags) end
 
 ---@param label string
 ---@param values table
 ---@param format? string
----@param flags? ImGuiInputTextFlags|integer
+---@param flags? ImGuiInputTextFlags | integer
 ---@return table values, boolean used
 function ImGui.InputFloat2(label, values, format, flags) end
 
 ---@param label string
 ---@param values table
 ---@param format? string
----@param flags? ImGuiInputTextFlags|integer
+---@param flags? ImGuiInputTextFlags | integer
 ---@return table values, boolean used
 function ImGui.InputFloat3(label, values, format, flags) end
 
 ---@param label string
 ---@param values table
 ---@param format? string
----@param flags? ImGuiInputTextFlags|integer
+---@param flags? ImGuiInputTextFlags | integer
 ---@return table values, boolean used
 function ImGui.InputFloat4(label, values, format, flags) end
 
@@ -909,25 +908,25 @@ function ImGui.InputFloat4(label, values, format, flags) end
 ---@param value integer
 ---@param step? integer
 ---@param step_fast? integer
----@param flags? ImGuiInputTextFlags|integer
+---@param flags? ImGuiInputTextFlags | integer
 ---@return integer value, boolean used
 function ImGui.InputInt(label, value, step, step_fast, flags) end
 
 ---@param label string
 ---@param values table
----@param flags? ImGuiInputTextFlags|integer
+---@param flags? ImGuiInputTextFlags | integer
 ---@return table values, boolean used
 function ImGui.InputInt2(label, values, flags) end
 
 ---@param label string
 ---@param values table
----@param flags? ImGuiInputTextFlags|integer
+---@param flags? ImGuiInputTextFlags | integer
 ---@return table values, boolean used
 function ImGui.InputInt3(label, values, flags) end
 
 ---@param label string
 ---@param values table
----@param flags? ImGuiInputTextFlags|integer
+---@param flags? ImGuiInputTextFlags | integer
 ---@return table values, boolean used
 function ImGui.InputInt4(label, values, flags) end
 
@@ -936,7 +935,7 @@ function ImGui.InputInt4(label, values, flags) end
 ---@param step? number
 ---@param step_fast? number
 ---@param format? string
----@param flags? ImGuiInputTextFlags|integer
+---@param flags? ImGuiInputTextFlags | integer
 ---@return number value, boolean used
 function ImGui.InputDouble(label, value, step, step_fast, format, flags) end
 
@@ -946,37 +945,37 @@ function ImGui.InputDouble(label, value, step, step_fast, format, flags) end
 
 ---@param label string
 ---@param col table
----@param flags? ImGuiColorEditFlags|integer
+---@param flags? ImGuiColorEditFlags | integer
 ---@return table col, boolean used
 function ImGui.ColorEdit3(label, col, flags) end
 
 ---@param label string
 ---@param col table
----@param flags? ImGuiColorEditFlags|integer
+---@param flags? ImGuiColorEditFlags | integer
 ---@return table col, boolean used
 function ImGui.ColorEdit4(label, col, flags) end
 
 ---@param label string
 ---@param col table
----@param flags? ImGuiColorEditFlags|integer
+---@param flags? ImGuiColorEditFlags | integer
 ---@return table col, boolean used
 function ImGui.ColorPicker3(label, col, flags) end
 
 ---@param label string
 ---@param col table
----@param flags? ImGuiColorEditFlags|integer
+---@param flags? ImGuiColorEditFlags | integer
 ---@return table col, boolean used
 function ImGui.ColorPicker4(label, col, flags) end
 
 ---@param desc_id string
 ---@param col table
----@param flags? ImGuiColorEditFlags|integer
+---@param flags? ImGuiColorEditFlags | integer
 ---@param size_x? number
 ---@param size_y? number
 ---@return boolean pressed
 function ImGui.ColorButton(desc_id, col, flags, size_x, size_y) end
 
----@param flags ImGuiColorEditFlags|integer
+---@param flags ImGuiColorEditFlags | integer
 function ImGui.SetColorEditOptions(flags) end
 
 --------------------------------------------------------------
@@ -989,7 +988,7 @@ function ImGui.SetColorEditOptions(flags) end
 function ImGui.TreeNode(label, fmt) end
 
 ---@param label string
----@param flags? ImGuiTreeNodeFlags|integer
+---@param flags? ImGuiTreeNodeFlags | integer
 ---@param fmt? string
 ---@return boolean open
 function ImGui.TreeNodeEx(label, flags, fmt) end
@@ -1003,9 +1002,9 @@ function ImGui.TreePop() end
 ---@nodiscard
 function ImGui.GetTreeNodeToLabelSpacing() end
 
----@overload fun(label: string, open: boolean, flags?: ImGuiTreeNodeFlags|integer): open: boolean, notCollapsed: boolean
+---@overload fun(label: string, open: boolean, flags?: ImGuiTreeNodeFlags | integer): open: boolean, notCollapsed: boolean
 ---@param label string
----@param flags? ImGuiTreeNodeFlags|integer
+---@param flags? ImGuiTreeNodeFlags | integer
 ---@return boolean notCollapsed
 function ImGui.CollapsingHeader(label, flags) end
 
@@ -1019,7 +1018,7 @@ function ImGui.SetNextItemOpen(open, cond) end
 
 ---@param label string
 ---@param selected? boolean
----@param flags? ImGuiSelectableFlags|integer
+---@param flags? ImGuiSelectableFlags | integer
 ---@param size_x? number
 ---@param size_y? number
 ---@return boolean selected
@@ -1097,46 +1096,46 @@ function ImGui.SetTooltip(fmt) end
 --------------------------------------------------------------
 
 ---@param str_id string
----@param flags? ImGuiWindowFlags|integer
+---@param flags? ImGuiWindowFlags | integer
 ---@return boolean open
 function ImGui.BeginPopup(str_id, flags) end
 
 ---@param name string
 ---@param open? boolean
----@param flags? ImGuiWindowFlags|integer
+---@param flags? ImGuiWindowFlags | integer
 ---@return boolean open
 function ImGui.BeginPopupModal(name, open, flags) end
 
 function ImGui.EndPopup() end
 
 ---@param str_id string
----@param popup_flags ImGuiPopupFlags|integer
+---@param popup_flags ImGuiPopupFlags | integer
 function ImGui.OpenPopup(str_id, popup_flags) end
 
 ---@param str_id string
----@param popup_flags ImGuiPopupFlags|integer
+---@param popup_flags ImGuiPopupFlags | integer
 ---@return boolean open
 function ImGui.OpenPopupContextItem(str_id, popup_flags) end
 
 function ImGui.CloseCurrentPopup() end
 
 ---@param str_id string
----@param popup_flags ImGuiPopupFlags|integer
+---@param popup_flags ImGuiPopupFlags | integer
 ---@return boolean open
 function ImGui.BeginPopupContextItem(str_id, popup_flags) end
 
 ---@param str_id string
----@param popup_flags ImGuiPopupFlags|integer
+---@param popup_flags ImGuiPopupFlags | integer
 ---@return boolean open
 function ImGui.BeginPopupContextWindow(str_id, popup_flags) end
 
 ---@param str_id string
----@param popup_flags ImGuiPopupFlags|integer
+---@param popup_flags ImGuiPopupFlags | integer
 ---@return boolean open
 function ImGui.BeginPopupContextVoid(str_id, popup_flags) end
 
 ---@param str_id string
----@param popup_flags ImGuiPopupFlags|integer
+---@param popup_flags ImGuiPopupFlags | integer
 ---@return boolean
 ---@nodiscard
 function ImGui.IsPopupOpen(str_id, popup_flags) end
@@ -1183,13 +1182,13 @@ function ImGui.GetColumnsCount() end
 --------------------------------------------------------------
 
 ---@param str_id string
----@param flags ImGuiTabBarFlags|integer
+---@param flags ImGuiTabBarFlags | integer
 ---@return boolean open
 function ImGui.BeginTabBar(str_id, flags) end
 
 function ImGui.EndTabBar() end
 
----@overload fun(label: string, open: boolean, flags?: ImGuiTabItemFlags|integer): open: boolean, selected: boolean
+---@overload fun(label: string, open: boolean, flags?: ImGuiTabItemFlags | integer): open: boolean, selected: boolean
 ---@param label string
 ---@return boolean selected
 function ImGui.BeginTabItem(label) end
@@ -1246,7 +1245,7 @@ function ImGui.SetKeyboardFocusHere(offset) end
 --- Item / Widgets Utilities
 --------------------------------------------------------------
 
----@param flags? ImGuiHoveredFlags|integer
+---@param flags? ImGuiHoveredFlags | integer
 ---@return boolean hovered
 ---@nodiscard
 function ImGui.IsItemHovered(flags) end
@@ -1341,7 +1340,7 @@ function ImGui.GetStyleColorName(idx) end
 ---@param id integer
 ---@param size_x number
 ---@param size_y number
----@param flags? ImGuiWindowFlags|integer
+---@param flags? ImGuiWindowFlags | integer
 ---@return boolean open
 function ImGui.BeginChildFrame(id, size_x, size_y, flags) end
 

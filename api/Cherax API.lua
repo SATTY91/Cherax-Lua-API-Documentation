@@ -410,6 +410,7 @@ function Curl:AddHeader(header) end
 
 --- Create a new curl object.  
 --- ```lua
+--- -- make sure that this object doesn't go out of scope, idk cytox can't code it properly
 --- local luaCurl = Curl.Easy()
 --- luaCurl:Setopt(eCurlOption.CURLOPT_URL, "https://www.google.com/")
 --- luaCurl:Perform()
@@ -436,7 +437,7 @@ function Curl:Perform() end
 --- object:Setopt(eCurlOption.CURLOPT_URL, "https://www.google.com/")
 --- ```
 ---@param option eCurlOption
----@param str string|integer
+---@param str string | integer
 ---@return self
 function Curl:Setopt(option, str) end
 
@@ -750,7 +751,7 @@ function Feature:SetBoolValue(value) end
 function Feature:SetColor(r, g, b, a) end
 
 --- Sets the default feature value and returns itself.
----@param value boolean|number
+---@param value boolean | number
 ---@return self
 function Feature:SetDefaultValue(value) end
 
@@ -836,7 +837,7 @@ function Feature:SetStepSize(value) end
 function Feature:SetStringValue(value) end
 
 --- Sets the current feature value and returns itself.
----@param value integer|number|string|boolean
+---@param value integer | number | string | boolean
 ---@return self
 function Feature:SetValue(value) end
 
@@ -2214,6 +2215,11 @@ function Utils.GetTimeEpoche() end
 ---@nodiscard
 function Utils.GetTimeEpocheMs() end
 
+--- Force another player take control of the given entity.
+---@param playerId integer
+---@param iEntity integer
+function Utils.GiveControl(playerId, iEntity) end
+
 --- Give a sepcific player script host of the given script.
 ---@param playerId integer
 ---@param scriptHash integer
@@ -2245,7 +2251,7 @@ function Utils.MciSendString(str) end
 function Utils.PlaySound(str, looped) end
 
 --- Converts a CEntity pointer into an entity handle.
----@param ptr CEntity|CPed|CVehicle
+---@param ptr CEntity | CPed | CVehicle
 ---@return integer
 ---@nodiscard
 function Utils.PointerToHandle(ptr) end
@@ -2280,7 +2286,7 @@ function Utils.SetLabelText(label, text) end
 function Utils.SetSelectedPlayer(playerId) end
 
 --- Should only be executed in a native thread.
----@param hash integer|string
+---@param hash integer | string
 ---@param x number
 ---@param y number
 ---@param z number
@@ -2293,7 +2299,7 @@ function Utils.SetSelectedPlayer(playerId) end
 function Utils.SpawnVehicle(hash, x, y, z, heading, isNetworked, autoCleanup) end
 
 --- Spawns a vehicle in front of the given player. Should only be executed in a native thread.
----@param hash integer|string
+---@param hash integer | string
 ---@param player integer
 ---@param forward? number
 ---|> 5.0
@@ -2307,8 +2313,10 @@ function Utils.StopSound() end
 ---@overload fun(bitflags: integer, ...: integer): integer
 ---@param bitflags integer
 ---@param arguments integer[]
+---@param ingoreChecks boolean
+---|> false
 ---@return integer
-function Utils.TriggerScriptEvent(bitflags, arguments) end
+function Utils.TriggerScriptEvent(bitflags, arguments, ingoreChecks) end
 
 --- Converts a 3D world position to a 2D normalized screen position. To get the actual screen coordinates multiply them with the screen size.
 ---@overload fun(position: V3): V2
