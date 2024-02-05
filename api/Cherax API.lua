@@ -1778,15 +1778,15 @@ Script = {}
 function Script.ExecuteAsScript(scriptName, fn) end
 
 --- Queues a function that will be exeucted in a native thread.
----@generic var_args: any
----@param func fun(...: var_args)
----@param ...var_args
+---@generic TAny: any
+---@param func fun(...: TAny)
+---@param ...TAny
 function Script.QueueJob(func, ...) end
 
 --- Register a script that will be called in a loop.
----@generic var_args: any
----@param func fun(...: var_args)
----@param ...var_args
+---@generic TAny: any
+---@param func fun(...: TAny)
+---@param ...TAny
 function Script.RegisterLooped(func, ...) end
 
 --- Sleeps for the given time in milliseconds. Should only be executed in a native thread.
@@ -1961,9 +1961,27 @@ function Tab:AddSeparator(text) end
 ---@return Tab
 function Tab:AddSubTab(text, desc) end
 
+---@param index integer
+---@return ListWidget
+---@nodiscard
+function Tab:GetContent(index) end
+
+--- Returns the number of widgets in this tab.
+---@return integer
+---@nodiscard
+function Tab:GetContentSize() end
+
 ---@return string
 ---@nodiscard
 function Tab:GetDesc() end
+
+---@return ListWidget
+---@nodiscard
+function Tab:GetSelectedContent() end
+
+---@return integer
+---@nodiscard
+function Tab:GetSelectedContentId() end
 
 --- Returns a sub tab by name.
 ---@param text string
@@ -1975,8 +1993,15 @@ function Tab:GetSubTab(text) end
 ---@nodiscard
 function Tab:GetText() end
 
+--- Removes a sub tab and returns the amount of removed tab buttons.
+---@param tab Tab
+function Tab:RemoveSubTab(tab) end
+
 ---@param desc string
 function Tab:SetDesc(desc) end
+
+---@param index integer
+function Tab:SetSelectedContentId(index) end
 
 ---@param text string
 function Tab:SetText(text) end
@@ -2310,20 +2335,17 @@ function Utils.SpawnVehicleForPlayer(hash, player, forward) end
 function Utils.StopSound() end
 
 --- Triggers a script event for given player(s).
----@overload fun(bitflags: integer, ...: integer): integer
+---@overload fun(bitflags: integer, eventId: integer, playerId: integer, recieverFlags: integer, ...?: integer): integer
 ---@param bitflags integer
 ---@param arguments integer[]
----@param ingoreChecks boolean
----|> false
 ---@return integer
-function Utils.TriggerScriptEvent(bitflags, arguments, ingoreChecks) end
+function Utils.TriggerScriptEvent(bitflags, arguments) end
 
 --- Converts a 3D world position to a 2D normalized screen position. To get the actual screen coordinates multiply them with the screen size.
----@overload fun(position: V3): V2
 ---@param x number
 ---@param y number
 ---@param z number
----@return V2
+---@return x number, y number
 ---@nodiscard
 function Utils.WorldToScreen(x, y, z) end
 
