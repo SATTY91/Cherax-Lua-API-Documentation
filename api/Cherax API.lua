@@ -120,6 +120,61 @@ function CModelInfo:IsWorldObject() end
 ---@field public WantsToDelete boolean
 CNetObject = {}
 
+---@class CObject
+---@field public HeightMultiplier number
+---@field public IsDynamic boolean
+---@field public IsFixed boolean
+---@field public IsFixedByNetwork boolean
+---@field public IsInWater boolean
+---@field public IsNotBuoyant boolean
+---@field public IsRenderScorched boolean
+---@field public IsVisible boolean
+---@field public ModelInfo CBaseModelInfo
+---@field public NetObject CNetObject
+---@field public Position V3
+---@field public ThicknessMultiplier number
+---@field public WidthMultiplier number
+CObject = {}
+
+function CObject:DisableInvincible() end
+
+function CObject:EnableInvincible() end
+
+---@param address integer
+---@return CObject
+---@nodiscard
+function CObject.FromAddress(address) end
+
+---@return integer
+---@nodiscard
+function CObject:GetAddress() end
+
+--- Check if the extension is not nil before using it.
+---@return fwAttachmentEntityExtension?
+---@nodiscard
+function CObject:GetAttachmentExtension() end
+
+--- Returns the current velocity vector in meters per second.
+---@return V3
+---@nodiscard
+function CObject:GetVelocity() end
+
+---@return boolean
+---@nodiscard
+function CObject:IsInvincible() end
+
+---@return boolean
+---@nodiscard
+function CObject:IsObject() end
+
+---@return boolean
+---@nodiscard
+function CObject:IsPed() end
+
+---@return boolean
+---@nodiscard
+function CObject:IsVehicle() end
+
 ---@class CPed
 ---@field public Armor number
 ---@field public Health number
@@ -132,7 +187,7 @@ CNetObject = {}
 ---@field public IsRenderScorched boolean
 ---@field public IsVisible boolean
 ---@field public MaxHealth number
----@field public ModelInfo CModelInfo
+---@field public ModelInfo CBaseModelInfo
 ---@field public NetObject CNetObject
 ---@field public Position V3
 ---@field public ThicknessMultiplicator number
@@ -195,7 +250,7 @@ function CPed:IsVehicle() end
 ---@field public IsNotBuoyant boolean
 ---@field public IsRenderScorched boolean
 ---@field public IsVisible boolean
----@field public ModelInfo CModelInfo
+---@field public ModelInfo CBaseModelInfo
 ---@field public NetObject CNetObject
 ---@field public PetrolTankHealth number
 ---@field public Position V3
@@ -367,6 +422,10 @@ function ClickGUI.BeginCustomChildWindow(label, frames, textLines) end
 --- End custom ImgGui Child window.
 function ClickGUI.EndCustomChildWindow() end
 
+--- Get the current open menu tab.
+---@return ClickTab
+function ClickGUI.GetActiveMenuTab() end
+
 --- Get the current position in screen coordinates.
 ---@return number x, number y
 ---@nodiscard
@@ -399,6 +458,28 @@ function ClickGUI.RenderCustomTitleBar(title) end
 ---@param hash integer
 ---@return boolean
 function ClickGUI.RenderFeature(hash) end
+
+--- Set the current open menu tab.
+---@param tab ClickTab
+function ClickGUI.SetActiveMenuTab(tab) end
+
+---@enum ClickTab
+ClickTab = {
+    Player = 0,
+    PlayerList = 1,
+    Session = 2,
+    Spawner = 3,
+    Vehicle = 4,
+    Weapon = 5,
+    Recovery = 6,
+    Miscellaneous = 7,
+    Protections = 8,
+    SCAPI = 9,
+    Settings = 10,
+    LuaEditor = 11,
+    LuaTab = 12,
+    NumTabs = 13,
+}
 
 ---@class Curl
 Curl = {}
@@ -1272,6 +1353,14 @@ function ListGUI.GetSize() end
 ---@return boolean
 function ListGUI.LoadTheme(fileName) end
 
+--- Remoces the tab from the stack and jump back to the tab before.
+---@param tab Tab
+function ListGUI.RemoveTabFromStack(tab) end
+
+--- Adds the tab to the tab stack or jumps back if it is already in the tab stack.
+---@param tab Tab
+function ListGUI.SetCurrentTab(tab) end
+
 --- Set the current position in screen coordinates.
 ---@param x number
 ---@param y number
@@ -1762,6 +1851,21 @@ function PoolMgr.GetPed(index) end
 ---@nodiscard
 function PoolMgr.GetPickup(index) end
 
+--- Return all currrently rendered CObject pointers
+---@return CObject[]
+---@nodiscard
+function PoolMgr.GetRenderedObjects() end
+
+--- Return all currrently rendered CPed pointers
+---@return CPed[]
+---@nodiscard
+function PoolMgr.GetRenderedPeds() end
+
+--- Return all currrently rendered CVehicle pointers
+---@return CVehicle[]
+---@nodiscard
+function PoolMgr.GetRenderedVehicles() end
+
 --- Return the vehicle handle for a specific index. Can have a performance impact if called to frequently.
 ---@param index integer
 ---@return integer
@@ -1904,14 +2008,6 @@ SocketAddress = {}
 ---@param port boolean
 ---@return string
 function SocketAddress:ToString(port) end
-
----@class SpecificPedTask
----@field public Priority integer
----@field public SequenceId integer
----@field public SpecificActive integer
----@field public TaskId integer
----@field public TreeDepth integer
-SpecificPedTask = {}
 
 ---@class Stats
 Stats = {}
@@ -2112,7 +2208,7 @@ function Utils.CreatePed(hash, pedType, x, y, z, heading, isNetworked, autoClean
 ---@return integer
 function Utils.CreateRandomPed(x, y, z) end
 
---- Spawns an world object using a bypass. Should only be executed in a native thread.
+--- Spawns a world object using a bypass. Should only be executed in a native thread.
 ---@param hash integer
 ---@param x number
 ---@param y number
@@ -2586,15 +2682,6 @@ eGuiMode = {
     Both = 0,
     ClickGUI = 1,
     ListGUI = 2
-}
-
----@enum eHookType
-eHookType = {
-    D3D_PRESENT = 0,
-    NET_EVENT = 1,
-    SCRIPTED_GAME_EVENT = 2,
-    SHOULD_SPOOF_SYNC_DATA = 3,
-    SPOOF_SYNC_DATA = 4
 }
 
 ---@enum eLogColor
