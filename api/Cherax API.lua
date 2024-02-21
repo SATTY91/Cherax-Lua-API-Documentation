@@ -32,7 +32,7 @@ function CBaseModelInfo:IsVehicle() end
 ---@nodiscard
 function CBaseModelInfo:IsWorldObject() end
 
----@class CEntity
+---@class CPhysical
 ---@field public HeightMultiplicator number
 ---@field public IsDynamic boolean
 ---@field public IsFixed boolean
@@ -41,162 +41,98 @@ function CBaseModelInfo:IsWorldObject() end
 ---@field public IsNotBuoyant boolean
 ---@field public IsRenderScorched boolean
 ---@field public IsVisible boolean
----@field public ModelInfo CModelInfo
----@field public NetObject CNetObject
+---@field public ModelInfo? CBaseModelInfo
+---@field public NetObject? CNetObject
 ---@field public Position V3
 ---@field public ThicknessMultiplicator number
 ---@field public WidthMultiplicator number
-CEntity = {}
+CPhysical = {}
 
-function CEntity:DisableInvincible() end
+function CPhysical:DisableInvincible() end
 
-function CEntity:EnableInvincible() end
+function CPhysical:EnableInvincible() end
 
 ---@param address integer
----@return CEntity
+---@return CPhysical
 ---@nodiscard
-function CEntity.FromAddress(address) end
+function CPhysical.FromAddress(address) end
 
 ---@return integer
 ---@nodiscard
-function CEntity:GetAddress() end
+function CPhysical:GetAddress() end
 
 --- Check if the extension is not nil before using it.
 ---@return fwAttachmentEntityExtension?
 ---@nodiscard
-function CEntity:GetAttachmentExtension() end
+function CPhysical:GetAttachmentExtension() end
 
 --- Returns the current velocity vector in meters per second.
 ---@return V3
 ---@nodiscard
-function CEntity:GetVelocity() end
+function CPhysical:GetVelocity() end
 
 ---@return boolean
 ---@nodiscard
-function CEntity:IsInvincible() end
+function CPhysical:IsInvincible() end
 
 ---@return boolean
 ---@nodiscard
-function CEntity:IsObject() end
+function CPhysical:IsObject() end
 
 ---@return boolean
 ---@nodiscard
-function CEntity:IsPed() end
+function CPhysical:IsPed() end
 
 ---@return boolean
 ---@nodiscard
-function CEntity:IsVehicle() end
+function CPhysical:IsVehicle() end
 
----@class CModelInfo
+---@class CBaseModelInfo
 ---@field public Model integer
 ---@field public ModelIndex integer
-CModelInfo = {}
+CBaseModelInfo = {}
 
 ---@return boolean
 ---@nodiscard
-function CModelInfo:IsObject() end
+function CBaseModelInfo:IsObject() end
 
 ---@return boolean
 ---@nodiscard
-function CModelInfo:IsPed() end
+function CBaseModelInfo:IsPed() end
 
 ---@return boolean
 ---@nodiscard
-function CModelInfo:IsVehicle() end
+function CBaseModelInfo:IsVehicle() end
 
 ---@return boolean
 ---@nodiscard
-function CModelInfo:IsWorldObject() end
+function CBaseModelInfo:IsWorldObject() end
 
 ---@class CNetObject
----@field public ControlId integer
----@field public Entity CEntity
 ---@field public IsRemote boolean
----@field public NetId integer
----@field public NextOwnerId integer
+---@field public ObjectID integer # Used to identify or to find a netobject.
 ---@field public ObjectType integer
----@field public OwnerId integer
----@field public ShouldNotBeDeleted boolean
----@field public WantsToDelete boolean
+---@field public PendingPlayerId integer # The next owner of the CNetObject.
+---@field public PlayerId integer
 CNetObject = {}
 
----@class CObject
----@field public HeightMultiplier number
----@field public IsDynamic boolean
----@field public IsFixed boolean
----@field public IsFixedByNetwork boolean
----@field public IsInWater boolean
----@field public IsNotBuoyant boolean
----@field public IsRenderScorched boolean
----@field public IsVisible boolean
----@field public ModelInfo CBaseModelInfo
----@field public NetObject CNetObject
----@field public Position V3
----@field public ThicknessMultiplier number
----@field public WidthMultiplier number
+---@return CPhysical?
+---@nodiscard
+function CNetObject:GetEntity() end
+
+---@class CObject : CPhysical
 CObject = {}
-
-function CObject:DisableInvincible() end
-
-function CObject:EnableInvincible() end
 
 ---@param address integer
 ---@return CObject
 ---@nodiscard
 function CObject.FromAddress(address) end
 
----@return integer
----@nodiscard
-function CObject:GetAddress() end
-
---- Check if the extension is not nil before using it.
----@return fwAttachmentEntityExtension?
----@nodiscard
-function CObject:GetAttachmentExtension() end
-
---- Returns the current velocity vector in meters per second.
----@return V3
----@nodiscard
-function CObject:GetVelocity() end
-
----@return boolean
----@nodiscard
-function CObject:IsInvincible() end
-
----@return boolean
----@nodiscard
-function CObject:IsObject() end
-
----@return boolean
----@nodiscard
-function CObject:IsPed() end
-
----@return boolean
----@nodiscard
-function CObject:IsVehicle() end
-
----@class CPed
+---@class CPed : CPhysical
 ---@field public Armor number
 ---@field public Health number
----@field public HeightMultiplicator number
----@field public IsDynamic boolean
----@field public IsFixed boolean
----@field public IsFixedByNetwork boolean
----@field public IsInWater boolean
----@field public IsNotBuoyant boolean
----@field public IsRenderScorched boolean
----@field public IsVisible boolean
 ---@field public MaxHealth number
----@field public ModelInfo CBaseModelInfo
----@field public NetObject CNetObject
----@field public Position V3
----@field public ThicknessMultiplicator number
----@field public WidthMultiplicator number
 CPed = {}
-
-function CPed:DisableInvincible() end
-
-function CPed:EnableInvincible() end
 
 ---@return boolean
 ---@nodiscard
@@ -207,55 +143,10 @@ function CPed:IsPlayer() end
 ---@nodiscard
 function CPed.FromAddress(address) end
 
----@return integer
----@nodiscard
-function CPed:GetAddress() end
-
---- Check if the extension is not nil before using it.
----@return fwAttachmentEntityExtension?
----@nodiscard
-function CPed:GetAttachmentExtension() end
-
---- Returns the current velocity vector in meters per second.
----@return V3
----@nodiscard
-function CPed:GetVelocity() end
-
----@return boolean
----@nodiscard
-function CPed:IsInvincible() end
-
----@return boolean
----@nodiscard
-function CPed:IsObject() end
-
----@return boolean
----@nodiscard
-function CPed:IsPed() end
-
----@class CPhysical
-
----@return boolean
----@nodiscard
-function CPed:IsVehicle() end
-
----@class CVehicle
+---@class CVehicle : CPhysical
 ---@field public BodyHealth number
 ---@field public EngineHealth number
----@field public HeightMultiplicator number
----@field public IsDynamic boolean
----@field public IsFixed boolean
----@field public IsFixedByNetwork boolean
----@field public IsInWater boolean
----@field public IsNotBuoyant boolean
----@field public IsRenderScorched boolean
----@field public IsVisible boolean
----@field public ModelInfo CBaseModelInfo
----@field public NetObject CNetObject
 ---@field public PetrolTankHealth number
----@field public Position V3
----@field public ThicknessMultiplicator number
----@field public WidthMultiplicator number
 ---@field public SteerAngle number
 ---@field public SecondSteerAngle number # This is for 4 wheel steering.
 ---@field public Throttle number
@@ -267,10 +158,6 @@ function CPed:IsVehicle() end
 ---@field public VehicleTopSpeedPercent number
 ---@field public CheatPowerIncrease number
 CVehicle = {}
-
-function CVehicle:DisableInvincible() end
-
-function CVehicle:EnableInvincible() end
 
 ---@return CPed
 ---@nodiscard
@@ -294,43 +181,13 @@ function CVehicle:GetPedInSeat(seatIndex) end
 ---@nodiscard
 function CVehicle.FromAddress(address) end
 
----@return integer
----@nodiscard
-function CVehicle:GetAddress() end
-
---- Check if the extension is not nil before using it.
----@return fwAttachmentEntityExtension?
----@nodiscard
-function CVehicle:GetAttachmentExtension() end
-
---- Returns the current velocity vector in meters per second.
----@return V3
----@nodiscard
-function CVehicle:GetVelocity() end
-
----@return boolean
----@nodiscard
-function CVehicle:IsInvincible() end
-
----@return boolean
----@nodiscard
-function CVehicle:IsObject() end
-
----@return boolean
----@nodiscard
-function CVehicle:IsPed() end
-
----@return boolean
----@nodiscard
-function CVehicle:IsVehicle() end
-
 ---@class CVehicleModelInfo
 ---@field public Model integer
 ---@field public ModelIndex integer
 CVehicleModelInfo = {}
 
----@param base CModelInfo
----@return CVehicleModelInfo
+---@param base CBaseModelInfo
+---@return CVehicleModelInfo?
 ---@nodiscard
 function CVehicleModelInfo.FromBaseModelInfo(base) end
 
@@ -393,6 +250,19 @@ function CVehicleModelInfo:IsnAmphibiousCar() end
 ---@return boolean
 ---@nodiscard
 function CVehicleModelInfo:IsnAmphibiousQuadbike() end
+
+---@class Cherax
+Cherax = {}
+
+---@return integer userID
+---@nodiscard
+function Cherax.GetUID() end
+
+---@return string
+function Cherax.GetVersion() end
+
+---@return integer
+function Cherax.GetBuild() end
 
 ---@class ClickGUI
 ClickGUI = {}
@@ -496,7 +366,7 @@ function Curl:AddHeader(header) end
 --- luaCurl:Setopt(eCurlOption.CURLOPT_URL, "https://www.google.com/")
 --- luaCurl:Perform()
 --- ```
----@return Curl
+---@return Curl easy
 ---@nodiscard
 function Curl.Easy() end
 
@@ -506,7 +376,7 @@ function Curl.Easy() end
 function Curl:GetFinished() end
 
 --- Get the response. The response string is only valid when no custom Write Function was used.
----@return eCurlCode, string
+---@return eCurlCode code, string response
 ---@nodiscard
 function Curl:GetResponse() end
 
@@ -603,8 +473,8 @@ EventMgr = {}
 function EventMgr.RegisterHandler(event, func) end
 
 --- Remove a previously registered handler by id.
----@param id integer
-function EventMgr.RemoveHandler(id) end
+---@param handlerId integer
+function EventMgr.RemoveHandler(handlerId) end
 
 ---@class Feature
 Feature = {}
@@ -738,7 +608,7 @@ function Feature:GetRenderAfter() end
 function Feature:GetRenderBefore() end
 
 --- Gets the feature type. E.g eFeatureType.Button
----@return eFeatureType _type
+---@return eFeatureType type
 ---@nodiscard
 function Feature:GetType() end
 
@@ -838,12 +708,12 @@ function Feature:SetDefaultValue(value) end
 
 --- Set the description of the feature.
 ---@param desc string
-----@return self
+---@return self
 function Feature:SetDesc(desc) end
 
 --- Set the name of the feature.
 ---@param name string
-----@return self
+---@return self
 function Feature:SetName(name) end
 
 --- Sets the feature fast step size used in a slider.
@@ -927,7 +797,10 @@ function Feature:SetValue(value) end
 ---@return self
 function Feature:SetVisible(visible) end
 
---- Flips the current boolean value of this feature.
+--- Flips the current boolean value of this feature.  
+--- Note that it will also invoke the feature callback.
+---@overload fun(self: Feature, on: boolean): Feature
+---@return self
 function Feature:Toggle() end
 
 --- Toggles the list index for types like ComboToggles.
@@ -1290,7 +1163,7 @@ function GamerHandleBuffer.New() end
 function GamerHandleBuffer:ToHandle() end
 
 ---@class GamerInfo
----@field public HostKey integer
+---@field public HostKey integer # Use `math.ult` to compare host tokens.
 ---@field public Name string
 ---@field public RockstarId integer
 GamerInfo = {}
@@ -1411,6 +1284,7 @@ Memory = {}
 
 --- Allocates a block of size bytes of memory, returning a pointer to the beginning of the block. The content of the newly allocated block of memory is not initialized, remaining with indeterminate values. Consider using Memory.MemSet
 ---@param size? integer
+---|> 24
 ---@return integer
 ---@nodiscard
 function Memory.Alloc(size) end
@@ -1614,30 +1488,30 @@ NetAddressType = {
     NUM_TYPES    = 4
 }
 
----@class NetGamePlayer
+---@class CNetGamePlayer
 ---@field public PlayerId integer
 ---@field public CxnId integer
-NetGamePlayer = {}
+CNetGamePlayer = {}
 
 --- Returns a structure 'GamerInfo' holding information about the player.
 ---@return GamerInfo
 ---@nodiscard
-function NetGamePlayer:GetGamerInfo() end
+function CNetGamePlayer:GetGamerInfo() end
 
 ---@return string
 ---@nodiscard
-function NetGamePlayer:GetName() end
+function CNetGamePlayer:GetName() end
 
 --- Check whether its the local player or not.
 ---@return boolean
 ---@nodiscard
-function NetGamePlayer:IsLocalPlayer() end
+function CNetGamePlayer:IsLocalPlayer() end
 
 --- Check if a report flag is set. Also called Rockstar Anti Cheat(RAC).
 ---@param reason eReportReason
 ---@return boolean
 ---@nodiscard
-function NetGamePlayer:IsReportBitSet(reason) end
+function CNetGamePlayer:IsReportBitSet(reason) end
 
 ---@class PlayerGameStateFlags
 ---@field public BulletProof boolean
@@ -1656,67 +1530,90 @@ function NetGamePlayer:IsReportBitSet(reason) end
 ---@field public UseKinematicPhysics boolean
 PlayerGameStateFlags = {}
 
+---@class NetworkObjectMgr
+NetworkObjectMgr = {}
+
+--- Changes the ownership of a network object.
+---@param object CNetObject
+---@param player CNetGamePlayer
+---@param migrationType integer
+function NetworkObjectMgr.ChangeOwner(object, player, migrationType) end
+
+---@param netId integer
+---@param includeAll? boolean # If this flag is set the function will also return unregistering objects and those being reassigned
+---|> false
+---@return CNetObject?
+---@nodiscard
+function NetworkObjectMgr.GetNetworkObject(netId, includeAll) end
+
+--- Unregisters a network object with the manager and removes clones on remote machines if necessary.
+---@param object CNetworkObject
+---@param reason integer
+---@param bforce boolean
+---@param bDestroyObject boolean
+function NetworkObjectMgr.UnregisterNetworkObject(object, reason, bforce, bDestroyObject) end
+
 ---@class Players
 Players = {}
 
 --- Returns the players for a given filter.
----@param filter ePlayerListSort
----@param search string
----@return integer[]
+---@param filter? ePlayerListSort
+---@param search? string
+---@return integer[] players
 ---@nodiscard
 function Players.Get(filter, search) end
 
---- Returns the NetGamePlayer for a given connection id.
+--- Returns the CNetGamePlayer for a given connection id.
 ---@param cxn integer
----@return NetGamePlayer?
+---@return CNetGamePlayer?
 ---@nodiscard
 function Players.GetByConId(cxn) end
 
---- Returns the NetGamePlayer for a given endpoint id.
+--- Returns the CNetGamePlayer for a given endpoint id.
 ---@param ep integer
----@return NetGamePlayer?
+---@return CNetGamePlayer?
 ---@nodiscard
 function Players.GetByEndpointId(ep) end
 
---- Returns the NetGamePlayer for a given gamer id.
+--- Returns the CNetGamePlayer for a given gamer id.
 ---@param gamerId integer
----@return NetGamePlayer?
+---@return CNetGamePlayer?
 ---@nodiscard
 function Players.GetByGamerId(gamerId) end
 
---- Returns the NetGamePlayer for a given ip.
----@param addr netSocketAddress
----@return NetGamePlayer?
+--- Returns the CNetGamePlayer for a given ip.
+---@param addr SocketAddress|integer
+---@return CNetGamePlayer?
 ---@nodiscard
 function Players.GetByIP(addr) end
 
---- Returns the NetGamePlayer for a given playerId.
+--- Returns the CNetGamePlayer for a given playerId.
 ---@param playerId integer
----@return NetGamePlayer
+---@return CNetGamePlayer?
 ---@nodiscard
 function Players.GetById(playerId) end
 
---- Returns the NetGamePlayer for a given peer id.
+--- Returns the CNetGamePlayer for a given peer id.
 ---@param peerId integer
----@return NetGamePlayer?
+---@return CNetGamePlayer?
 ---@nodiscard
 function Players.GetByPeerId(peerId) end
 
---- Returns the NetGamePlayer for a given rockstar id.
+--- Returns the CNetGamePlayer for a given rockstar id.
 ---@param rid integer
----@return NetGamePlayer?
+---@return CNetGamePlayer?
 ---@nodiscard
 function Players.GetByRockstarId(rid) end
 
 --- Gets the player's CPed
----@param rid integer
+---@param playerId integer
 ---@return CPed?
 ---@nodiscard
-function Players.GetCPed(rid) end
+function Players.GetCPed(playerId) end
 
 --- Returns the player SocketAddress.
 ---@param playerId integer
----@return SocketAddress
+---@return SocketAddress?
 ---@nodiscard
 function Players.GetIP(playerId) end
 
@@ -1734,7 +1631,7 @@ function Players.GetName(playerId) end
 
 --- Returns the player NetAddress.
 ---@param playerId integer
----@return NetAddress
+---@return NetAddress?
 ---@nodiscard
 function Players.GetNetAddress(playerId) end
 
@@ -1749,105 +1646,160 @@ PoolMgr = {}
 
 --- Return the camera class object. Can have a performance impact if called to frequently.
 ---@param index integer
----@return CEntity
+---@return CPhysical?
 ---@nodiscard
 function PoolMgr.GetCCamera(index) end
 
 --- Return the object class object. Can have a performance impact if called to frequently.
 ---@param index integer
----@return CEntity
+---@return CPhysical?
 ---@nodiscard
 function PoolMgr.GetCObject(index) end
 
 --- Return the ped class object. Can have a performance impact if called to frequently.
 ---@param index integer
----@return CPed
+---@return CPed?
 ---@nodiscard
 function PoolMgr.GetCPed(index) end
 
 --- Return the pickup class object. Can have a performance impact if called to frequently.
 ---@param index integer
----@return CEntity
+---@return CPhysical?
 ---@nodiscard
 function PoolMgr.GetCPickup(index) end
 
 --- Return the vehicle class object. Can have a performance impact if called to frequently.
 ---@param index integer
----@return CVehicle
+---@return CVehicle?
 ---@nodiscard
 function PoolMgr.GetCVehicle(index) end
 
 --- Return the camera handle for a specific index. Can have a performance impact if called to frequently.
 ---@param index integer
----@return integer
+---@return integer cameraIndex # Check if `cameraIndex ~= -1`
 ---@nodiscard
 function PoolMgr.GetCamera(index) end
 
---- Return the current amount of cameras.
+--- Return the current amount of cameras.  
+--- Do not use if you want to iterate over the pool, use `PoolMgr.GetMaxCameraCount()` instead.
 ---@return integer
 ---@nodiscard
 function PoolMgr.GetCurrentCameraCount() end
 
---- Return the current amount of objects.
+--- Return the current amount of objects.  
+--- Do not use if you want to iterate over the pool, use `PoolMgr.GetMaxObjectCount()` instead.
 ---@return integer
 ---@nodiscard
 function PoolMgr.GetCurrentObjectCount() end
 
---- Return the current amount of peds.
+--- Return the current amount of peds.  
+--- Do not use if you want to iterate over the pool, use `PoolMgr.GetMaxPedCount()` instead.
 ---@return integer
 ---@nodiscard
 function PoolMgr.GetCurrentPedCount() end
 
---- Return the current amount of pickups.
+--- Return the current amount of pickups.  
+--- Do not use if you want to iterate over the pool, use `PoolMgr.GetMaxPickupCount()` instead.
 ---@return integer
 ---@nodiscard
 function PoolMgr.GetCurrentPickupCount() end
 
---- Return the current amount of vehicles.
+--- Return the current amount of vehicles.  
+--- Do not use if you want to iterate over the pool, use `PoolMgr.GetMaxVehicleCount()` instead.
 ---@return integer
 ---@nodiscard
 function PoolMgr.GetCurrentVehicleCount() end
 
 --- Return the maximum amount of cameras.
+--- # Example
+--- ```lua
+--- for i = 0, PoolMgr.GetMaxCameraCount() - 1 do
+---     local pCamera = PoolMgr.GetCCamera(i)
+---     -- Check if is valid
+---     if pCamera then
+---         -- ...
+---     end
+--- end
+--- ```
 ---@return integer
 ---@nodiscard
 function PoolMgr.GetMaxCameraCount() end
 
 --- Return the maximum amount of objects.
+--- # Example
+--- ```lua
+--- for i = 0, PoolMgr.GetMaxObjectCount() - 1 do
+---     local pObj = PoolMgr.GetCObject(i)
+---     -- Check if is valid
+---     if pObj then
+---         -- ...
+---     end
+--- end
+--- ```
 ---@return integer
 ---@nodiscard
 function PoolMgr.GetMaxObjectCount() end
 
 --- Return the maximum amount of peds.
+--- # Example
+--- ```lua
+--- for i = 0, PoolMgr.GetMaxPedCount() - 1 do
+---     local pPed = PoolMgr.GetCPed(i)
+---     -- Check if is valid
+---     if pPed then
+---         -- ...
+---     end
+--- end
+--- ```
 ---@return integer
 ---@nodiscard
 function PoolMgr.GetMaxPedCount() end
 
 --- Return the maximum amount of pickups.
+--- # Example
+--- ```lua
+--- for i = 0, PoolMgr.GetMaxPickupCount() - 1 do
+---     local pPickup = PoolMgr.GetCPickup(i)
+---     -- Check if is valid
+---     if pPickup then
+---         -- ...
+---     end
+--- end
+--- ```
 ---@return integer
 ---@nodiscard
 function PoolMgr.GetMaxPickupCount() end
 
 --- Return the maximum amount of vehicles.
+--- # Example
+--- ```lua
+--- for i = 0, PoolMgr.GetMaxVehicleCount() - 1 do
+---     local pVehicle = PoolMgr.GetCVehicle(i)
+---     -- Check if is valid
+---     if pVehicle then
+---         -- ...
+---     end
+--- end
+--- ```
 ---@return integer
 ---@nodiscard
 function PoolMgr.GetMaxVehicleCount() end
 
 --- Return the object handle for a specific index. Can have a performance impact if called to frequently.
 ---@param index integer
----@return integer
+---@return integer objectIndex # Check if `objectIndex ~= -1`
 ---@nodiscard
 function PoolMgr.GetObject(index) end
 
 --- Return the ped handle for a specific index. Can have a performance impact if called to frequently.
 ---@param index integer
----@return integer
+---@return integer pedIndex # Check if `pedIndex ~= -1`
 ---@nodiscard
 function PoolMgr.GetPed(index) end
 
 --- Return the pickup handle for a specific index. Can have a performance impact if called to frequently.
 ---@param index integer
----@return integer
+---@return integer pickupIndex # Check if `pickupIndex ~= -1`
 ---@nodiscard
 function PoolMgr.GetPickup(index) end
 
@@ -1868,7 +1820,7 @@ function PoolMgr.GetRenderedVehicles() end
 
 --- Return the vehicle handle for a specific index. Can have a performance impact if called to frequently.
 ---@param index integer
----@return integer
+---@return integer vehicleIndex # Check if `vehicleIndex ~= -1`
 ---@nodiscard
 function PoolMgr.GetVehicle(index) end
 
@@ -1882,15 +1834,15 @@ Script = {}
 function Script.ExecuteAsScript(scriptName, fn) end
 
 --- Queues a function that will be exeucted in a native thread.
----@generic TAny: any
----@param func fun(...: TAny)
----@param ...TAny
+---@generic TArgs: any
+---@param func fun(...: TArgs)
+---@param ...TArgs
 function Script.QueueJob(func, ...) end
 
 --- Register a script that will be called in a loop.
----@generic TAny: any
----@param func fun(...: TAny)
----@param ...TAny
+---@generic TArgs: any
+---@param func fun(...: TArgs)
+---@param ...TArgs
 function Script.RegisterLooped(func, ...) end
 
 --- Sleeps for the given time in milliseconds. Should only be executed in a native thread.
@@ -1916,7 +1868,7 @@ function ScriptGlobal.GetFloat(global) end
 function ScriptGlobal.GetInt(global) end
 
 ---@param global integer
----@return integer
+---@return integer ptr
 ---@nodiscard
 function ScriptGlobal.GetPtr(global) end
 
@@ -1927,7 +1879,7 @@ function ScriptGlobal.GetString(global) end
 
 --- Returns a pointer to the tunable. Returns 0 if not found.
 ---@param hash integer
----@return integer
+---@return integer ptr
 ---@nodiscard
 function ScriptGlobal.GetTunableByHash(hash) end
 
@@ -1970,7 +1922,7 @@ function ScriptLocal.GetInt(scriptHash, _local) end
 
 ---@param scriptHash integer
 ---@param _local integer
----@return integer
+---@return integer ptr
 ---@nodiscard
 function ScriptLocal.GetPtr(scriptHash, _local) end
 
@@ -2105,25 +2057,25 @@ function Tab:SetText(text) end
 ---@class Texture
 Texture = {}
 
----@param id integer
+---@param textureId integer
 ---@return D3D11Texture
 ---@nodiscard
-function Texture.GetTexture(id) end
+function Texture.GetTexture(textureId) end
 
----@param id integer
+---@param textureId integer
 ---@return boolean
 ---@nodiscard
-function Texture.IsTextureValid(id) end
+function Texture.IsTextureValid(textureId) end
 
 --- Creates a new texture that can load files such as gif,jpg,png etc.
 ---@param file string
----@return integer
+---@return integer textureId
 ---@nodiscard
 function Texture.LoadTexture(file) end
 
 --- Creates a new texture that can load files such as gif,jpg,png etc.
 ---@param file string
----@return integer
+---@return integer textureId
 ---@nodiscard
 function Texture.LoadTextureAsync(file) end
 
@@ -2233,13 +2185,6 @@ function Utils.DrawPedPreview(ped, relativeScreen, distance, pitch, yaw, lightni
 ---@return boolean
 function Utils.ExecuteScript(file) end
 
---- Returns a net object for given NetId.
----@param netId integer
----@param canDeleteBePending? boolean
----@return CNetObject
----@nodiscard
-function Utils.FindNetobjectById(netId, canDeleteBePending) end
-
 --- Forces yourself to script host of the given script.
 ---@param scriptHash integer
 function Utils.ForceScriptHost(scriptHash) end
@@ -2273,17 +2218,15 @@ function Utils.GetLabelText(str) end
 --- Returns the last joined player id.
 ---@return integer
 ---@nodiscard
----@deprecated
 function Utils.GetLastJoinedPlayer() end
 
 --- Returns the last joined player id.
 ---@return integer
 ---@nodiscard
----@deprecated
 function Utils.GetLastLeftPlayer() end
 
 --- Returns the local player CPed class.
----@return CPed
+---@return CPed?
 ---@nodiscard
 function Utils.GetLocalPed() end
 
@@ -2292,15 +2235,15 @@ function Utils.GetLocalPed() end
 ---@nodiscard
 function Utils.GetLocalPlayerId() end
 
---- Returns Model Info by hash. Returns nil if no CModelInfo found.
+--- Returns Model Info by hash. Returns nil if no CBaseModelInfo found.
 ---@param hash integer
----@return CModelInfo
+---@return CBaseModelInfo?
 ---@nodiscard
 function Utils.GetModelInfoFromHash(hash) end
 
---- Returns Model Info by index. Returns nil if no CModelInfo found.
+--- Returns Model Info by index. Returns nil if no CBaseModelInfo found.
 ---@param index integer
----@return CModelInfo
+---@return CBaseModelInfo?
 ---@nodiscard
 function Utils.GetModelInfoFromIndex(index) end
 
@@ -2348,7 +2291,7 @@ function Utils.GiveScriptHost(playerId, scriptHash) end
 
 --- Converts an entity handle into a CEntity pointer.
 ---@param handle integer
----@return CEntity
+---@return CPhysical?
 ---@nodiscard
 function Utils.HandleToPointer(handle) end
 
@@ -2357,6 +2300,12 @@ function Utils.HandleToPointer(handle) end
 ---@return integer
 ---@nodiscard
 function Utils.Joaat(str) end
+
+--- Hashes a string using joaat. Returns the hash as signed int.
+---@param str string
+---@return integer
+---@nodiscard
+function Utils.sJoaat(str) end
 
 --- ~The mciSendString function sends a command string to an MCI device. The device that the command is sent to is specified in the command string. For more information browse it on the internet.~
 --- **Deprecated use `Utils.PlaySound` instead**
@@ -2372,7 +2321,7 @@ function Utils.MciSendString(str) end
 function Utils.PlaySound(str, looped) end
 
 --- Converts a CEntity pointer into an entity handle.
----@param ptr CEntity | CPed | CVehicle
+---@param ptr CPhysical | CPed | CVehicle
 ---@return integer
 ---@nodiscard
 function Utils.PointerToHandle(ptr) end
@@ -2441,7 +2390,7 @@ function Utils.TriggerScriptEvent(bitflags, arguments) end
 ---@param x number
 ---@param y number
 ---@param z number
----@return x number, y number
+---@return number x, number y
 ---@nodiscard
 function Utils.WorldToScreen(x, y, z) end
 
@@ -2496,16 +2445,16 @@ function V4.New(x, y, z, w) end
 Widget = {}
 
 ---@class fwAttachmentEntityExtension
----@field AttachChild CEntity
+---@field AttachChild? CPhysical
 ---@field AttachFlags integer
 ---@field AttachOffset V3
----@field AttachParent CEntity
+---@field AttachParent? CPhysical
 ---@field AttachParentOffset V3
----@field AttachSibling CEntity
+---@field AttachSibling? CPhysical
 ---@field MyAttachBone integer
----@field NoCollisionEntity CEntity
+---@field NoCollisionEntity? CPhysical
 ---@field OtherAttachBone integer
----@field ThisEntity CEntity
+---@field ThisEntity CPhysical
 fwAttachmentEntityExtension = {}
 
 ---@return number x, number y, number z, number w
