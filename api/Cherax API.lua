@@ -2508,7 +2508,7 @@ eLuaEvent = {
 
     --- # Example
     --- ```lua
-    --- ---@param sender? NetGamePlayer
+    --- ---@param sender? CNetGamePlayer
     --- ---@param eventId integer
     --- ---@param buffer DatBitBuffer
     --- ---@return boolean # return true to block
@@ -2518,7 +2518,7 @@ eLuaEvent = {
 
     --- # Example
     --- ```lua
-    --- ---@param sender? NetGamePlayer
+    --- ---@param sender? CNetGamePlayer
     --- ---@param args integer[]
     --- ---@return boolean # return true to block
     --- function scriptedGameEvent(sender, args) end
@@ -2541,7 +2541,7 @@ eLuaEvent = {
 
     --- # Example
     --- ```lua
-    --- ---@param sender? NetGamePlayer
+    --- ---@param sender? CNetGamePlayer
     --- ---@param message string
     --- ---@param isTeam boolean
     --- function onChatMessage(sender, message, isTeam) end

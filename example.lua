@@ -118,7 +118,7 @@ FeatureMgr.AddFeature(Utils.Joaat("LUA_ComboToggles"), "ComboToggles", eFeatureT
     :SetList({"Eins", "Zwei", "Drei"})
     :ToggleListIndex(0, true)
 
----@param sender? NetGamePlayer
+---@param sender? CNetGamePlayer
 ---@param args integer[]
 ---@return boolean # return true to block
 local function scriptedGameEvent(sender, args)
