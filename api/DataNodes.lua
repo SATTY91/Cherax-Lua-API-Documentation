@@ -124,7 +124,8 @@ CHeliControlDataNode = {}
 ---@field public playerWantsControl boolean # does the creating player want control of this object
 CObjectCreationDataNode = {}
 
----@class CObjectSectorPosNode---@field public SectorPosX number # X position of this object within the current sector
+---@class CObjectSectorPosNode
+---@field public SectorPosX number # X position of this object within the current sector
 ---@field public SectorPosY number # Y position of this object within the current sector
 ---@field public SectorPosZ number # Z position of this object within the current sector
 ---@field public UseHighPrecision boolean # Indicates whether the position should be synced with high precision
@@ -268,7 +269,8 @@ CPedOrientationDataNode = {}
 ---@field public StayInCarWhenJacked boolean
 CPedScriptCreationDataNode = {}
 
----@class CPedSectorPosMapNode---@field public IsRagdolling boolean
+---@class CPedSectorPosMapNode
+---@field public IsRagdolling boolean
 ---@field public IsStandingOnNetworkObject boolean
 ---@field public LocalOffset V3
 ---@field public StandingOnNetworkObjectID integer
@@ -334,7 +336,8 @@ CPickupCreationDataNode = {}
 ---@field public teamPermits integer # which teams are allowed to collect this pickup
 CPickupPlacementCreationDataNode = {}
 
----@class CPickupSectorPosNode---@field public SectorPosX number # X position of this object within the current sector
+---@class CPickupSectorPosNode
+---@field public SectorPosX number # X position of this object within the current sector
 ---@field public SectorPosY number # Y position of this object within the current sector
 ---@field public SectorPosZ number # Z position of this object within the current sector
 CPickupSectorPosNode = {}
@@ -362,7 +365,8 @@ CPickupSectorPosNode = {}
 ---@field public disableExpFromBodyDamage boolean # Does this plane take damage from body impacts?
 CPlaneGameStateDataNode = {}
 
----@class CPlayerAmbientModelStreamingNode---@field public AllowedPedModelStartOffset integer
+---@class CPlayerAmbientModelStreamingNode
+---@field public AllowedPedModelStartOffset integer
 ---@field public AllowedVehicleModelStartOffset integer
 ---@field public TargetVehicleEntryPoint integer
 ---@field public TargetVehicleForAnimStreaming integer
@@ -498,7 +502,8 @@ CPlayerCreationDataNode = {}
 ---@field public vehicleweaponindex integer # Vehicle Weapon Index: Missiles, Gatling, etc...
 CPlayerGameStateDataNode = {}
 
----@class CPlayerSectorPosNode---@field public IsOnStairs boolean # is this player standing on stairs?
+---@class CPlayerSectorPosNode
+---@field public IsOnStairs boolean # is this player standing on stairs?
 ---@field public IsRagdolling boolean # is this player ragdolling?
 ---@field public IsStandingOnNetworkObject boolean # is this player currently standing on another network object?
 ---@field public LocalOffset V3 # Offset from the center of the object
