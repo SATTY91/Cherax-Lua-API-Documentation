@@ -410,10 +410,10 @@ function ImGui.PushFont(font) end
 function ImGui.PopFont() end
 
 ---@param idx ImGuiCol
----@param color_r number
----@param color_g number
----@param color_b number
----@param color_a number
+---@param color_r number # [0.0 - 1.0]
+---@param color_g number # [0.0 - 1.0]
+---@param color_b number # [0.0 - 1.0]
+---@param color_a number # [0.0 - 1.0]
 function ImGui.PushStyleColor(idx, color_r, color_g, color_b, color_a) end
 
 ---@param count? integer
@@ -428,7 +428,10 @@ function ImGui.PushStyleVar(idx, value) end
 function ImGui.PopStyleVar(count) end
 
 ---@param idx ImGuiCol
----@return number color_r, number color_g, number color_b, number color_a
+---@return number color_r # [0.0 - 1.0]
+---@return number color_g # [0.0 - 1.0]
+---@return number color_b # [0.0 - 1.0]
+---@return number color_a # [0.0 - 1.0]
 ---@nodiscard
 function ImGui.GetStyleColorVec4(idx) end
 
@@ -583,10 +586,10 @@ function ImGui.TextUnformatted(text, text_end) end
 ---@param fmt string
 function ImGui.Text(fmt, ...) end
 
----@param color_r number
----@param color_g number
----@param color_b number
----@param color_a number
+---@param color_r number # 0.0 - 1.0
+---@param color_g number # 0.0 - 1.0
+---@param color_b number # 0.0 - 1.0
+---@param color_a number # 0.0 - 1.0
 ---@param text string
 function ImGui.TextColored(color_r, color_g, color_b, color_a, text) end
 

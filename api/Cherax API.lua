@@ -1049,8 +1049,10 @@ function FileMgr.DoesFileExist(path) end
 
 --- Returns a list of all found files.
 ---@param path string
----@param extension string
+---@param extension? string # e.g. '.json', '.txt'
+---|> ""
 ---@param recursive? boolean
+---|> false
 ---@return string[] files
 ---@nodiscard
 function FileMgr.FindFiles(path, extension, recursive) end
@@ -2487,21 +2489,22 @@ eLuaEvent = {
     --- # Example
     --- ```lua
     --- ---@param playerId integer
-    --- ---@param entity CEntity
+    --- ---@param pEntity CEntity
     --- ---@return boolean
-    --- function shouldSpoofSyncData(playerId, entity) end
+    --- function shouldTriggerExclusiveSync(playerId, pEntity) end
     ---```
-    SHOULD_SPOOF_SYNC_DATA = 3,
+    SHOULD_TRIGGER_EXCLUSIVE_SYNC = 3,
 
     --- # Example
     --- ```lua
-    --- ---@param pEntity CPhysical
-    --- ---@param node any
     --- ---@param nodeType eSyncDataNodes
-    --- ---@param spoofingTarget integer
-    --- function spoofSyncData(pEntity, node, nodeType, spoofingTarget) end
+    --- ---@param node _AnyDataNode
+    --- ---@param pEntity CPhysical
+    --- ---@param isExclusive boolean
+    --- ---@param exclusivePlayer integer
+    --- function onSyncDataNode(nodeType, node, pEntity, isExclusive, exclusivePlayer) end
     ---```
-    SPOOF_SYNC_DATA = 4,
+    ON_SYNC_DATA_NODE = 4,
 
     --- # Example
     --- ```lua
