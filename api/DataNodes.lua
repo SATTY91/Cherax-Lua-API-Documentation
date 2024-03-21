@@ -776,7 +776,8 @@ CVehicleProximityMigrationDataNode = {}
 ---@field public taskType integer
 CVehicleTaskDataNode = {}
 
----@class PlayerGameStateFlags---@field public PRF_BlockRemotePlayerRecording boolean
+---@class PlayerGameStateFlags
+---@field public PRF_BlockRemotePlayerRecording boolean
 ---@field public PRF_UseScriptedWeaponFirePosition boolean
 ---@field public PlayerPreferFrontSeat boolean
 ---@field public allowBikeAlternateAnimations boolean
