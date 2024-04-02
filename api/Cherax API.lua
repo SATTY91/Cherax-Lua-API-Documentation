@@ -1306,6 +1306,10 @@ function Memory.Free(ptr) end
 ---@nodiscard
 function Memory.GetBaseAddress(moduleName) end
 
+---@param addr integer
+---@param ... any
+function Memory.LuaCallCFunction(addr, ...) end
+
 --- Sets the first num bytes of the block of memory pointed by ptr to the specified value (interpreted as an unsigned char).
 ---@param ptr integer
 ---@param val integer
