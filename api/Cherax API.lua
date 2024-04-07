@@ -32,60 +32,76 @@ function CBaseModelInfo:IsVehicle() end
 ---@nodiscard
 function CBaseModelInfo:IsWorldObject() end
 
----@class CPhysical
+---@class CEntity
 ---@field public HeightMultiplicator number
 ---@field public IsDynamic boolean
 ---@field public IsFixed boolean
 ---@field public IsFixedByNetwork boolean
----@field public IsInWater boolean
----@field public IsNotBuoyant boolean
 ---@field public IsRenderScorched boolean
 ---@field public IsVisible boolean
 ---@field public ModelInfo? CBaseModelInfo
----@field public NetObject? CNetObject
 ---@field public Position V3
 ---@field public ThicknessMultiplicator number
 ---@field public WidthMultiplicator number
+CEntity = {}
+
+---@param address integer
+---@return CEntity
+---@nodiscard
+function CEntity.FromAddress(address) end
+
+---@return integer
+---@nodiscard
+function CEntity:GetAddress() end
+
+--- Check if the extension is not nil before using it.
+---@return fwAttachmentEntityExtension?
+---@nodiscard
+function CEntity:GetAttachmentExtension() end
+
+---@return eEntityType
+---@nodiscard
+function CEntity:GetType() end
+
+--- Returns the current velocity vector in meters per second.
+---@return V3
+---@nodiscard
+function CEntity:GetVelocity() end
+
+---@return boolean
+---@nodiscard
+function CEntity:IsObject() end
+
+---@return boolean
+---@nodiscard
+function CEntity:IsPed() end
+
+---@return boolean
+---@nodiscard
+function CEntity:IsPhysical() end
+
+---@return boolean
+---@nodiscard
+function CEntity:IsVehicle() end
+
+---@class CPhysical : CEntity
+---@field public IsInWater boolean
+---@field public IsNotBuoyant boolean
+---@field public NetObject? CNetObject
 CPhysical = {}
-
-function CPhysical:DisableInvincible() end
-
-function CPhysical:EnableInvincible() end
 
 ---@param address integer
 ---@return CPhysical
 ---@nodiscard
 function CPhysical.FromAddress(address) end
 
----@return integer
----@nodiscard
-function CPhysical:GetAddress() end
+function CPhysical:DisableInvincible() end
 
---- Check if the extension is not nil before using it.
----@return fwAttachmentEntityExtension?
----@nodiscard
-function CPhysical:GetAttachmentExtension() end
-
---- Returns the current velocity vector in meters per second.
----@return V3
----@nodiscard
-function CPhysical:GetVelocity() end
+function CPhysical:EnableInvincible() end
 
 ---@return boolean
 ---@nodiscard
 function CPhysical:IsInvincible() end
-
----@return boolean
----@nodiscard
-function CPhysical:IsObject() end
-
----@return boolean
----@nodiscard
-function CPhysical:IsPed() end
-
----@return boolean
----@nodiscard
-function CPhysical:IsVehicle() end
 
 ---@class CBaseModelInfo
 ---@field public Model integer
@@ -2085,141 +2101,36 @@ function Texture.LoadTexture(file) end
 ---@nodiscard
 function Texture.LoadTextureAsync(file) end
 
+---@class Time
+Time = {}
+
+--- Retrieves the current system time in seconds.
+---@return integer
+---@nodiscard
+function Time.Get() end
+
+--- Retrieves the time since Epoche in seconds.
+---@return integer
+---@nodiscard
+function Time.GetEpoche() end
+
+--- Retrieves the time since Epoche in milliseconds.
+---@return integer
+---@nodiscard
+function Time.GetEpocheMs() end
+
+--- Retrieves the time since Epoche in nanoseconds.
+---@return integer
+---@nodiscard
+function Time.GetEpocheNs() end
+
 ---@class Utils
 Utils = {}
-
---- Adds a chat message locally on your pc only. You can specify the sender of the message. The message has a max length of 255 characters.
----@param playerId integer
----@param message string
----@param team boolean
-function Utils.AddChatMessageToPool(playerId, message, team) end
-
---- Adds an item to the Basket Transaction.
----@param items integer[]
----@return boolean
-function Utils.BasketAddItem(items) end
-
---- Initializes a Basket Transaction.
----@param category integer
----@param action integer
----@param flags integer
----@return boolean
-function Utils.BasketStart(category, action, flags) end
-
---- Initializes a new Service Transaction.
----@param type integer
----@param category integer
----@param service integer
----@param action integer
----@param price integer
----@param flags integer
----@return boolean
-function Utils.BeginService(type, category, service, action, price, flags) end
-
---- Starts the checkout of a transaction. Should be used for services and baskets.
----@param transactionId integer
----@return boolean
-function Utils.CheckoutStart(transactionId) end
-
---- Converts the sector pos to world cords.
----@param sectorIn V3
----@param relativePos V3
----@return V3
----@nodiscard
-function Utils.ConvertSectorToWorldPosition(sectorIn, relativePos) end
-
---- Converts the world pos to sector and relative position. This is being used in sync data nodes to sync the actual position of entities. 
----@param pos V3
----@return V3, V3
----@nodiscard
-function Utils.ConvertWorldToSectorPosition(pos) end
-
---- Spawns an object. Should only be executed in a native thread.
----@param hash integer
----@param x number
----@param y number
----@param z number
----@param dynamic boolean
----@param isNetworked? boolean
----|> true
----@return integer
-function Utils.CreateObject(hash, x, y, z, dynamic, isNetworked) end
-
---- Spawns a ped. Should only be executed in a native thread.
----@param hash integer
----@param pedType integer
----@param x number
----@param y number
----@param z number
----@param heading number
----@param isNetworked? boolean
----|> true
----@param autoCleanup? boolean # if set to false entity won't be set as no longer needed
----|> true
----@return integer
-function Utils.CreatePed(hash, pedType, x, y, z, heading, isNetworked, autoCleanup) end
-
---- Creates a random ped. Should only be executed in a native thread.
----@param x number
----@param y number
----@param z number
----@return integer
-function Utils.CreateRandomPed(x, y, z) end
-
---- Spawns a world object using a bypass. Should only be executed in a native thread.
----@param hash integer
----@param x number
----@param y number
----@param z number
----@param dynamic boolean
----@param isNetworked? boolean
----|> true
----@return integer
-function Utils.CreateWorldObject(hash, x, y, z, dynamic, isNetworked) end
-
---- Renders a given CPed on the frontend.
----@param ped CPed
----@param relativeScreen V2
----@param distance number
----@param pitch number
----@param yaw number
----@param lightning number
-function Utils.DrawPedPreview(ped, relativeScreen, distance, pitch, yaw, lightning) end
 
 --- Executes the given script. File can be relative or absolute.
 ---@param file string
 ---@return boolean
 function Utils.ExecuteScript(file) end
-
---- Forces yourself to script host of the given script.
----@param scriptHash integer
-function Utils.ForceScriptHost(scriptHash) end
-
---- Does the same as GetBonePos3D and then converts them to normalized screen coordinates.
----@param ped CPed
----@param wMask integer
----@return V2
----@nodiscard
-function Utils.GetBonePos2D(ped, wMask) end
-
---- Gets the bone world position based on the specified ped and mask.
----@param ped CPed
----@param wMask integer
----@return V3
----@nodiscard
-function Utils.GetBonePos3D(ped, wMask) end
-
---- Returns the display name of a specific hash.
----@param hash integer
----@return string
----@nodiscard
-function Utils.GetDisplayNameFromHash(hash) end
-
---- Returns a specific label for a given text entry.
----@param str string
----@return string
----@nodiscard
-function Utils.GetLabelText(str) end
 
 --- Returns the last joined player id.
 ---@return integer
@@ -2231,75 +2142,10 @@ function Utils.GetLastJoinedPlayer() end
 ---@nodiscard
 function Utils.GetLastLeftPlayer() end
 
---- Returns the local player CPed class.
----@return CPed?
----@nodiscard
-function Utils.GetLocalPed() end
-
---- Returns the local player id.
----@return integer
----@nodiscard
-function Utils.GetLocalPlayerId() end
-
---- Returns Model Info by hash. Returns nil if no CBaseModelInfo found.
----@param hash integer
----@return CBaseModelInfo?
----@nodiscard
-function Utils.GetModelInfoFromHash(hash) end
-
---- Returns Model Info by index. Returns nil if no CBaseModelInfo found.
----@param index integer
----@return CBaseModelInfo?
----@nodiscard
-function Utils.GetModelInfoFromIndex(index) end
-
---- Returns Model Info Index by hash. Returns -1 if invalid.
----@param hash integer
----@return integer
----@nodiscard
-function Utils.GetModelInfoIndexFromHash(hash) end
-
---- Returns the model name of the model hash.
----@param hash integer
----@return string
----@nodiscard
-function Utils.GetModelNameFromHash(hash) end
-
 --- Returns the current selected player id.
 ---@return integer
 ---@nodiscard
 function Utils.GetSelectedPlayer() end
-
---- Retrieves the current system time in seconds.
----@return integer
----@nodiscard
-function Utils.GetTime() end
-
---- Retrieves the time since Epoche in seconds.
----@return integer
----@nodiscard
-function Utils.GetTimeEpoche() end
-
---- Retrieves the time since Epoche in milliseconds.
----@return integer
----@nodiscard
-function Utils.GetTimeEpocheMs() end
-
---- Force another player take control of the given entity.
----@param playerId integer
----@param iEntity integer
-function Utils.GiveControl(playerId, iEntity) end
-
---- Give a sepcific player script host of the given script.
----@param playerId integer
----@param scriptHash integer
-function Utils.GiveScriptHost(playerId, scriptHash) end
-
---- Converts an entity handle into a CEntity pointer.
----@param handle integer
----@return CPhysical?
----@nodiscard
-function Utils.HandleToPointer(handle) end
 
 --- Hashes a string using joaat.
 ---@param str string
@@ -2326,40 +2172,221 @@ function Utils.MciSendString(str) end
 ---@return boolean
 function Utils.PlaySound(str, looped) end
 
---- Converts a CEntity pointer into an entity handle.
+--- Sets the current selected Player Id. Returns the previous selected player id.
+---@param playerId integer
+---@return integer
+function Utils.SetSelectedPlayer(playerId) end
+
+---@class GTA
+GTA = {}
+
+--- Adds a chat message locally on your pc only. You can specify the sender of the message. The message has a max length of 255 characters.
+---@param playerId integer
+---@param message string
+---@param team boolean
+function GTA.AddChatMessageToPool(playerId, message, team) end
+
+--- Adds an item to the Basket Transaction.
+---@param items integer[]
+---@return boolean
+function GTA.BasketAddItem(items) end
+
+--- Initializes a Basket Transaction.
+---@param category integer
+---@param action integer
+---@param flags integer
+---@return boolean
+function GTA.BasketStart(category, action, flags) end
+
+--- Initializes a new Service Transaction.
+---@param type integer
+---@param category integer
+---@param service integer
+---@param action integer
+---@param price integer
+---@param flags integer
+---@return boolean
+function GTA.BeginService(type, category, service, action, price, flags) end
+
+--- Starts the checkout of a transaction. Should be used for services and baskets.
+---@param transactionId integer
+---@return boolean
+function GTA.CheckoutStart(transactionId) end
+
+--- Converts the sector pos to world cords.
+---@param sectorIn V3
+---@param relativePos V3
+---@return V3
+---@nodiscard
+function GTA.ConvertSectorToWorldPosition(sectorIn, relativePos) end
+
+--- Converts the world pos to sector and relative position. This is being used in sync data nodes to sync the actual position of entities. 
+---@param pos V3
+---@return V3, V3
+---@nodiscard
+function GTA.ConvertWorldToSectorPosition(pos) end
+
+--- Spawns an object. Should only be executed in a native thread.
+---@param hash integer
+---@param x number
+---@param y number
+---@param z number
+---@param dynamic boolean
+---@param isNetworked? boolean
+---|> true
+---@return integer
+function GTA.CreateObject(hash, x, y, z, dynamic, isNetworked) end
+
+--- Spawns a ped. Should only be executed in a native thread.
+---@param hash integer
+---@param pedType integer
+---@param x number
+---@param y number
+---@param z number
+---@param heading number
+---@param isNetworked? boolean
+---|> true
+---@param autoCleanup? boolean # if set to false entity won't be set as no longer needed
+---|> true
+---@return integer
+function GTA.CreatePed(hash, pedType, x, y, z, heading, isNetworked, autoCleanup) end
+
+--- Creates a random ped. Should only be executed in a native thread.
+---@param x number
+---@param y number
+---@param z number
+---@return integer
+function GTA.CreateRandomPed(x, y, z) end
+
+--- Spawns a world object using a bypass. Should only be executed in a native thread.
+---@param hash integer
+---@param x number
+---@param y number
+---@param z number
+---@param dynamic boolean
+---@param isNetworked? boolean
+---|> true
+---@return integer
+function GTA.CreateWorldObject(hash, x, y, z, dynamic, isNetworked) end
+
+--- Renders a given CPed on the frontend.
+---@param ped CPed
+---@param relativeScreen V2
+---@param distance number
+---@param pitch number
+---@param yaw number
+---@param lightning number
+function GTA.DrawPedPreview(ped, relativeScreen, distance, pitch, yaw, lightning) end
+
+--- Forces yourself to script host of the given script.
+---@param scriptHash integer
+function GTA.ForceScriptHost(scriptHash) end
+
+--- Does the same as GetBonePos3D and then converts them to normalized screen coordinates.
+---@param ped CPed
+---@param wMask integer
+---@return V2
+---@nodiscard
+function GTA.GetBonePos2D(ped, wMask) end
+
+--- Gets the bone world position based on the specified ped and mask.
+---@param ped CPed
+---@param wMask integer
+---@return V3
+---@nodiscard
+function GTA.GetBonePos3D(ped, wMask) end
+
+--- Returns the display name of a specific hash.
+---@param hash integer
+---@return string
+---@nodiscard
+function GTA.GetDisplayNameFromHash(hash) end
+
+--- Returns a specific label for a given text entry.
+---@param str string
+---@return string
+---@nodiscard
+function GTA.GetLabelText(str) end
+
+--- Returns the local player CPed class.
+---@return CPed?
+---@nodiscard
+function GTA.GetLocalPed() end
+
+--- Returns the local player id.
+---@return integer
+---@nodiscard
+function GTA.GetLocalPlayerId() end
+
+--- Returns Model Info by hash. Returns nil if no CBaseModelInfo found.
+---@param hash integer
+---@return CBaseModelInfo?
+---@nodiscard
+function GTA.GetModelInfoFromHash(hash) end
+
+--- Returns Model Info by index. Returns nil if no CBaseModelInfo found.
+---@param index integer
+---@return CBaseModelInfo?
+---@nodiscard
+function GTA.GetModelInfoFromIndex(index) end
+
+--- Returns Model Info Index by hash. Returns -1 if invalid.
+---@param hash integer
+---@return integer
+---@nodiscard
+function GTA.GetModelInfoIndexFromHash(hash) end
+
+--- Returns the model name of the model hash.
+---@param hash integer
+---@return string
+---@nodiscard
+function GTA.GetModelNameFromHash(hash) end
+
+--- Force another player take control of the given entity.
+---@param playerId integer
+---@param iEntity integer
+function GTA.GiveControl(playerId, iEntity) end
+
+--- Give a sepcific player script host of the given script.
+---@param playerId integer
+---@param scriptHash integer
+function GTA.GiveScriptHost(playerId, scriptHash) end
+
+--- Converts an entity handle into a CPhysical pointer.
+---@param handle integer
+---@return CPhysical?
+---@nodiscard
+function GTA.HandleToPointer(handle) end
+
+--- Converts a CPhysical pointer into an entity handle.
 ---@param ptr CPhysical | CPed | CVehicle
 ---@return integer
 ---@nodiscard
-function Utils.PointerToHandle(ptr) end
+function GTA.PointerToHandle(ptr) end
 
 --- Registers the given file for the game so it can be used by natives.
 ---@param path string
 ---@return boolean
-function Utils.RegisterFile(path) end
+function GTA.RegisterFile(path) end
 
 ---@param label string
-function Utils.RemoveLabelText(label) end
+function GTA.RemoveLabelText(label) end
 
 --- Sends a chat message to every player in the session. Note: You won't see that message yourself unless you manually add it to the chat pool. The message has a max length of 255 characters.
 ---@param message string
 ---@param team boolean
-function Utils.SendChatMessageToEveryone(message, team) end
+function GTA.SendChatMessageToEveryone(message, team) end
 
 --- Sends a chat message to a given player in the session. Note: You won't see that message yourself unless you manually add it to the chat pool. The message has a max length of 255 characters.
 ---@param playerId integer
 ---@param message string
 ---@param team boolean
-function Utils.SendChatMessageToPlayer(playerId, message, team) end
+function GTA.SendChatMessageToPlayer(playerId, message, team) end
 
 --- Overwrites the text for a specifc label which is being used by the game.
 ---@param label string
 ---@param text string
-function Utils.SetLabelText(label, text) end
-
---- Sets the current selected Player Id. Returns the previous selected player id.
----@param playerId integer
----@return integer
-function Utils.SetSelectedPlayer(playerId) end
+function GTA.SetLabelText(label, text) end
 
 --- Should only be executed in a native thread.
 ---@param hash integer | string
@@ -2372,7 +2399,7 @@ function Utils.SetSelectedPlayer(playerId) end
 ---@param autoCleanup? boolean # if set to false entity won't be set as no longer needed
 ---|> true
 ---@return integer
-function Utils.SpawnVehicle(hash, x, y, z, heading, isNetworked, autoCleanup) end
+function GTA.SpawnVehicle(hash, x, y, z, heading, isNetworked, autoCleanup) end
 
 --- Spawns a vehicle in front of the given player. Should only be executed in a native thread.
 ---@param hash integer | string
@@ -2380,17 +2407,17 @@ function Utils.SpawnVehicle(hash, x, y, z, heading, isNetworked, autoCleanup) en
 ---@param forward? number
 ---|> 5.0
 ---@return integer
-function Utils.SpawnVehicleForPlayer(hash, player, forward) end
+function GTA.SpawnVehicleForPlayer(hash, player, forward) end
 
 --- Stops all currently played sounds.
-function Utils.StopSound() end
+function GTA.StopSound() end
 
 --- Triggers a script event for given player(s).
 ---@overload fun(bitflags: integer, eventId: integer, playerId: integer, recieverFlags: integer, ...?: integer): integer
 ---@param bitflags integer
 ---@param arguments integer[]
 ---@return integer
-function Utils.TriggerScriptEvent(bitflags, arguments) end
+function GTA.TriggerScriptEvent(bitflags, arguments) end
 
 --- Converts a 3D world position to a 2D normalized screen position. To get the actual screen coordinates multiply them with the screen size.
 ---@param x number
@@ -2398,7 +2425,7 @@ function Utils.TriggerScriptEvent(bitflags, arguments) end
 ---@param z number
 ---@return number x, number y
 ---@nodiscard
-function Utils.WorldToScreen(x, y, z) end
+function GTA.WorldToScreen(x, y, z) end
 
 ---@class V2
 ---@field public x number
@@ -2493,9 +2520,9 @@ eLuaEvent = {
     --- # Example
     --- ```lua
     --- ---@param playerId integer
-    --- ---@param pEntity CEntity
+    --- ---@param pPhysical CPhysical
     --- ---@return boolean
-    --- function shouldTriggerExclusiveSync(playerId, pEntity) end
+    --- function shouldTriggerExclusiveSync(playerId, pPhysical) end
     ---```
     SHOULD_TRIGGER_EXCLUSIVE_SYNC = 3,
 
@@ -2503,16 +2530,16 @@ eLuaEvent = {
     --- ```lua
     --- ---@param nodeType eSyncDataNodes
     --- ---@param node _AnyDataNode
-    --- ---@param pEntity CPhysical
+    --- ---@param pPhysical CPhysical
     --- ---@param isExclusive boolean
     --- ---@param exclusivePlayer integer
-    --- function onSyncDataNode(nodeType, node, pEntity, isExclusive, exclusivePlayer) end
+    --- function onSyncDataNode(nodeType, node, pPhysical, isExclusive, exclusivePlayer) end
     ---```
     ON_SYNC_DATA_NODE = 4,
 
     --- # Example
     --- ```lua
-    --- ---@param sender? CNetGamePlayer
+    --- ---@param sender? NetGamePlayer
     --- ---@param eventId integer
     --- ---@param buffer DatBitBuffer
     --- ---@return boolean # return true to block
@@ -2522,7 +2549,7 @@ eLuaEvent = {
 
     --- # Example
     --- ```lua
-    --- ---@param sender? CNetGamePlayer
+    --- ---@param sender? NetGamePlayer
     --- ---@param args integer[]
     --- ---@return boolean # return true to block
     --- function scriptedGameEvent(sender, args) end
@@ -2531,33 +2558,48 @@ eLuaEvent = {
 
     --- # Example
     --- ```lua
+    --- ---@param pEntityA CEntity
+    --- ---@param pEntityB CEntity
+    --- ---@param materialA string
+    --- ---@param materialB string
+    --- ---@param vPointA V3
+    --- ---@param vWorldA V3
+    --- ---@param vPointB V3
+    --- ---@param vWorldB V3
+    --- ---@return boolean # return false to block
+    --- function shouldCollideHandler(pEntityA, pEntityB, materialA, materialB, vPointA, vWorldA, vPointB, vWorldB)
+    --- ```
+    SHOULD_COLLIDE = 7,
+
+    --- # Example
+    --- ```lua
     --- ---@param playerId integer
     --- function onPlayerJoin(playerId) end
     ---```
-    ON_PLAYER_JOIN = 7, 
+    ON_PLAYER_JOIN = 8, 
 
     --- # Example
     --- ```lua
     --- ---@param playerId integer
     --- function onPlayerLeft(playerId) end
     ---```
-    ON_PLAYER_LEFT = 8,
+    ON_PLAYER_LEFT = 9,
 
     --- # Example
     --- ```lua
-    --- ---@param sender? CNetGamePlayer
+    --- ---@param sender? NetGamePlayer
     --- ---@param message string
     --- ---@param isTeam boolean
     --- function onChatMessage(sender, message, isTeam) end
     ---```
-    ON_CHAT_MESSAGE = 9,
+    ON_CHAT_MESSAGE = 10,
 
-    ON_PLAYER_PED_CHANGE = 10,
-    ON_PLAYER_PED_RESPAWN = 11,
-    ON_VEHICLE_CHANGE = 12,
-    ON_WEAPON_CHANGE = 13,
-    ON_WEAPON_RELOADED = 14,
-    ON_SESSION_CHANGE = 15
+    ON_PLAYER_PED_CHANGE = 11,
+    ON_PLAYER_PED_RESPAWN = 12,
+    ON_VEHICLE_CHANGE = 13,
+    ON_WEAPON_CHANGE = 14,
+    ON_WEAPON_RELOADED = 15,
+    ON_SESSION_CHANGE = 16
 }
 
 ---@enum eCallbackTrigger
@@ -2603,6 +2645,26 @@ eCurlOption = {
     CURLOPT_XFERINFODATA = 8,
     CURLOPT_XFERINFOFUNCTION = 9,
     CURLOPT_XOAUTH2_BEARER = 10
+}
+
+---@enum eEntityType
+eEntityType = {
+    GRASS_INSTANCE_LIST = 14,
+    NOTHING = 0,
+    VEHICLEGLASSCOMPONENT = 15,
+    PARTICLESYSTEM = 10,
+    TOTAL = 16,
+    LIGHT = 11,
+    BUILDING = 2,
+    INSTANCE_LIST = 13,
+    PED = 4,
+    COMPOSITE = 12,
+    OBJECT = 5,
+    NOTINPOOLS = 9,
+    MLO = 8,
+    VEHICLE = 3,
+    PORTAL = 7,
+    DUMMY_OBJECT = 6,
 }
 
 ---@enum eFeatureType
