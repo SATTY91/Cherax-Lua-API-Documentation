@@ -2313,6 +2313,11 @@ function GTA.GetLabelText(str) end
 ---@nodiscard
 function GTA.GetLocalPed() end
 
+--- Returns the local player's current CVehicle. Might be nil.
+---@return CVehicle?
+---@nodiscard
+function GTA.GetLocalVehicle() end
+
 --- Returns the local player id.
 ---@return integer
 ---@nodiscard
