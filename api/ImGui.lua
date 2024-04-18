@@ -189,6 +189,8 @@ function ImGui.GetDisplaySize() end
 ---@nodiscard
 function ImGui.GetFrameRate() end
 
+function ImGui.TableNextColumn() end
+
 function ImGui.TableNextRow() end
 
 ---@param column integer

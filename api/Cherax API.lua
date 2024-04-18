@@ -146,9 +146,15 @@ function CObject.FromAddress(address) end
 
 ---@class CPed : CPhysical
 ---@field public Armor number
+---@field public CurVehicle CVehicle
 ---@field public Health number
+---@field public LastVehicle CVehicle
 ---@field public MaxHealth number
 CPed = {}
+
+---@return boolean
+---@nodiscard
+function CPed:IsInVehicle() end
 
 ---@return boolean
 ---@nodiscard
@@ -537,6 +543,16 @@ function Feature:GetBoolValue() end
 ---@nodiscard
 function Feature:GetColor() end
 
+--- Gets the current color in rgba as floats from 0.0 to 1.0.
+---@return number r, number g, number b, number a
+---@nodiscard
+function Feature:GetColorFloats() end
+
+--- Gets the current color in packed rgba.
+---@return integer
+---@nodiscard
+function Feature:GetColorU32() end
+
 --- Get the description of the feature.
 ---@param translate? boolean
 ---|> true
@@ -716,6 +732,19 @@ function Feature:SetBoolValue(value) end
 ---@param a integer
 ---@return self
 function Feature:SetColor(r, g, b, a) end
+
+--- Sets the current color value.
+---@param r number
+---@param g number
+---@param b number
+---@param a number
+---@return self
+function Feature:SetColorFloats(r, g, b, a) end
+
+--- Sets the current color in packed rgba."
+---@param color integer
+---@return self
+function Feature:SetColorU32(color) end
 
 --- Sets the default feature value and returns itself.
 ---@param value boolean | number
@@ -897,6 +926,7 @@ function FeatureMgr.GetCurrentFeatureListString(hash) end
 function FeatureMgr.GetFeature(hash) end
 
 --- Returns a feature by name.
+---@overload fun(name: string, index: integer): Feature
 ---@param name string
 ---@return Feature
 ---@nodiscard
