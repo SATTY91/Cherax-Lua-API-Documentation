@@ -32,17 +32,24 @@ function CBaseModelInfo:IsVehicle() end
 ---@nodiscard
 function CBaseModelInfo:IsWorldObject() end
 
+---@class CDoorCreationDataNode
+---@field public DoorModel integer
+CDoorCreationDataNode = {}
+
 ---@class CEntity
----@field public HeightMultiplicator number
+---@field public HeightMultiplier number
 ---@field public IsDynamic boolean
 ---@field public IsFixed boolean
 ---@field public IsFixedByNetwork boolean
----@field public IsRenderScorched boolean
+---@field public IsObject boolean
+---@field public IsPed boolean
+---@field public IsPhysical boolean
+---@field public IsVehicle boolean
 ---@field public IsVisible boolean
 ---@field public ModelInfo? CBaseModelInfo
 ---@field public Position V3
----@field public ThicknessMultiplicator number
----@field public WidthMultiplicator number
+---@field public ThicknessMultiplier number
+---@field public WidthMultiplier number
 CEntity = {}
 
 ---@param address integer
@@ -68,26 +75,234 @@ function CEntity:GetType() end
 ---@nodiscard
 function CEntity:GetVelocity() end
 
+---@class CExplosionArgs
+---@field public ActivationDelay integer
+---@field public AttachBoneTag integer
+---@field public AttachEntity CEntity
+---@field public AttachedToVehicle boolean
+---@field public CamShake number
+---@field public CamShakeNameHash integer
+---@field public CamShakeRollOffScaling number
+---@field public DetonatingOtherPlayersExplosive boolean
+---@field public Direction V3
+---@field public DisableDamagingOwner boolean
+---@field public EntExplosionOwner CEntity
+---@field public EntIgnoreDamage CEntity
+---@field public ExplodingEntity CEntity
+---@field public ExplosionPosition V3
+---@field public ExplosionTag eExplosionTag
+---@field public InAir boolean
+---@field public IsLocalOnly boolean
+---@field public MakeSound boolean
+---@field public NoDamage boolean
+---@field public NoFx boolean
+---@field public OriginalExplosionTag eExplosionTag
+---@field public SizeScale number
+---@field public VfxTagHash integer
+---@field public WeaponHash integer
+CExplosionArgs = {}
+
+--- Create a new CExplosionArgs object.
+---@param explosionTag eExplosionTag
+---@param explosionPosition V3
+---@return CExplosionArgs
+function CExplosionArgs.New(explosionTag, explosionPosition) end
+
+---@class CNetGamePlayer
+---@field public CxnId integer Connection Id
+---@field public PlayerId integer Player Id
+---@field public PlayerInfo CPlayerInfo Returns a class 'CPlayerInfo' holding information about the player.
+CNetGamePlayer = {}
+
+---@return integer
+---@nodiscard
+function CNetGamePlayer:GetAddress() end
+
+--- Returns a structure 'GamerInfo' holding information about the player.
+---@return GamerInfo
+---@nodiscard
+function CNetGamePlayer:GetGamerInfo() end
+
+---@return string
+---@nodiscard
+function CNetGamePlayer:GetName() end
+
+--- Check whether its the local player or not.
 ---@return boolean
 ---@nodiscard
-function CEntity:IsObject() end
+function CNetGamePlayer:IsLocalPlayer() end
 
+--- Check if a report flag is set. Also called Rockstar Anti Cheat(RAC).
+---@param reason eReportReason
 ---@return boolean
 ---@nodiscard
-function CEntity:IsPed() end
+function CNetGamePlayer:IsReportBitSet(reason) end
 
----@return boolean
+---@class CNetObject
+---@field public IsRemote boolean
+---@field public ObjectID integer Used to identify or to find a netobject.
+---@field public ObjectType integer
+---@field public PendingPlayerId integer The next owner of the CNetObject.
+---@field public PlayerId integer
+CNetObject = {}
+
+--- Check if 'object.Entity' is not nil before using it. Invalid for NetObjDoor.
+---@return CPhysical?
 ---@nodiscard
-function CEntity:IsPhysical() end
+function CNetObject:GetEntity() end
 
----@return boolean
----@nodiscard
-function CEntity:IsVehicle() end
-
----@class CPhysical : CEntity
+---@class CObject : CPhysical
+---@field public HeightMultiplier number
+---@field public IsDynamic boolean
+---@field public IsFixed boolean
+---@field public IsFixedByNetwork boolean
 ---@field public IsInWater boolean
 ---@field public IsNotBuoyant boolean
----@field public NetObject? CNetObject
+---@field public IsRenderScorched boolean
+---@field public IsVisible boolean
+---@field public ModelInfo? CBaseModelInfo Check if 'object.ModelInfo' is not nil before using it.
+---@field public NetObject? CNetObject Check if 'object.NetObject' is not nil before using it.
+---@field public Position V3
+---@field public ThicknessMultiplier number
+---@field public WidthMultiplier number
+CObject = {}
+
+---@param address integer
+---@return CObject
+---@nodiscard
+function CObject.FromAddress(address) end
+
+function CObject:DisableInvincible() end
+function CObject:EnableInvincible() end
+
+---@return integer
+---@nodiscard
+function CObject:GetAddress() end
+
+--- Check if the extension is not nil before using it.
+---@return fwAttachmentEntityExtension?
+---@nodiscard
+function CObject:GetAttachmentExtension() end
+
+---@return eEntityType
+---@nodiscard
+function CObject:GetType() end
+
+--- Returns the current velocity vector in meters per second.
+---@return V3
+---@nodiscard
+function CObject:GetVelocity() end
+
+---@return boolean
+---@nodiscard
+function CObject:IsInvincible() end
+
+---@return boolean
+---@nodiscard
+function CObject:IsObject() end
+
+---@return boolean
+---@nodiscard
+function CObject:IsPed() end
+
+---@return boolean
+---@nodiscard
+function CObject:IsPhysical() end
+
+---@return boolean
+---@nodiscard
+function CObject:IsVehicle() end
+
+---@class CPed : CPhysical
+---@field public Armor number
+---@field public CurVehicle CVehicle
+---@field public Health number
+---@field public HeightMultiplier number
+---@field public IsDynamic boolean
+---@field public IsFixed boolean
+---@field public IsFixedByNetwork boolean
+---@field public IsInWater boolean
+---@field public IsNotBuoyant boolean
+---@field public IsRenderScorched boolean
+---@field public IsVisible boolean
+---@field public LastVehicle CVehicle
+---@field public MaxHealth number
+---@field public ModelInfo? CBaseModelInfo Check if 'object.ModelInfo' is not nil before using it.
+---@field public NetObject? CNetObject Check if 'object.NetObject' is not nil before using it.
+---@field public PlayerInfo CPlayerInfo
+---@field public Position V3
+---@field public ThicknessMultiplier number
+---@field public WidthMultiplier number
+CPed = {}
+
+---@param address integer
+---@return CPed
+---@nodiscard
+function CPed.FromAddress(address) end
+
+function CPed:DisableInvincible() end
+function CPed:EnableInvincible() end
+
+---@return integer
+---@nodiscard
+function CPed:GetAddress() end
+
+--- Check if the extension is not nil before using it.
+---@return fwAttachmentEntityExtension?
+---@nodiscard
+function CPed:GetAttachmentExtension() end
+
+---@return eEntityType
+---@nodiscard
+function CPed:GetType() end
+
+--- Returns the current velocity vector in meters per second.
+---@return V3
+---@nodiscard
+function CPed:GetVelocity() end
+
+---@return boolean
+---@nodiscard
+function CPed:IsInVehicle() end
+
+---@return boolean
+---@nodiscard
+function CPed:IsInvincible() end
+
+---@return boolean
+---@nodiscard
+function CPed:IsObject() end
+
+---@return boolean
+---@nodiscard
+function CPed:IsPed() end
+
+---@return boolean
+---@nodiscard
+function CPed:IsPhysical() end
+
+---@return boolean
+---@nodiscard
+function CPed:IsPlayer() end
+
+---@return boolean
+---@nodiscard
+function CPed:IsVehicle() end
+
+---@class CPhysical : CEntity
+---@field public HeightMultiplier number
+---@field public IsDynamic boolean
+---@field public IsFixed boolean
+---@field public IsFixedByNetwork boolean
+---@field public IsInWater boolean
+---@field public IsNotBuoyant boolean
+---@field public IsRenderScorched boolean
+---@field public IsVisible boolean
+---@field public ModelInfo? CBaseModelInfo Check if 'object.ModelInfo' is not nil before using it.
+---@field public NetObject? CNetObject Check if 'object.NetObject' is not nil before using it.
+---@field public Position V3
+---@field public ThicknessMultiplier number
+---@field public WidthMultiplier number
 CPhysical = {}
 
 ---@param address integer
@@ -96,90 +311,133 @@ CPhysical = {}
 function CPhysical.FromAddress(address) end
 
 function CPhysical:DisableInvincible() end
-
 function CPhysical:EnableInvincible() end
+
+---@return integer
+---@nodiscard
+function CPhysical:GetAddress() end
+
+--- Check if the extension is not nil before using it.
+---@return fwAttachmentEntityExtension?
+---@nodiscard
+function CPhysical:GetAttachmentExtension() end
+
+---@return eEntityType
+---@nodiscard
+function CPhysical:GetType() end
+
+--- Returns the current velocity vector in meters per second.
+---@return V3
+---@nodiscard
+function CPhysical:GetVelocity() end
 
 ---@return boolean
 ---@nodiscard
 function CPhysical:IsInvincible() end
 
----@class CBaseModelInfo
----@field public Model integer
----@field public ModelIndex integer
-CBaseModelInfo = {}
+---@return boolean
+---@nodiscard
+function CPhysical:IsObject() end
 
 ---@return boolean
 ---@nodiscard
-function CBaseModelInfo:IsObject() end
+function CPhysical:IsPed() end
 
 ---@return boolean
 ---@nodiscard
-function CBaseModelInfo:IsPed() end
+function CPhysical:IsPhysical() end
 
 ---@return boolean
 ---@nodiscard
-function CBaseModelInfo:IsVehicle() end
+function CPhysical:IsVehicle() end
 
----@return boolean
----@nodiscard
-function CBaseModelInfo:IsWorldObject() end
-
----@class CNetObject
----@field public IsRemote boolean
----@field public ObjectID integer # Used to identify or to find a netobject.
----@field public ObjectType integer
----@field public PendingPlayerId integer # The next owner of the CNetObject.
----@field public PlayerId integer
-CNetObject = {}
-
----@return CPhysical?
----@nodiscard
-function CNetObject:GetEntity() end
-
----@class CObject : CPhysical
-CObject = {}
-
----@param address integer
----@return CObject
----@nodiscard
-function CObject.FromAddress(address) end
-
----@class CPed : CPhysical
----@field public Armor number
----@field public CurVehicle CVehicle
----@field public Health number
----@field public LastVehicle CVehicle
----@field public MaxHealth number
-CPed = {}
-
----@return boolean
----@nodiscard
-function CPed:IsInVehicle() end
-
----@return boolean
----@nodiscard
-function CPed:IsPlayer() end
-
----@param address integer
----@return CPed
----@nodiscard
-function CPed.FromAddress(address) end
+---@class CPlayerInfo
+---@field public CachedSprintMultThisFrame number
+---@field public ExplosiveDamageModifier number
+---@field public ForceAirDragMult number Affects the air drag of the player's current car/bike
+---@field public FriendStatus integer
+---@field public HavocCaused integer A counter going up when the player does bad stuff.
+---@field public JackSpeed integer 2 bytes
+---@field public LastChangeWeaponFrame integer
+---@field public LastTargetVehicle CVehicle Last vehicle player tried to enter.
+---@field public MaxArmour integer 2 bytes
+---@field public MaxExplosiveDamage number
+---@field public MaxHealth integer 2 bytes
+---@field public MaxSprintEnergy number
+---@field public MeleeUnarmedDamageModifier number
+---@field public MeleeWeaponDamageModifier number
+---@field public MeleeWeaponDefenseModifier number
+---@field public MeleeWeaponForceModifier number
+---@field public NetData GamerInfo structure to GamerInfo holding information about the player
+---@field public NumEnemiesInCombat integer A count of the number of enemy peds in combat targetting this player.
+---@field public NumEnemiesShootingInCombat integer A count of the number of enemy peds shooting at this player.
+---@field public OnlyEnterThisVehicle CVehicle Restrict the player to only being able to enter this vehicle (script-controlled)
+---@field public PlayerGroup integer
+---@field public PlayerPed CPed Pointer to the player ped (should always be set)
+---@field public PlayerState integer PLAYERSTATE_INVALID = -1, PLAYERSTATE_PLAYING, ...
+---@field public PreferFrontPassengerSeatVehicle CVehicle Script can prefer the player to enter the front passenger seat for this vehicle
+---@field public PreferRearSeatsVehicle CVehicle Script can prefer the player to enter the rear seats for this vehicle
+---@field public RunSprintSpeedMultiplier number
+---@field public SpotterOfStolenVehicle CPed
+---@field public SprintControlCounter number
+---@field public SprintEnergy number
+---@field public StealthRate number
+---@field public SwimSpeedMultiplier number
+---@field public Team integer The player's team (in network game)
+---@field public TimeBikeSprintPressed integer
+---@field public VehicleDamageModifier number
+---@field public VehicleDefenseModifier number
+---@field public WeaponDamageModifier number
+---@field public WeaponDefenseModifier number
+---@field public WeaponMinigunDefenseModifier number
+---@field public WeaponTakedownDefenseModifier number
+CPlayerInfo = {}
 
 ---@class CVehicle : CPhysical
----@field public BodyHealth number
----@field public EngineHealth number
----@field public PetrolTankHealth number
----@field public SteerAngle number
----@field public SecondSteerAngle number # This is for 4 wheel steering.
----@field public Throttle number
----@field public Brake number
----@field public Nitrous boolean
----@field public DirtLevel number # 0.0=fully clean, 15.0=maximum dirt visible
 ---@field public BodyDirtColor integer
----@field public HeadlightMultiplier number
----@field public VehicleTopSpeedPercent number
+---@field public BodyHealth number
+---@field public Brake number
 ---@field public CheatPowerIncrease number
+---@field public DirtLevel number 0.0=fully clean, 15.0=maximum dirt visible
+---@field public HandBrake boolean
+---@field public HeadlightMultiplier number
+---@field public HeightMultiplier number
+---@field public IsDynamic boolean
+---@field public IsFixed boolean
+---@field public IsFixedByNetwork boolean
+---@field public IsInWater boolean
+---@field public IsNotBuoyant boolean
+---@field public IsRenderScorched boolean
+---@field public IsVisible boolean
+---@field public ModelInfo? CBaseModelInfo Check if 'object.ModelInfo' is not nil before using it.
+---@field public NetObject? CNetObject Check if 'object.NetObject' is not nil before using it.
+---@field public Nitrous boolean
+---@field public PetrolTankHealth number
+---@field public Position V3
+---@field public SecondSteerAngle number This is for 4 wheel steering.
+---@field public SteerAngle number
+---@field public ThicknessMultiplier number
+---@field public Throttle number
+---@field public VehicleTopSpeedPercent number
+---@field public WidthMultiplier number
 CVehicle = {}
+
+---@param address integer
+---@return CVehicle
+---@nodiscard
+function CVehicle.FromAddress(address) end
+
+function CVehicle:DisableInvincible() end
+function CVehicle:EnableInvincible() end
+
+---@return integer
+---@nodiscard
+function CVehicle:GetAddress() end
+
+--- Check if the extension is not nil before using it.
+---@return fwAttachmentEntityExtension?
+---@nodiscard
+function CVehicle:GetAttachmentExtension() end
 
 ---@return CPed
 ---@nodiscard
@@ -198,20 +456,61 @@ function CVehicle:GetMaxSeats() end
 ---@nodiscard
 function CVehicle:GetPedInSeat(seatIndex) end
 
----@param address integer
----@return CVehicle
+---@return eEntityType
 ---@nodiscard
-function CVehicle.FromAddress(address) end
+function CVehicle:GetType() end
+
+--- Returns the current velocity vector in meters per second.
+---@return V3
+---@nodiscard
+function CVehicle:GetVelocity() end
+
+---@return boolean
+---@nodiscard
+function CVehicle:IsInvincible() end
+
+---@return boolean
+---@nodiscard
+function CVehicle:IsObject() end
+
+---@return boolean
+---@nodiscard
+function CVehicle:IsPed() end
+
+---@return boolean
+---@nodiscard
+function CVehicle:IsPhysical() end
+
+---@return boolean
+---@nodiscard
+function CVehicle:IsVehicle() end
 
 ---@class CVehicleModelInfo
 ---@field public Model integer
 ---@field public ModelIndex integer
 CVehicleModelInfo = {}
 
+---@param address integer
+---@return CVehicleModelInfo
+---@nodiscard
+function CVehicleModelInfo.FromAddress(address) end
+
 ---@param base CBaseModelInfo
----@return CVehicleModelInfo?
+---@return CVehicleModelInfo
 ---@nodiscard
 function CVehicleModelInfo.FromBaseModelInfo(base) end
+
+---@return integer
+---@nodiscard
+function CVehicleModelInfo:GetAddress() end
+
+---@return boolean
+---@nodiscard
+function CVehicleModelInfo:IsAmphibiousCar() end
+
+---@return boolean
+---@nodiscard
+function CVehicleModelInfo:IsAmphibiousQuadbike() end
 
 ---@return boolean
 ---@nodiscard
@@ -265,51 +564,45 @@ function CVehicleModelInfo:IsTrailer() end
 ---@nodiscard
 function CVehicleModelInfo:IsTrain() end
 
----@return boolean
----@nodiscard
-function CVehicleModelInfo:IsnAmphibiousCar() end
-
----@return boolean
----@nodiscard
-function CVehicleModelInfo:IsnAmphibiousQuadbike() end
-
 ---@class Cherax
 Cherax = {}
 
----@return integer userID
----@nodiscard
+---@return integer
+function Cherax.GetBuild() end
+
+---@return string
+function Cherax.GetEdition() end
+
+---@return integer
+function Cherax.GetLegacyUID() end
+
+---@return integer
 function Cherax.GetUID() end
 
 ---@return string
 function Cherax.GetVersion() end
 
----@return integer
-function Cherax.GetBuild() end
-
 ---@class ClickGUI
 ClickGUI = {}
 
---- Adds a lua tab to the player options.  
+--- Adds a lua tab to the player options.
 ---@param title string
 ---@param renderFunc function
 function ClickGUI.AddPlayerTab(title, renderFunc) end
 
---- Adds a lua tab to the main gui.  
---- Remember to remove the tab.
---- # Example
----@see ClickGUI.AddPlayerTab
+--- Adds a lua tab to the main gui.
 ---@param title string
 ---@param renderFunc function
 function ClickGUI.AddTab(title, renderFunc) end
 
---- Begin custom ImgGui Child window.
+--- Begin custom ImgGui Child window. The text alignment range is [0.0 - 1.0]. A value of -1.0 indicates the default value.
 ---@param label string
 ---@param frames? integer
----|> -1
 ---@param textLines? integer
----|> -1
+---@param textAlignX? number
+---@param textAlignY? number
 ---@return boolean
-function ClickGUI.BeginCustomChildWindow(label, frames, textLines) end
+function ClickGUI.BeginCustomChildWindow(label, frames, textLines, textAlignX, textAlignY) end
 
 --- End custom ImgGui Child window.
 function ClickGUI.EndCustomChildWindow() end
@@ -320,12 +613,10 @@ function ClickGUI.GetActiveMenuTab() end
 
 --- Get the current position in screen coordinates.
 ---@return number x, number y
----@nodiscard
 function ClickGUI.GetPos() end
 
 --- Get the current size in screen coordinates.
 ---@return number x, number y
----@nodiscard
 function ClickGUI.GetSize() end
 
 --- Loads a Theme by its name.
@@ -346,32 +637,31 @@ function ClickGUI.RemoveTab(title) end
 function ClickGUI.RenderCustomTitleBar(title) end
 
 --- Render a feature for the given feature hash and index.
----@overload fun(hash: integer, index: integer): boolean
 ---@param hash integer
+---@param index? integer
 ---@return boolean
-function ClickGUI.RenderFeature(hash) end
+function ClickGUI.RenderFeature(hash, index) end
 
 --- Set the current open menu tab.
 ---@param tab ClickTab
 function ClickGUI.SetActiveMenuTab(tab) end
 
----@enum ClickTab
-ClickTab = {
-    Player = 0,
-    PlayerList = 1,
-    Session = 2,
-    Spawner = 3,
-    Vehicle = 4,
-    Weapon = 5,
-    Recovery = 6,
-    Miscellaneous = 7,
-    Protections = 8,
-    SCAPI = 9,
-    Settings = 10,
-    LuaEditor = 11,
-    LuaTab = 12,
-    NumTabs = 13,
-}
+---@class ClickTab
+---@field LuaEditor any
+---@field LuaTab any
+---@field Miscellaneous any
+---@field NumTabs any
+---@field Player any
+---@field PlayerList any
+---@field Protections any
+---@field Recovery any
+---@field SCAPI any
+---@field Session any
+---@field Settings any
+---@field Spawner any
+---@field Vehicle any
+---@field Weapon any
+ClickTab = {}
 
 ---@class Curl
 Curl = {}
@@ -381,109 +671,80 @@ Curl = {}
 ---@return self
 function Curl:AddHeader(header) end
 
---- Create a new curl object.  
---- ```lua
---- -- make sure that this object doesn't go out of scope, idk cytox can't code it properly
---- local luaCurl = Curl.Easy()
---- luaCurl:Setopt(eCurlOption.CURLOPT_URL, "https://www.google.com/")
---- luaCurl:Perform()
---- ```
----@return Curl easy
----@nodiscard
+--- Disables the logging of errors.
+---@return self
+function Curl:DisableErrorLog() end
+
+--- Create a new curl object. Never lose this object until you are completely done with it. Never do 'Curl.Easy():Setopt' because this will cause the object to be lost by lua gc.
+---@return Curl
 function Curl.Easy() end
 
 --- Get whether or not the Perform call has finished.
 ---@return boolean
----@nodiscard
 function Curl:GetFinished() end
 
 --- Get the response. The response string is only valid when no custom Write Function was used.
----@return eCurlCode code, string response
----@nodiscard
+---@return eCurlCode, string
 function Curl:GetResponse() end
 
 --- Perform the curl operation after set up. Perform is called asynchronously. Call GetFinished() to check the current state.
 function Curl:Perform() end
 
 --- Set specific curl options during initialize.
---- ```lua
---- object:Setopt(eCurlOption.CURLOPT_URL, "https://www.google.com/")
---- ```
 ---@param option eCurlOption
----@param str string | integer
+---@param str string|integer
 ---@return self
 function Curl:Setopt(option, str) end
 
----@class D3D11Texture
-D3D11Texture = {}
+---@class D3D12Texture
+D3D12Texture = {}
 
----@return D3D11SRV
----@nodiscard
-function D3D11Texture:GetCurrent() end
+---@return any ImTextureID
+function D3D12Texture:GetCurrent() end
 
 --- The index starts at 0. The max index is (GetFrameCount - 1).
 ---@param index integer
----@return D3D11SRV
----@nodiscard
-function D3D11Texture:GetFrame(index) end
+---@return any ImTextureID
+function D3D12Texture:GetFrame(index) end
 
 --- Returns the number of frames in this texture.
 ---@return integer
----@nodiscard
-function D3D11Texture:GetFrameCount() end
+function D3D12Texture:GetFrameCount() end
 
 --- Returns the height this texture.
 ---@return integer
----@nodiscard
-function D3D11Texture:GetHeight() end
+function D3D12Texture:GetHeight() end
 
 --- Returns the width this texture.
 ---@return integer
----@nodiscard
-function D3D11Texture:GetWidth() end
+function D3D12Texture:GetWidth() end
 
 ---@class DatBitBuffer
 DatBitBuffer = {}
 
---- Reads 1 bit as a bool. Returns the value and whether the operation was successfull or not.
----@return boolean value, boolean success
----@nodiscard
+--- Reads a bool from the buffer. Format: [value, success]
+---@return boolean, boolean
 function DatBitBuffer:ReadBool() end
 
---- Reads given bits as unsigned 8-bit integer. Returns the value and whether the operation was successfull or not.
----@param bits integer
----@return integer value, boolean success
----@nodiscard
-function DatBitBuffer:ReadByte(bits) end
+--- Reads a signed integer from the buffer. Format: [value, success]
+---@param numBits integer
+---@return integer, boolean
+function DatBitBuffer:ReadInt(numBits) end
 
---- Reads given bits as unsigned 32-bit integer. Returns the value and whether the operation was successfull or not.
----@param bits integer
----@return integer value, boolean success
----@nodiscard
-function DatBitBuffer:ReadDword(bits) end
+--- Reads a zero-terminated string from the buffer. Format: [value, success]
+---@param maxChars integer
+---@return string, boolean
+function DatBitBuffer:ReadString(maxChars) end
 
---- Reads given bits as unsigned 64-bit integer. Returns the value and whether the operation was successfull or not.
----@param bits integer
----@return integer values, boolean success
----@nodiscard
-function DatBitBuffer:ReadQword(bits) end
+--- Reads an unsigned integer from the buffer. Format: [value, success]
+---@param numBits integer
+---@return integer, boolean
+function DatBitBuffer:ReadUns(numBits) end
 
---- Reads a string for the given length. Returns the string and whether the operation was successfull or not.
----@param strLength integer
----@return string value, boolean success
----@nodiscard
-function DatBitBuffer:ReadString(strLength) end
-
---- Reads given bits as unsigned 16-bit integer. Returns the value and whether the operation was successfull or not.
----@param bits integer
----@return integer value, boolean success
----@nodiscard
-function DatBitBuffer:ReadWord(bits) end
-
----@param bits integer
+--- Sets the bit position of the cursor. This is the location of the next read/write.
+---@param pos integer
 ---@return boolean
----@nodiscard
-function DatBitBuffer:Seek(bits) end
+function DatBitBuffer:Seek(pos) end
 
 ---@class EventMgr
 EventMgr = {}
@@ -491,24 +752,26 @@ EventMgr = {}
 --- Register a handler that will be called for a specific event.
 ---@param event eLuaEvent
 ---@param func function
----@return integer handlerId
+---@return integer
 function EventMgr.RegisterHandler(event, func) end
 
 --- Remove a previously registered handler by id.
----@param handlerId integer
-function EventMgr.RemoveHandler(handlerId) end
+---@param id integer
+function EventMgr.RemoveHandler(id) end
 
 ---@class Feature
+---@field public Desc string Description of the feature
+---@field public Name string Name of the feature
 Feature = {}
 
 --- Adds a hotkey for the feature and returns itself.
 ---@param keyCode integer
----@return self
+---@return Feature
 function Feature:AddHotKey(keyCode) end
 
 --- Add an feature as info content for eFeatureType ListWithInfo.
 ---@param hash integer
----@return self
+---@return Feature
 function Feature:AddInfoContentFeature(hash) end
 
 --- Adds a feature to a list that will be rendered after this feature.
@@ -520,173 +783,169 @@ function Feature:AddRenderAfter(feature) end
 function Feature:AddRenderBefore(feature) end
 
 --- Removes all hotkeys for this feature.
----@return self
+---@return Feature
 function Feature:ClearHotkeys() end
 
-function Feature:ClearRenderAfter() end
+---@param feature Feature
+function Feature:ClearRenderAfter(feature) end
 
-function Feature:ClearRenderBefore() end
+---@param feature Feature
+function Feature:ClearRenderBefore(feature) end
 
 --- If this feature is part of an feature array, this is the index.
----@return integer idx
----@nodiscard
+---@return integer
 function Feature:GetArrayIndex() end
 
 --- Gets the current boolean value.
---- use `Feature:IsToggled()
----@return boolean value
----@nodiscard
+---@return boolean
 function Feature:GetBoolValue() end
 
 --- Gets the current color in rgba.
 ---@return integer r, integer g, integer b, integer a
----@nodiscard
 function Feature:GetColor() end
 
---- Gets the current color in rgba as floats from 0.0 to 1.0.
+--- Gets the current color in rgba as floats from 0.0 to 1.0 .
 ---@return number r, number g, number b, number a
----@nodiscard
 function Feature:GetColorFloats() end
 
 --- Gets the current color in packed rgba.
 ---@return integer
----@nodiscard
 function Feature:GetColorU32() end
 
 --- Get the description of the feature.
 ---@param translate? boolean
----|> true
 ---@return string
 function Feature:GetDesc(translate) end
 
---- Get the name of the feature.
----@param translate? boolean
----|> true
----@return string
-function Feature:GetName(translate) end
+--- Gets the feature fast step size used in a slider.
+--- This method returns a float/number based on context, here assuming generic.
+---@return number|integer
+function Feature:GetFastStepSizeFloat() end
+
+--- Gets the feature fast step size used in a slider.
+---@return integer
+function Feature:GetFastStepSizeInt() end
 
 --- Returns the minimum and maximum floating value.
----@return number min, number max
----@nodiscard
+---@return number, number
 function Feature:GetFloatLimitValues() end
 
 --- Returns the maximum floating value.
----@return number max
----@nodiscard
+---@return number
 function Feature:GetFloatMaxValue() end
 
 --- Returns the minimum floating value.
----@return number min
----@nodiscard
+---@return number
 function Feature:GetFloatMinValue() end
 
 --- Gets the current floating value.
----@return number value
----@nodiscard
+---@return number
 function Feature:GetFloatValue() end
 
----@return integer hash
----@nodiscard
+--- Returns the format used for slider and input values.
+---@return string
+function Feature:GetFormat() end
+
+---@return integer
 function Feature:GetHash() end
 
 --- Get all hotkeys for this feature.
----@return integer[] hotkeys
----@nodiscard
+---@return table<integer, int>
 function Feature:GetHotkeys() end
 
+--- Returns the feature id in creation order.
+---@return integer
+function Feature:GetId() end
+
 --- Returns the minimum and maximum integer value.
----@return integer min, integer max
----@nodiscard
+---@return integer, integer
 function Feature:GetIntLimitValues() end
 
 --- Returns the maximum integer value.
----@return integer max
----@nodiscard
+---@return integer
 function Feature:GetIntMaxValue() end
 
 --- Returns the minimum integer value.
----@return integer min
----@nodiscard
+---@return integer
 function Feature:GetIntMinValue() end
 
 --- Gets the current integer value.
----@return integer value
----@nodiscard
+---@return integer
 function Feature:GetIntValue() end
 
 --- Gets the list for feature types like combo.
----@return string[] list
----@nodiscard
+---@return table<integer, string>
 function Feature:GetList() end
 
 --- Gets the current list index of the feature.
----@return integer idx
----@nodiscard
+---@return integer
 function Feature:GetListIndex() end
 
+--- Get the name of the feature.
+---@param translate? boolean
+---@return string
+function Feature:GetName(translate) end
+
 --- Same as GetArrayIndex but you might prefer this if you are using a player feature.
----@return integer playerId
----@nodiscard
+---@return integer
 function Feature:GetPlayerIndex() end
 
 --- Returns a list of features that will be rendered after this feature.
----@return integer[] hashes
----@nodiscard
+---@return table<integer, int>
 function Feature:GetRenderAfter() end
 
 --- Returns a list of features that will be rendered before this feature.
----@return integer[] hashes
----@nodiscard
+---@return table<integer, int>
 function Feature:GetRenderBefore() end
 
+--- Gets the feature step size used in a slider.
+---@return number
+function Feature:GetStepSizeFloat() end
+
+--- Gets the feature step size used in a slider.
+---@return integer
+function Feature:GetStepSizeInt() end
+
+--- Gets the current string value.
+---@return string
+function Feature:GetStringValue() end
+
 --- Gets the feature type. E.g eFeatureType.Button
----@return eFeatureType type
----@nodiscard
+---@return eFeatureType
 function Feature:GetType() end
 
 --- Returns whether the list index has been toggled for types like ComboToggles.
 ---@param index integer
 ---@return boolean
----@nodiscord
 function Feature:IsListIndexToggled(index) end
 
---- Returns whether the feature should be saved in settings or not.
+--- Returns whether the feature is a player feature or not.
 ---@return boolean
----@nodiscard
+function Feature:IsPlayerFeature() end
+
+--- Returns whether the feature should be safed in settings or not..
+---@return boolean
 function Feature:IsSaveable() end
 
 --- Gets whether a feature can be found by search or not.
 ---@return boolean
----@nodiscard
 function Feature:IsSearchable() end
 
 --- Returns whether the feature can be toggled or not.
 ---@return boolean
----@nodiscard
 function Feature:IsToggleFeature() end
 
 --- Returns whether the feature is currently toggled or not.
 ---@return boolean
----@nodiscard
 function Feature:IsToggled() end
 
---- Gets the current string value.
----@return string value
----@nodiscard
-function Feature:GetStringValue() end
-
 --- Returns whether the feature should be shown in the GUI or not.
----@return boolean visible
----@nodiscard
-function Feature:IsVisible() end
-
---- Renders the feature in the current context. Return true if rendered.
 ---@return boolean
-function Feature:Render() end
+function Feature:IsVisible() end
 
 --- Load the specific settings for this feature from a file.
 ---@param file string
----@return boolean success
+---@return boolean
 function Feature:LoadSettings(file) end
 
 --- Triggers the callback as if it would be called from the GUI.
@@ -697,32 +956,36 @@ function Feature:OnSettingsLoad() end
 
 --- Registers Callback Trigger for the feature and returns itself.
 ---@param flags eCallbackTrigger
----@return self
+---@return Feature
 function Feature:RegisterCallbackTrigger(flags) end
 
 --- Remove specific hotkeys for this feature.
 ---@param keyCode integer
 ---@param all boolean
----@return self
+---@return Feature
 function Feature:RemoveHotkey(keyCode, all) end
 
 --- Returns true when at least one feature was removed
 ---@param feature Feature
----@return self
+---@return boolean
 function Feature:RemoveRenderAfter(feature) end
 
 --- Returns true when at least one feature was removed
 ---@param feature Feature
----@return self
+---@return boolean
 function Feature:RemoveRenderBefore(feature) end
 
+--- Renders the feature in the current context. Return true if rendered.
+---@return boolean
+function Feature:Render() end
+
 --- Restore the current values with the default values.
----@return self
+---@return Feature
 function Feature:Reset() end
 
 --- Sets the current boolean value.
 ---@param value boolean
----@return self
+---@return Feature
 function Feature:SetBoolValue(value) end
 
 --- Sets the current color value.
@@ -730,7 +993,7 @@ function Feature:SetBoolValue(value) end
 ---@param g integer
 ---@param b integer
 ---@param a integer
----@return self
+---@return Feature
 function Feature:SetColor(r, g, b, a) end
 
 --- Sets the current color value.
@@ -738,120 +1001,124 @@ function Feature:SetColor(r, g, b, a) end
 ---@param g number
 ---@param b number
 ---@param a number
----@return self
+---@return Feature
 function Feature:SetColorFloats(r, g, b, a) end
 
---- Sets the current color in packed rgba."
+--- Sets the current color in packed rgba.
 ---@param color integer
----@return self
+---@return Feature
 function Feature:SetColorU32(color) end
 
 --- Sets the default feature value and returns itself.
----@param value boolean | number
----@return self
+---@param value any
+---@return Feature
 function Feature:SetDefaultValue(value) end
 
 --- Set the description of the feature.
 ---@param desc string
----@return self
+---@return Feature
 function Feature:SetDesc(desc) end
 
---- Set the name of the feature.
----@param name string
----@return self
-function Feature:SetName(name) end
-
 --- Sets the feature fast step size used in a slider.
----@param step number
----@return self
-function Feature:SetFastStepSize(step) end
+---@param size number|integer
+---@return Feature
+function Feature:SetFastStepSize(size) end
 
 --- Sets the current floating value.
 ---@param value number
----@return self
+---@return Feature
 function Feature:SetFloatValue(value) end
+
+--- Sets the format used for slider and input values.
+---@param fmt string
+---@return self
+function Feature:SetFormat(fmt) end
 
 --- Sets the current integer value.
 ---@param value integer
----@return self
+---@return Feature
 function Feature:SetIntValue(value) end
 
 --- Sets the feature minimum and maximum values and returns itself.
----@param min number
----@param max number
----@return self
+---@param min number|integer
+---@param max number|integer
+---@return Feature
 function Feature:SetLimitValues(min, max) end
 
 --- Sets the list for feature types like combo.
----@param list string[]
----@return self
+---@param list table<integer, string>
+---@return Feature
 function Feature:SetList(list) end
 
 --- Sets the current list index of the feature.
 ---@param index integer
----@return self
+---@return Feature
 function Feature:SetListIndex(index) end
 
 --- Sets the feature maximum value and returns itself.
----@param value number
----@return self
+---@param value number|integer
+---@return Feature
 function Feature:SetMaxValue(value) end
 
 --- Sets the feature minimum value and returns itself.
----@param value number
----@return self
+---@param value number|integer
+---@return Feature
 function Feature:SetMinValue(value) end
+
+--- Set the name of the feature.
+---@param name string
+---@return Feature
+function Feature:SetName(name) end
 
 --- This disables the callback for OnClick.
 ---@param disable boolean
----@return self
-function Feature:SetNoCallbackOnPress(disable) end
+---@return Feature
+function Feature:SetNoCallbackOnClick(disable) end
 
---- Sets whether the feature should be saved in settings or not.
+--- This disables the callback for OnSettingsLoad.
+---@param disable boolean
+---@return Feature
+function Feature:SetNoCallbackOnSettingsLoad(disable) end
+
+--- Sets whether the feature should be safed in settings or not.
 ---@param saveable boolean
----@return self
+---@return Feature
 function Feature:SetSaveable(saveable) end
 
 --- Sets whether a feature can be found by search or not.
 ---@param searchable boolean
----@return self
+---@return Feature
 function Feature:SetSearchable(searchable) end
 
---- This disables the callback for OnSettingsLoad.
----@param disable boolean
----@return self
-function Feature:SetNoCallbackOnSettingsLoad(disable) end
-
 --- Sets the feature step size used in a slider.
----@param value number
----@return self
-function Feature:SetStepSize(value) end
+---@param size number|integer
+---@return Feature
+function Feature:SetStepSize(size) end
 
 --- Sets the current string value.
 ---@param value string
----@return self
+---@return Feature
 function Feature:SetStringValue(value) end
 
 --- Sets the current feature value and returns itself.
----@param value integer | number | string | boolean
----@return self
+---@param value any
+---@return Feature
 function Feature:SetValue(value) end
 
 --- Sets whether the feature should be shown in the GUI or not.
 ---@param visible boolean
----@return self
+---@return Feature
 function Feature:SetVisible(visible) end
 
---- Flips the current boolean value of this feature.  
---- Note that it will also invoke the feature callback.
----@overload fun(self: Feature, on: boolean): Feature
----@return self
-function Feature:Toggle() end
+--- Flips the current boolean value of this feature.
+---@param on? boolean
+---@return Feature
+function Feature:Toggle(on) end
 
 --- Toggles the list index for types like ComboToggles.
 ---@param index integer
 ---@param toggle boolean
----@return self
+---@return Feature
 function Feature:ToggleListIndex(index, toggle) end
 
 function Feature:TriggerCallback() end
@@ -864,12 +1131,11 @@ FeatureMgr = {}
 ---@param name string
 ---@param type eFeatureType
 ---@param desc? string
----|> ""
----@param callback? fun(f: Feature)
+---@param callback? function
 ---@param nativeThreadExecution? boolean
----|> true
----@return Feature feature
-function FeatureMgr.AddFeature(hash, name, type, desc, callback, nativeThreadExecution) end
+---@param forceQueue? boolean
+---@return Feature
+function FeatureMgr.AddFeature(hash, name, type, desc, callback, nativeThreadExecution, forceQueue) end
 
 --- Create and add a new features. Returns list of the created feature hashes.
 ---@param size integer
@@ -877,149 +1143,138 @@ function FeatureMgr.AddFeature(hash, name, type, desc, callback, nativeThreadExe
 ---@param name string
 ---@param type eFeatureType
 ---@param desc? string
----|> ""
----@param callback? fun(f: Feature)
+---@param callback? function
 ---@param nativeThreadExecution? boolean
----|> true
----@return integer[] hashes
-function FeatureMgr.AddFeatureArray(size, hash, name, type, desc, callback, nativeThreadExecution) end
+---@param forceQueue? boolean
+---@return table<integer, int>
+function FeatureMgr.AddFeatureArray(size, hash, name, type, desc, callback, nativeThreadExecution, forceQueue) end
 
 --- Creates an array of 32 features which will automatically reset when the player leaves.
 ---@param hash integer
 ---@param name string
 ---@param type eFeatureType
 ---@param desc? string
----|> ""
----@param callback? fun(f: Feature)
+---@param callback? function
 ---@param nativeThreadExecution? boolean
----|> true
----@return integer[] hashes
-function FeatureMgr.AddPlayerFeature(hash, name, type, desc, callback, nativeThreadExecution) end
+---@param forceQueue? boolean
+---@return table<integer, int>
+function FeatureMgr.AddPlayerFeature(hash, name, type, desc, callback, nativeThreadExecution, forceQueue) end
 
 --- Returns all feaure hashes.
----@return integer[]
----@nodiscard
+---@return table<integer, int>
 function FeatureMgr.GetAllFeatureHashes() end
 
 --- Returns all feaures.
----@return Feature[]
----@nodiscard
+---@return table<integer, Feature>
 function FeatureMgr.GetAllFeatures() end
 
 --- Returns all player feaure hashes.
----@return integer[]
----@nodiscard
-function FeatureMgr.GetAllPlayerFeatureHashes() end
+---@param playerId? integer
+---@return table<integer, int>
+function FeatureMgr.GetAllPlayerFeatureHashes(playerId) end
 
 --- Returns the string value of the current feature list index.
----@overload fun(hash: integer, index: integer): string
 ---@param hash integer
+---@param index? integer
 ---@return string
----@nodiscard
-function FeatureMgr.GetCurrentFeatureListString(hash) end
+function FeatureMgr.GetCurrentFeatureListString(hash, index) end
 
 --- Returns a feature by hash.
----@overload fun(hash: integer, index: integer): Feature
 ---@param hash integer
+---@param index? integer
 ---@return Feature
----@nodiscard
-function FeatureMgr.GetFeature(hash) end
+function FeatureMgr.GetFeature(hash, index) end
 
 --- Returns a feature by name.
----@overload fun(name: string, index: integer): Feature
 ---@param name string
+---@param index? integer
 ---@return Feature
----@nodiscard
-function FeatureMgr.GetFeatureByName(name) end
+function FeatureMgr.GetFeatureByName(name, index) end
 
 --- Returns the color value of the feature.
----@overload fun(hash: integer, index: integer): r: integer, g: integer, b: integer, a: integer
 ---@param hash integer
+---@param index? integer
 ---@return integer r, integer g, integer b, integer a
----@nodiscard
-function FeatureMgr.GetFeatureColor(hash) end
+function FeatureMgr.GetFeatureColor(hash, index) end
 
 --- Returns the float value of the feature.
----@overload fun(hash: integer, index: integer): number
 ---@param hash integer
----@return number value
----@nodiscard
-function FeatureMgr.GetFeatureFloat(hash) end
+---@param index? integer
+---@return number
+function FeatureMgr.GetFeatureFloat(hash, index) end
 
 --- Returns the int value of the feature.
----@overload fun(hash: integer, index: integer): integer
 ---@param hash integer
----@return integer value
----@nodiscard
-function FeatureMgr.GetFeatureInt(hash) end
+---@param index? integer
+---@return integer
+function FeatureMgr.GetFeatureInt(hash, index) end
 
 --- Returns all string items of the feature list.
----@overload fun(hash: integer, index: integer): integer
 ---@param hash integer
----@return string[]
----@nodiscard
-function FeatureMgr.GetFeatureList(hash) end
+---@param index? integer
+---@return table<integer, string>
+function FeatureMgr.GetFeatureList(hash, index) end
 
 --- Returns the current index of the feature list.
----@overload fun(hash: integer, index: integer): integer
 ---@param hash integer
----@return integer idx
----@nodiscard
-function FeatureMgr.GetFeatureListIndex(hash) end
+---@param index? integer
+---@return integer
+function FeatureMgr.GetFeatureListIndex(hash, index) end
 
 --- Returns the string value of the feature.
----@overload fun(hash: integer, index: integer): string
 ---@param hash integer
----@return string value
----@nodiscard
-function FeatureMgr.GetFeatureString(hash) end
+---@param index? integer
+---@return string
+function FeatureMgr.GetFeatureString(hash, index) end
 
 --- Returns the current focused(ClickGui) / selected(ListGui) feature.
 ---@return Feature
----@nodiscard
 function FeatureMgr.GetFocusedFeature() end
 
 --- Returns the current hovered(ClickGui) / selected(ListGui) feature.
 ---@return Feature
----@nodiscard
 function FeatureMgr.GetHoveredFeature() end
 
 --- Returns the boolean value of the feature.
----@overload fun(hash: integer, index: integer): boolean
 ---@param hash integer
+---@param index? integer
 ---@return boolean
----@nodiscard
-function FeatureMgr.IsFeatureEnabled(hash) end
+function FeatureMgr.IsFeatureEnabled(hash, index) end
+
+--- Returns if the feature is toggled.
+---@param hash integer
+---@param index? integer
+---@return boolean
+function FeatureMgr.IsFeatureToggled(hash, index) end
 
 --- Loads the given settings. File can be relative or absolute.
 ---@param file string
----@return boolean success
+---@return boolean
 function FeatureMgr.LoadSettings(file) end
 
 --- Removes the feature for the given hash.
----@overload fun(hash: integer, index: integer): boolean
 ---@param hash integer
----@return boolean success
+---@return boolean
 function FeatureMgr.RemoveFeature(hash) end
 
 --- Removes the feature array for the given hash and size.
 ---@param hash integer
 ---@param size integer
----@return boolean success
+---@return boolean
 function FeatureMgr.RemoveFeatureArray(hash, size) end
 
 --- Removes the player feature for the given hash.
 ---@param hash integer
----@return boolean success
+---@return boolean
 function FeatureMgr.RemovePlayerFeature(hash) end
 
 --- Resets all player features for every player.
 function FeatureMgr.ResetAllPlayerFeatures() end
 
 --- Restore the current values with the default values of the feature.
----@overload fun(hash: integer, index: integer)
 ---@param hash integer
-function FeatureMgr.ResetFeature(hash) end
+---@param index? integer
+function FeatureMgr.ResetFeature(hash, index) end
 
 --- Resets all player features for given player id.
 ---@param playerIndex integer
@@ -1029,58 +1284,57 @@ function FeatureMgr.ResetPlayerFeatures(playerIndex) end
 ---@param input string
 ---@param maxResults integer
 ---@param cutoffPercent number
----@return integer[]
----@nodiscard
+---@return table<integer, int>
 function FeatureMgr.SearchFeature(input, maxResults, cutoffPercent) end
 
 --- Sets the color value of the feature.
----@overload fun(hash: integer, index: integer, r: integer, g: integer, b: integer, a: integer)
 ---@param hash integer
----@param r integer
----@param g integer
----@param b integer
----@param a integer
-function FeatureMgr.SetFeatureColor(hash, r, g, b, a) end
+---@param r_or_index integer|integer
+---@param g_or_r integer
+---@param b_or_g integer
+---@param a_or_b integer
+---@param nothing_or_a? integer
+function FeatureMgr.SetFeatureColor(hash, r_or_index, g_or_r, b_or_g, a_or_b, nothing_or_a) end
 
 --- Sets the float value of the feature.
----@overload fun(hash: integer, value: number, index: integer)
 ---@param hash integer
----@param value number
-function FeatureMgr.SetFeatureFloat(hash, value) end
+---@param value_or_index number|integer
+---@param nothing_or_value? number
+function FeatureMgr.SetFeatureFloat(hash, value_or_index, nothing_or_value) end
 
 --- Sets the int value of the feature.
----@overload fun(hash: integer, value: integer, index: integer)
 ---@param hash integer
----@param value integer
-function FeatureMgr.SetFeatureInt(hash, value) end
+---@param value_or_index integer
+---@param nothing_or_value? integer
+function FeatureMgr.SetFeatureInt(hash, value_or_index, nothing_or_value) end
 
 --- Sets the current index of the feature list.
----@overload fun(hash: integer, value: integer, index: integer)
 ---@param hash integer
----@param listIndex integer
-function FeatureMgr.SetFeatureListIndex(hash, listIndex) end
+---@param listIndex_or_index integer
+---@param nothing_or_listIndex? integer
+function FeatureMgr.SetFeatureListIndex(hash, listIndex_or_index, nothing_or_listIndex) end
 
 --- Sets the string value of the feature.
----@overload fun(hash: integer, value: string, index: integer)
 ---@param hash integer
----@param value string
-function FeatureMgr.SetFeatureString(hash, value) end
+---@param value_or_index string|integer
+---@param nothing_or_value? string
+function FeatureMgr.SetFeatureString(hash, value_or_index, nothing_or_value) end
 
 --- Flips the current boolean value of the feature.
----@overload fun(hash: integer, index: integer)
 ---@param hash integer
-function FeatureMgr.ToggleFeature(hash) end
+---@param index? integer
+function FeatureMgr.ToggleFeature(hash, index) end
 
----@overload fun(hash: integer, index: integer)
 ---@param hash integer
-function FeatureMgr.TriggerFeatureCallback(hash) end
+---@param index? integer
+function FeatureMgr.TriggerFeatureCallback(hash, index) end
 
 ---@class FileMgr
 FileMgr = {}
 
 --- Ensures that the given path is a directory.
 ---@param path string
----@return boolean success
+---@return boolean
 function FileMgr.CreateDir(path) end
 
 --- Deletes the given file using an absolute path.
@@ -1090,42 +1344,276 @@ function FileMgr.DeleteFile(path) end
 --- Check whether the file exist using an absolute path.
 ---@param path string
 ---@return boolean
----@nodiscard
 function FileMgr.DoesFileExist(path) end
 
 --- Returns a list of all found files.
 ---@param path string
----@param extension? string # e.g. '.json', '.txt'
----|> ""
----@param recursive? boolean
----|> false
----@return string[] files
----@nodiscard
+---@param extension string
+---@param recursive boolean
+---@return table<integer,string>
 function FileMgr.FindFiles(path, extension, recursive) end
 
 --- Returns the root directory of the menu.
 ---@return string
----@nodiscard
 function FileMgr.GetMenuRootPath() end
 
 --- Reads the file content using an absolute path.
 ---@param path string
 ---@return string
----@nodiscard
 function FileMgr.ReadFileContent(path) end
 
 --- Extract a .zip file to a given directory.
 ---@param zipName string
 ---@param dir string
----@return boolean success
+---@return boolean
 function FileMgr.Unzip(zipName, dir) end
 
 --- Writes the given content to a file using an absolute path.
 ---@param path string
 ---@param content string
 ---@param append? boolean
----@return boolean success
+---@return boolean
 function FileMgr.WriteFileContent(path, content, append) end
+
+---@class GTA
+GTA = {}
+
+--- Adds a chat message locally on your pc only. You can specify the sender of the message. The message has a max length of 255 characters.
+---@param playerId integer
+---@param message string
+---@param team boolean
+function GTA.AddChatMessageToPool(playerId, message, team) end
+
+--- Add an explosion without any restrictions.
+---@param args CExplosionArgs
+---@return boolean
+function GTA.AddExplosion(args) end
+
+--- Adds an item to the Basket Transaction.
+---@param items table<integer, int>
+---@return boolean
+function GTA.BasketAddItem(items) end
+
+--- Initializes a Basket Transaction.
+---@param category integer
+---@param action integer
+---@param flags integer
+---@return boolean, integer
+function GTA.BasketStart(category, action, flags) end
+
+--- Initializes a new Service Transaction.
+---@param type integer
+---@param category integer
+---@param service integer
+---@param action integer
+---@param price integer
+---@param flags integer
+---@return boolean, integer
+function GTA.BeginService(type, category, service, action, price, flags) end
+
+--- Starts the checkout of a transaction. Should be used for services and baskets.
+---@param transactionId integer
+---@return boolean
+function GTA.CheckoutStart(transactionId) end
+
+--- Converts the sector pos to world cords.
+---@param sectorIn V3
+---@param relativePos V3
+---@return V3
+function GTA.ConvertSectorToWorldPosition(sectorIn, relativePos) end
+
+--- Converts the world pos to sector and relative position. This is being used in sync data nodes to sync the actual position of entities.
+---@param pos V3
+---@return V3, V3
+function GTA.ConvertWorldToSectorPosition(pos) end
+
+--- Spawns an object. Should only be executed in a native thread.
+---@param hash_or_model integer|string
+---@param x float
+---@param y float
+---@param z float
+---@param dynamic boolean
+---@param isNetworked? boolean
+---@return integer
+function GTA.CreateObject(hash_or_model, x, y, z, dynamic, isNetworked) end
+
+--- Spawns a ped. Should only be executed in a native thread.
+---@param hash_or_model integer|string
+---@param pedType integer
+---@param x float
+---@param y float
+---@param z float
+---@param heading number
+---@param isNetworked? boolean
+---@param autoCleanup? boolean
+---@return integer
+function GTA.CreatePed(hash_or_model, pedType, x, y, z, heading, isNetworked, autoCleanup) end
+
+--- Creates a random ped. Should only be executed in a native thread.
+---@param x float
+---@param y float
+---@param z float
+---@return integer
+function GTA.CreateRandomPed(x, y, z) end
+
+--- Spawns an world object using a bypass. Should only be executed in a native thread.
+---@param hash_or_model integer|string
+---@param x float
+---@param y float
+---@param z float
+---@param dynamic boolean
+---@param isNetworked? boolean
+---@return integer
+function GTA.CreateWorldObject(hash_or_model, x, y, z, dynamic, isNetworked) end
+
+--- Renders a given CPed on the frontend.
+---@param ped CPed
+---@param relativeScreen V2
+---@param size V2
+---@param distance float
+---@param pitch float
+---@param yaw float
+---@param lightning float
+function GTA.DrawPedPreview(ped, relativeScreen, size, distance, pitch, yaw, lightning) end
+
+--- Forces yourself to script host of the given script.
+---@param scriptHash integer
+function GTA.ForceScriptHost(scriptHash) end
+
+--- Does the same as GetBonePos3D and then converts them to normalized screen coordinates.
+---@param ped CPed
+---@param wMask integer
+---@return V2
+function GTA.GetBonePos2D(ped, wMask) end
+
+--- Gets the bone world position based on the specified ped and mask.
+---@param ped CPed
+---@param wMask integer
+---@return V3
+function GTA.GetBonePos3D(ped, wMask) end
+
+--- Returns the display name of a specific hash.
+---@param hash integer
+---@return string
+function GTA.GetDisplayNameFromHash(hash) end
+
+--- Returns whether the ground was found and the Z coordinate it was found at.
+---@param x number
+---@param y number
+---@return boolean, number
+function GTA.GetGroundZ(x, y) end
+
+--- Returns a specific label for a given text entry.
+---@param str_or_hash string|integer
+---@return string
+function GTA.GetLabelText(str_or_hash) end
+
+--- Returns the local player CPed. Might be nil.
+---@return CPed
+function GTA.GetLocalPed() end
+
+--- Returns the local player id.
+---@return integer
+function GTA.GetLocalPlayerId() end
+
+--- Returns the local player's current CVehicle. Might be nil.
+---@return CVehicle
+function GTA.GetLocalVehicle() end
+
+--- Returns Model Info by hash. Returns nil if no CBaseModelInfo found.
+---@param hash integer
+---@return CBaseModelInfo
+function GTA.GetModelInfoFromHash(hash) end
+
+--- Returns Model Info Index by hash. Returns -1 if invalid.
+---@param hash integer
+---@return integer
+function GTA.GetModelInfoIndexFromHash(hash) end
+
+--- Returns the model name of the model hash.
+---@param hash integer
+---@return string
+function GTA.GetModelNameFromHash(hash) end
+
+--- Returns sucess and the name.
+---@param scriptEvent integer
+---@return boolean, string
+function GTA.GetScriptEventName(scriptEvent) end
+
+--- Force another player take control of the given entity.
+---@param playerId integer
+---@param iEntity integer
+function GTA.GiveControl(playerId, iEntity) end
+
+--- Give a sepcific player script host of the given script.
+---@param playerId integer
+---@param scriptHash integer
+function GTA.GiveScriptHost(playerId, scriptHash) end
+
+--- Converts an entity handle into a CPhysical pointer.
+---@param handle integer
+---@return CPhysical
+function GTA.HandleToPointer(handle) end
+
+--- Converts a CPhysical pointer into an entity handle.
+---@param ptr CPhysical
+---@return integer
+function GTA.PointerToHandle(ptr) end
+
+--- Registers the given file for the game so it can be used by natives.
+---@param path string
+---@return boolean
+function GTA.RegisterFile(path) end
+
+---@param label string
+function GTA.RemoveLabelText(label) end
+
+--- Sends a chat message to every player in the session. Note: You won't see that message yourself unless you manually add it to the chat pool. The message has a max length of 255 characters.
+---@param message string
+---@param team boolean
+function GTA.SendChatMessageToEveryone(message, team) end
+
+--- Sends a chat message to a given player in the session. Note: You won't see that message yourself unless you manually add it to the chat pool. The message has a max length of 255 characters.
+---@param playerId integer
+---@param message string
+---@param team boolean
+function GTA.SendChatMessageToPlayer(playerId, message, team) end
+
+--- Overwrites the text for a specifc label which is being used by the game.
+---@param label string
+---@param text string
+function GTA.SetLabelText(label, text) end
+
+--- Should only be executed in a native thread.
+---@param hash_or_model integer|string
+---@param x float
+---@param y float
+---@param z float
+---@param heading number
+---@param isNetworked? boolean
+---@param autoCleanup? boolean
+---@return integer
+function GTA.SpawnVehicle(hash_or_model, x, y, z, heading, isNetworked, autoCleanup) end
+
+--- Spawns a vehicle in front of the given player. Should only be executed in a native thread.
+---@param hash_or_model integer|string
+---@param player integer
+---@param forward? number
+---@return integer
+function GTA.SpawnVehicleForPlayer(hash_or_model, player, forward) end
+
+--- Triggers a script event for given player(s).
+---@param bitflags integer
+---@param arguments table<integer, int>
+---@return integer
+function GTA.TriggerScriptEvent(bitflags, arguments) end
+
+--- Converts a 3D world position to a 2D normalized screen position. To get the actual screen coordinates multiply them with the screen size.
+---@param x float
+---@param y float
+---@param z float
+---@return float, float
+function GTA.WorldToScreen(x, y, z) end
 
 ---@class GUI
 GUI = {}
@@ -1134,29 +1622,20 @@ GUI = {}
 ---@param title string
 ---@param text string
 ---@param duration integer
----@param pos? eToastPos
----@return boolean success
+---@param pos eToastPos
+---@return boolean
 function GUI.AddToast(title, text, duration, pos) end
-
---- Creates a new texture that can load files such as gif,jpg,png etc. The texture will be cleaned up autoamtically when unloading the lua.
----@param file string
----@return D3D11Texture
----@nodiscard
-function GUI.CreateTexture(file) end
 
 --- Returns which GUI Mode is currently rendering. Usefull when Both GUIs are rendering in the same frame.
 ---@return eGuiMode
----@nodiscard
 function GUI.GetCurrentRenderMode() end
 
 --- Returns the current GUI mode.
 ---@return eGuiMode
----@nodiscard
 function GUI.GetMode() end
 
 --- Returns whether the GUI is open or not.
 ---@return boolean
----@nodiscard
 function GUI.IsOpen() end
 
 --- Sets the current GUI Mode
@@ -1166,25 +1645,28 @@ function GUI.SetMode(mode) end
 --- Toggle the GUI.
 function GUI.Toggle() end
 
+---@class GadgetData
+---@field public Data table<integer, int>
+---@field public Type integer int32_t
+GadgetData = {}
+
 ---@class GamerHandle
----@field public UNK1 integer
----@field public Platform integer
----@field public RockstarId integer
+---@field public Platform any
+---@field public RockstarId any
+---@field public UNK1 any
 GamerHandle = {}
 
 --- Returns true if the GamerHandle is valid.
 ---@return boolean
----@nodiscard
 function GamerHandle:IsValid() end
 
---- Create a new GamerHandle.
+--- Create a new GamerHandle object.
+---@param rockstarId? integer
 ---@return GamerHandle
----@nodiscard
-function GamerHandle.New() end
+function GamerHandle.New(rockstarId) end
 
 --- Converts the GamerHandle into a GamerHandleBuffer used by most natives.
 ---@return GamerHandleBuffer
----@nodiscard
 function GamerHandle:ToBuffer() end
 
 ---@class GamerHandleBuffer
@@ -1192,28 +1674,24 @@ GamerHandleBuffer = {}
 
 --- Returns the buffer address.
 ---@return integer
----@nodiscard
 function GamerHandleBuffer:GetBuffer() end
 
 --- Returns the size of the GamerHandleBuffer.
 ---@return integer
----@nodiscard
 function GamerHandleBuffer:GetSize() end
 
---- Create a new GamerHandle.
+--- Create a new GamerHandleBuffer object.
 ---@return GamerHandleBuffer
----@nodiscard
 function GamerHandleBuffer.New() end
 
 --- Converts the GamerHandleBuffer into a GamerHandle.
 ---@return GamerHandle
----@nodiscard
 function GamerHandleBuffer:ToHandle() end
 
 ---@class GamerInfo
----@field public HostKey integer # Use `math.ult` to compare host tokens.
----@field public Name string
----@field public RockstarId integer
+---@field public HostKey any
+---@field public Name any
+---@field public RockstarId any
 GamerInfo = {}
 
 ---@class HotKeyMgr
@@ -1225,14 +1703,12 @@ HotKeyMgr = {}
 function HotKeyMgr.AddHotkey(hash, key) end
 
 --- Returns all hotkeys and their associated feature hash.
----@return table<integer, integer[]>
----@nodiscard
+---@return table<integer, table<integer, int>>
 function HotKeyMgr.GetAllHotkeys() end
 
 --- Returns all hotkeys for a specific feature hash.
 ---@param hash integer
----@return integer[]
----@nodiscard
+---@return table<integer, int>
 function HotKeyMgr.GetHotKeys(hash) end
 
 --- Removes specific hotkey from an feature.
@@ -1245,28 +1721,23 @@ ListGUI = {}
 
 --- Returns the top most tab.
 ---@return Tab
----@nodiscard
 function ListGUI.GetCurrentTab() end
 
 --- Returns a specific player tab. (ranges from 0-31).
 ---@param player integer
 ---@return Tab
----@nodiscard
 function ListGUI.GetPlayerTab(player) end
 
 --- Get the current position in screen coordinates.
 ---@return number x, number y
----@nodiscard
 function ListGUI.GetPos() end
 
 --- Returns the root tab.
 ---@return Tab
----@nodiscard
 function ListGUI.GetRootTab() end
 
 --- Get the current size in screen coordinates.
 ---@return number x, number y
----@nodiscard
 function ListGUI.GetSize() end
 
 --- Loads a Theme by its name.
@@ -1296,15 +1767,12 @@ function ListGUI.SetSize(x, y) end
 ListWidget = {}
 
 ---@return string
----@nodiscard
 function ListWidget:GetDesc() end
 
 ---@return string
----@nodiscard
 function ListWidget:GetText() end
 
 ---@return boolean
----@nodiscard
 function ListWidget:IsVisible() end
 
 ---@param desc string
@@ -1331,8 +1799,7 @@ function Logger.LogInfo(str) end
 Memory = {}
 
 --- Allocates a block of size bytes of memory, returning a pointer to the beginning of the block. The content of the newly allocated block of memory is not initialized, remaining with indeterminate values. Consider using Memory.MemSet
----@param size? integer
----|> 24
+---@param size? integer|24
 ---@return integer
 ---@nodiscard
 function Memory.Alloc(size) end
@@ -1352,9 +1819,16 @@ function Memory.Free(ptr) end
 ---@nodiscard
 function Memory.GetBaseAddress(moduleName) end
 
+--- Calls a function with user-defined arguments.
 ---@param addr integer
 ---@param ... any
 function Memory.LuaCallCFunction(addr, ...) end
+
+--- Calls a function with user-defined arguments and returns a pointer to the return value. You must free the return value yourself using Memory.Free.
+---@param addr integer
+---@param ... any
+---@return integer
+function Memory.LuaCallCFunctionWithReturnValue(addr, ...) end
 
 --- Sets the first num bytes of the block of memory pointed by ptr to the specified value (interpreted as an unsigned char).
 ---@param ptr integer
@@ -1436,6 +1910,13 @@ function Memory.Rip(address) end
 ---@nodiscard
 function Memory.Scan(pattern, moduleName) end
 
+--- Scans for a given pattern in a specific script and returns the address if found.
+---@param scriptHash integer
+---@param pattern string
+---@return integer
+---@nodiscard
+function Memory.ScanScript(scriptHash, pattern) end
+
 --- Writes an 8-bit integer to the given address.
 ---@param address integer
 ---@param value integer
@@ -1499,30 +1980,70 @@ function ModderDB.AddModder(rockstarId, reason) end
 ---@return boolean
 function ModderDB.AddModderByPlayerId(playerId, reason) end
 
+--- Detection format: name, count, lastTime.
+---@param rockstarId integer
+---@return table<integer, table>
+---@nodiscard
+function ModderDB.GetModderDetections(rockstarId) end
+
+--- Detection format: name, count, lastTime.
+---@param playerId integer
+---@return table<integer, table>
+---@nodiscard
+function ModderDB.GetModderDetectionsByPlayerId(playerId) end
+
+---@param rockstarId integer
+---@param reason string
+---@return boolean
+function ModderDB.RemoveModder(rockstarId, reason) end
+
+---@param rockstarId integer
+---@param reason string
+---@return boolean
+function ModderDB.RemoveModderDetection(rockstarId, reason) end
+
 ---@class Natives
 Natives = {}
 
+--- Call a native that returns a boolean.
 ---@param hash integer
+---@param ... any
 ---@return boolean
 function Natives.InvokeBool(hash, ...) end
 
+--- Call a native that returns a float.
 ---@param hash integer
+---@param ... any
 ---@return number
 function Natives.InvokeFloat(hash, ...) end
 
+--- Call a native that returns an integer.
 ---@param hash integer
+---@param ... any
 ---@return integer
 function Natives.InvokeInt(hash, ...) end
 
+--- Call a native that returns a pointer.
 ---@param hash integer
+---@param ... any
+---@return integer
+function Natives.InvokePointer(hash, ...) end
+
+--- Call a native that returns a string.
+---@param hash integer
+---@param ... any
 ---@return string
 function Natives.InvokeString(hash, ...) end
 
+--- Call a native that returns three floats representing a V3.
 ---@param hash integer
+---@param ... any
 ---@return number, number, number
 function Natives.InvokeV3(hash, ...) end
 
+--- Call a native that does not return a value.
 ---@param hash integer
+---@param ... any
 function Natives.InvokeVoid(hash, ...) end
 
 ---@class NetAddress
@@ -1530,57 +2051,6 @@ function Natives.InvokeVoid(hash, ...) end
 ---@field public TargetAddr SocketAddress
 ---@field public Type NetAddressType
 NetAddress = {}
-
----@enum NetAddressType
-NetAddressType = {
-    INVALID      = 0,
-    DIRECT       = 1,
-    RELAY_SERVER = 2,
-    PEER_RELAY   = 3,
-    NUM_TYPES    = 4
-}
-
----@class CNetGamePlayer
----@field public PlayerId integer
----@field public CxnId integer
-CNetGamePlayer = {}
-
---- Returns a structure 'GamerInfo' holding information about the player.
----@return GamerInfo
----@nodiscard
-function CNetGamePlayer:GetGamerInfo() end
-
----@return string
----@nodiscard
-function CNetGamePlayer:GetName() end
-
---- Check whether its the local player or not.
----@return boolean
----@nodiscard
-function CNetGamePlayer:IsLocalPlayer() end
-
---- Check if a report flag is set. Also called Rockstar Anti Cheat(RAC).
----@param reason eReportReason
----@return boolean
----@nodiscard
-function CNetGamePlayer:IsReportBitSet(reason) end
-
----@class PlayerGameStateFlags
----@field public BulletProof boolean
----@field public CollisionProof boolean
----@field public ControlsDisabledByScript boolean
----@field public DrownProof boolean
----@field public ExplosionProof boolean
----@field public FireProof boolean
----@field public IsAntagonisticToAnotherPlayer boolean
----@field public IsInvincible boolean
----@field public IsMaxHealthAndMaxArmourDefault boolean
----@field public IsSpectating boolean
----@field public MeleeProof boolean
----@field public NeverTarget boolean
----@field public SteamProof boolean
----@field public UseKinematicPhysics boolean
-PlayerGameStateFlags = {}
 
 ---@class NetworkObjectMgr
 NetworkObjectMgr = {}
@@ -1591,19 +2061,79 @@ NetworkObjectMgr = {}
 ---@param migrationType integer
 function NetworkObjectMgr.ChangeOwner(object, player, migrationType) end
 
+--- includeAll - If this flag is set the function will also return unregistering objects and those being reassigned
 ---@param netId integer
----@param includeAll? boolean # If this flag is set the function will also return unregistering objects and those being reassigned
----|> false
+---@param includeAll? boolean
 ---@return CNetObject?
 ---@nodiscard
 function NetworkObjectMgr.GetNetworkObject(netId, includeAll) end
 
 --- Unregisters a network object with the manager and removes clones on remote machines if necessary.
----@param object CNetworkObject
+---@param object CNetObject
 ---@param reason integer
----@param bforce boolean
+---@param bForce boolean
 ---@param bDestroyObject boolean
-function NetworkObjectMgr.UnregisterNetworkObject(object, reason, bforce, bDestroyObject) end
+function NetworkObjectMgr.UnregisterNetworkObject(object, reason, bForce, bDestroyObject) end
+
+---@class PlayerGameStateFlags
+---@field public PRF_BlockRemotePlayerRecording boolean
+---@field public PRF_UseScriptedWeaponFirePosition boolean
+---@field public PlayerPreferFrontSeat boolean
+---@field public allowBikeAlternateAnimations boolean
+---@field public bHasMaxHealth boolean
+---@field public bHasMicrophone boolean
+---@field public bHelmetHasBeenShot boolean
+---@field public bInvincible boolean
+---@field public cantBeKnockedOffBike integer
+---@field public controlsDisabledByScript boolean
+---@field public disableHelmetArmor boolean
+---@field public disableHomingMissileLockForVehiclePedInside boolean
+---@field public disableStartEngine boolean
+---@field public disableVehicleCombat boolean
+---@field public dontActivateRagdollFromExplosions boolean
+---@field public dontActivateRagdollFromVehicleImpact boolean
+---@field public dontDragMeOutOfCar boolean
+---@field public dontTakeOffHelmet boolean
+---@field public everybodyBackOff boolean
+---@field public forceHelmetVisorSwitch boolean
+---@field public hasHelmet boolean
+---@field public hasSetJackSpeed boolean
+---@field public ignoreInteriorCheckForSprinting boolean
+---@field public ignoreMeleeFistWeaponDamageMult boolean
+---@field public ignoresExplosions boolean
+---@field public inTutorial boolean
+---@field public isAntagonisticToPlayer boolean
+---@field public isPerformingVehicleMelee boolean
+---@field public isScuba boolean
+---@field public isSpectating boolean
+---@field public isSwitchingHelmetVisor boolean
+---@field public lawOnlyAttackIfPlayerIsWanted boolean
+---@field public lawPedsCanFleeFromNonWantedPlayer boolean
+---@field public myVehicleIsMyInteresting boolean
+---@field public neverTarget boolean
+---@field public newMaxHealthArmour boolean
+---@field public noCriticalHits boolean
+---@field public notDamagedByBullets boolean
+---@field public notDamagedByCollisions boolean
+---@field public notDamagedByFlames boolean
+---@field public notDamagedByMelee boolean
+---@field public notDamagedBySmoke boolean
+---@field public notDamagedBySteam boolean
+---@field public pedIsArresting boolean
+---@field public pendingTutorialSessionChange boolean
+---@field public playerIsWeird boolean
+---@field public playersDontDragMeOutOfCar boolean
+---@field public randomPedsFlee boolean
+---@field public respawning boolean
+---@field public swatHeliSpawnWithinLastSpottedLocation boolean
+---@field public treatFriendlyTargettingAndDamage boolean
+---@field public useKinematicModeWhenStationary boolean
+---@field public useKinematicPhysics boolean
+---@field public useLockpickVehicleEntryAnimations boolean
+---@field public useOverrideFootstepPtFx boolean
+---@field public willJackAnyPlayer boolean
+---@field public willJackWantedPlayersRatherThanStealCar boolean
+PlayerGameStateFlags = {}
 
 ---@class Players
 Players = {}
@@ -1615,59 +2145,77 @@ Players = {}
 ---@nodiscard
 function Players.Get(filter, search) end
 
---- Returns the CNetGamePlayer for a given connection id.
+--- Returns the NetGamePlayer for a given connection id.
 ---@param cxn integer
 ---@return CNetGamePlayer?
 ---@nodiscard
 function Players.GetByConId(cxn) end
 
---- Returns the CNetGamePlayer for a given endpoint id.
+--- Returns the NetGamePlayer for a given endpoint id.
 ---@param ep integer
 ---@return CNetGamePlayer?
 ---@nodiscard
 function Players.GetByEndpointId(ep) end
 
---- Returns the CNetGamePlayer for a given gamer id.
+--- Returns the NetGamePlayer for a given gamer id.
 ---@param gamerId integer
 ---@return CNetGamePlayer?
 ---@nodiscard
 function Players.GetByGamerId(gamerId) end
 
---- Returns the CNetGamePlayer for a given ip.
+--- Returns the NetGamePlayer for a given ip.
 ---@param addr SocketAddress|integer
 ---@return CNetGamePlayer?
 ---@nodiscard
 function Players.GetByIP(addr) end
 
---- Returns the CNetGamePlayer for a given playerId.
+--- Returns the NetGamePlayer for a given playerId.
 ---@param playerId integer
 ---@return CNetGamePlayer?
 ---@nodiscard
 function Players.GetById(playerId) end
 
---- Returns the CNetGamePlayer for a given peer id.
+--- Returns the NetGamePlayer for a given peer id.
 ---@param peerId integer
 ---@return CNetGamePlayer?
 ---@nodiscard
 function Players.GetByPeerId(peerId) end
 
---- Returns the CNetGamePlayer for a given rockstar id.
+--- Returns the NetGamePlayer for a given rockstar id.
 ---@param rid integer
 ---@return CNetGamePlayer?
 ---@nodiscard
 function Players.GetByRockstarId(rid) end
 
---- Gets the player's CPed
+--- Gets the player's CPed.
 ---@param playerId integer
 ---@return CPed?
 ---@nodiscard
 function Players.GetCPed(playerId) end
+
+--- Gets the player's cam position.
+---@param playerId integer
+---@return V3
+---@nodiscard
+function Players.GetCam(playerId) end
+
+--- Gets the player's cam rotation in eulers.
+---@param playerId integer
+---@return V3
+---@nodiscard
+function Players.GetCamRot(playerId) end
 
 --- Returns the player SocketAddress.
 ---@param playerId integer
 ---@return SocketAddress?
 ---@nodiscard
 function Players.GetIP(playerId) end
+
+--- Returns info about players ip.
+---@param playerId integer
+---@return table<string, string>
+---@nodiscard
+function Players.GetIPInfo(playerId) end
 
 --- Returns a readable player ip string including the type of the connection.
 ---@param playerId integer
@@ -1692,6 +2240,12 @@ function Players.GetNetAddress(playerId) end
 ---@return string
 ---@nodiscard
 function Players.GetTags(playerId) end
+
+--- Gets if the player has a waypoint, the position of the waypoint, and the owner of the waypoint.
+---@param playerId integer
+---@return boolean, V3, integer
+---@nodiscard
+function Players.GetWaypoint(playerId) end
 
 ---@class PoolMgr
 PoolMgr = {}
@@ -1728,130 +2282,80 @@ function PoolMgr.GetCVehicle(index) end
 
 --- Return the camera handle for a specific index. Can have a performance impact if called to frequently.
 ---@param index integer
----@return integer cameraIndex # Check if `cameraIndex ~= -1`
+---@return integer cameraIndex Check if `cameraIndex ~= -1`
 ---@nodiscard
 function PoolMgr.GetCamera(index) end
 
---- Return the current amount of cameras.  
+--- Return the current amount of cameras.
 --- Do not use if you want to iterate over the pool, use `PoolMgr.GetMaxCameraCount()` instead.
 ---@return integer
 ---@nodiscard
 function PoolMgr.GetCurrentCameraCount() end
 
---- Return the current amount of objects.  
+--- Return the current amount of objects.
 --- Do not use if you want to iterate over the pool, use `PoolMgr.GetMaxObjectCount()` instead.
 ---@return integer
 ---@nodiscard
 function PoolMgr.GetCurrentObjectCount() end
 
---- Return the current amount of peds.  
+--- Return the current amount of peds.
 --- Do not use if you want to iterate over the pool, use `PoolMgr.GetMaxPedCount()` instead.
 ---@return integer
 ---@nodiscard
 function PoolMgr.GetCurrentPedCount() end
 
---- Return the current amount of pickups.  
+--- Return the current amount of pickups.
 --- Do not use if you want to iterate over the pool, use `PoolMgr.GetMaxPickupCount()` instead.
 ---@return integer
 ---@nodiscard
 function PoolMgr.GetCurrentPickupCount() end
 
---- Return the current amount of vehicles.  
+--- Return the current amount of vehicles.
 --- Do not use if you want to iterate over the pool, use `PoolMgr.GetMaxVehicleCount()` instead.
 ---@return integer
 ---@nodiscard
 function PoolMgr.GetCurrentVehicleCount() end
 
 --- Return the maximum amount of cameras.
---- # Example
---- ```lua
---- for i = 0, PoolMgr.GetMaxCameraCount() - 1 do
----     local pCamera = PoolMgr.GetCCamera(i)
----     -- Check if is valid
----     if pCamera then
----         -- ...
----     end
---- end
---- ```
 ---@return integer
 ---@nodiscard
 function PoolMgr.GetMaxCameraCount() end
 
 --- Return the maximum amount of objects.
---- # Example
---- ```lua
---- for i = 0, PoolMgr.GetMaxObjectCount() - 1 do
----     local pObj = PoolMgr.GetCObject(i)
----     -- Check if is valid
----     if pObj then
----         -- ...
----     end
---- end
---- ```
 ---@return integer
 ---@nodiscard
 function PoolMgr.GetMaxObjectCount() end
 
 --- Return the maximum amount of peds.
---- # Example
---- ```lua
---- for i = 0, PoolMgr.GetMaxPedCount() - 1 do
----     local pPed = PoolMgr.GetCPed(i)
----     -- Check if is valid
----     if pPed then
----         -- ...
----     end
---- end
---- ```
 ---@return integer
 ---@nodiscard
 function PoolMgr.GetMaxPedCount() end
 
 --- Return the maximum amount of pickups.
---- # Example
---- ```lua
---- for i = 0, PoolMgr.GetMaxPickupCount() - 1 do
----     local pPickup = PoolMgr.GetCPickup(i)
----     -- Check if is valid
----     if pPickup then
----         -- ...
----     end
---- end
---- ```
 ---@return integer
 ---@nodiscard
 function PoolMgr.GetMaxPickupCount() end
 
 --- Return the maximum amount of vehicles.
---- # Example
---- ```lua
---- for i = 0, PoolMgr.GetMaxVehicleCount() - 1 do
----     local pVehicle = PoolMgr.GetCVehicle(i)
----     -- Check if is valid
----     if pVehicle then
----         -- ...
----     end
---- end
---- ```
 ---@return integer
 ---@nodiscard
 function PoolMgr.GetMaxVehicleCount() end
 
 --- Return the object handle for a specific index. Can have a performance impact if called to frequently.
 ---@param index integer
----@return integer objectIndex # Check if `objectIndex ~= -1`
+---@return integer objectIndex Check if `objectIndex ~= -1`
 ---@nodiscard
 function PoolMgr.GetObject(index) end
 
 --- Return the ped handle for a specific index. Can have a performance impact if called to frequently.
 ---@param index integer
----@return integer pedIndex # Check if `pedIndex ~= -1`
+---@return integer pedIndex Check if `pedIndex ~= -1`
 ---@nodiscard
 function PoolMgr.GetPed(index) end
 
 --- Return the pickup handle for a specific index. Can have a performance impact if called to frequently.
 ---@param index integer
----@return integer pickupIndex # Check if `pickupIndex ~= -1`
+---@return integer pickupIndex Check if `pickupIndex ~= -1`
 ---@nodiscard
 function PoolMgr.GetPickup(index) end
 
@@ -1872,7 +2376,7 @@ function PoolMgr.GetRenderedVehicles() end
 
 --- Return the vehicle handle for a specific index. Can have a performance impact if called to frequently.
 ---@param index integer
----@return integer vehicleIndex # Check if `vehicleIndex ~= -1`
+---@return integer vehicleIndex Check if `vehicleIndex ~= -1`
 ---@nodiscard
 function PoolMgr.GetVehicle(index) end
 
@@ -1880,21 +2384,20 @@ function PoolMgr.GetVehicle(index) end
 Script = {}
 
 --- Changes the current script context to your desired script, calls your function and then restores the orignal script context.
----@overload fun(scriptHash: integer, fn: fun())
----@param scriptName string
----@param fn fun()
-function Script.ExecuteAsScript(scriptName, fn) end
+---@param scriptName_or_hash string|integer
+---@param fn function
+function Script.ExecuteAsScript(scriptName_or_hash, fn) end
 
 --- Queues a function that will be exeucted in a native thread.
----@generic TArgs: any
----@param func fun(...: TArgs)
----@param ...TArgs
+---@param func function
+---@param ... any
+---@return integer
 function Script.QueueJob(func, ...) end
 
 --- Register a script that will be called in a loop.
----@generic TArgs: any
----@param func fun(...: TArgs)
----@param ...TArgs
+---@param func function
+---@param ... any
+---@return integer
 function Script.RegisterLooped(func, ...) end
 
 --- Sleeps for the given time in milliseconds. Should only be executed in a native thread.
@@ -1920,7 +2423,7 @@ function ScriptGlobal.GetFloat(global) end
 function ScriptGlobal.GetInt(global) end
 
 ---@param global integer
----@return integer ptr
+---@return integer
 ---@nodiscard
 function ScriptGlobal.GetPtr(global) end
 
@@ -1931,7 +2434,7 @@ function ScriptGlobal.GetString(global) end
 
 --- Returns a pointer to the tunable. Returns 0 if not found.
 ---@param hash integer
----@return integer ptr
+---@return integer
 ---@nodiscard
 function ScriptGlobal.GetTunableByHash(hash) end
 
@@ -1955,57 +2458,64 @@ function ScriptGlobal.SetString(global, text) end
 ScriptLocal = {}
 
 ---@param scriptHash integer
----@param _local integer
+---@param localHandle integer
 ---@return boolean
 ---@nodiscard
-function ScriptLocal.GetBool(scriptHash, _local) end
+function ScriptLocal.GetBool(scriptHash, localHandle) end
 
 ---@param scriptHash integer
----@param _local integer
+---@param localHandle integer
 ---@return number
 ---@nodiscard
-function ScriptLocal.GetFloat(scriptHash, _local) end
+function ScriptLocal.GetFloat(scriptHash, localHandle) end
 
 ---@param scriptHash integer
----@param _local integer
+---@param localHandle integer
 ---@return integer
 ---@nodiscard
-function ScriptLocal.GetInt(scriptHash, _local) end
+function ScriptLocal.GetInt(scriptHash, localHandle) end
 
 ---@param scriptHash integer
----@param _local integer
----@return integer ptr
+---@param global integer
+---@return integer
 ---@nodiscard
-function ScriptLocal.GetPtr(scriptHash, _local) end
+function ScriptLocal.GetPtr(scriptHash, global) end
 
 ---@param scriptHash integer
----@param _local integer
+---@param localHandle integer
 ---@return string
 ---@nodiscard
-function ScriptLocal.GetString(scriptHash, _local) end
+function ScriptLocal.GetString(scriptHash, localHandle) end
 
 ---@param scriptHash integer
----@param _local integer
+---@param localHandle integer
 ---@param value boolean
-function ScriptLocal.SetBool(scriptHash, _local, value) end
+function ScriptLocal.SetBool(scriptHash, localHandle, value) end
 
 ---@param scriptHash integer
----@param _local integer
+---@param localHandle integer
 ---@param value number
-function ScriptLocal.SetFloat(scriptHash, _local, value) end
+function ScriptLocal.SetFloat(scriptHash, localHandle, value) end
 
 ---@param scriptHash integer
----@param _local integer
+---@param localHandle integer
 ---@param value integer
-function ScriptLocal.SetInt(scriptHash, _local, value) end
+function ScriptLocal.SetInt(scriptHash, localHandle, value) end
 
 ---@param scriptHash integer
----@param _local integer
+---@param localHandle integer
 ---@param text string
-function ScriptLocal.SetString(scriptHash, _local, text) end
+function ScriptLocal.SetString(scriptHash, localHandle, text) end
+
+--- Mark the script as done. It will automatically be unloaded by the menu.
+function SetShouldUnload() end
+
+--- Check if the script should unload. Use this to exit all your loops etc.
+---@return boolean
+function ShouldUnload() end
 
 ---@class SocketAddress
----@field public IPv4 integer
+---@field public IPv4 integer This value is a raw 4 byte integer.
 ---@field public Port integer
 SocketAddress = {}
 
@@ -2017,45 +2527,44 @@ function SocketAddress:ToString(port) end
 Stats = {}
 
 ---@param hash integer
----@return boolean success, integer value
----@nodiscard
+---@return boolean, integer
 function Stats.GetBool(hash) end
 
 ---@param hash integer
----@return boolean success, number value
----@nodiscard
+---@return boolean, number
 function Stats.GetFloat(hash) end
 
 ---@param hash integer
----@return boolean success, integer value
----@nodiscard
+---@return boolean, integer
 function Stats.GetInt(hash) end
 
 ---@param hash integer
 ---@param value integer
----@return boolean success
+---@return boolean
 function Stats.SetBool(hash, value) end
 
 ---@param hash integer
 ---@param value number
----@return boolean success
+---@return boolean
 function Stats.SetFloat(hash, value) end
 
 ---@param hash integer
 ---@param value integer
----@return boolean success
+---@return boolean
 function Stats.SetInt(hash, value) end
 
 ---@class Tab
 Tab = {}
 
----@overload fun(self: self, hash: integer, index: integer)
+--- Adds a feature to the tab.
 ---@param hash integer
-function Tab:AddFeature(hash) end
+---@param index? integer
+function Tab:AddFeature(hash, index) end
 
 ---@param text string
-function Tab:AddSeparator(text) end
+function Tab:AddSeperator(text) end
 
+--- Adds Tab Button and returns the created tab.
 ---@param text string
 ---@param desc string
 ---@return Tab
@@ -2063,38 +2572,32 @@ function Tab:AddSubTab(text, desc) end
 
 ---@param index integer
 ---@return ListWidget
----@nodiscard
 function Tab:GetContent(index) end
 
 --- Returns the number of widgets in this tab.
 ---@return integer
----@nodiscard
 function Tab:GetContentSize() end
 
 ---@return string
----@nodiscard
 function Tab:GetDesc() end
 
 ---@return ListWidget
----@nodiscard
 function Tab:GetSelectedContent() end
 
 ---@return integer
----@nodiscard
 function Tab:GetSelectedContentId() end
 
 --- Returns a sub tab by name.
 ---@param text string
 ---@return Tab
----@nodiscard
 function Tab:GetSubTab(text) end
 
 ---@return string
----@nodiscard
 function Tab:GetText() end
 
 --- Removes a sub tab and returns the amount of removed tab buttons.
 ---@param tab Tab
+---@return integer
 function Tab:RemoveSubTab(tab) end
 
 ---@param desc string
@@ -2106,29 +2609,39 @@ function Tab:SetSelectedContentId(index) end
 ---@param text string
 function Tab:SetText(text) end
 
+---@class CTaskData
+---@field public TaskData table<integer, int>
+---@field public TaskDataSize integer
+---@field public TaskType integer
+CTaskData = {}
+
+---@class TaskSlotData
+---@field public taskActive boolean
+---@field public taskPriority integer
+---@field public taskSequenceId integer
+---@field public taskTreeDepth integer
+---@field public taskType integer
+TaskSlotData = {}
+
 ---@class Texture
 Texture = {}
 
----@param textureId integer
----@return D3D11Texture
----@nodiscard
-function Texture.GetTexture(textureId) end
+---@param id integer
+---@return D3D12Texture
+function Texture.GetTexture(id) end
 
----@param textureId integer
+---@param id integer
 ---@return boolean
----@nodiscard
-function Texture.IsTextureValid(textureId) end
+function Texture.IsTextureValid(id) end
 
 --- Creates a new texture that can load files such as gif,jpg,png etc.
 ---@param file string
----@return integer textureId
----@nodiscard
+---@return integer
 function Texture.LoadTexture(file) end
 
 --- Creates a new texture that can load files such as gif,jpg,png etc.
 ---@param file string
----@return integer textureId
----@nodiscard
+---@return integer
 function Texture.LoadTextureAsync(file) end
 
 ---@class Time
@@ -2136,22 +2649,18 @@ Time = {}
 
 --- Retrieves the current system time in seconds.
 ---@return integer
----@nodiscard
 function Time.Get() end
 
 --- Retrieves the time since Epoche in seconds.
 ---@return integer
----@nodiscard
 function Time.GetEpoche() end
 
 --- Retrieves the time since Epoche in milliseconds.
 ---@return integer
----@nodiscard
 function Time.GetEpocheMs() end
 
---- Retrieves the time since Epoche in nanoseconds.
+--- Retrieves the time since Epoche in nanoseconds, might not equal system time.
 ---@return integer
----@nodiscard
 function Time.GetEpocheNs() end
 
 ---@class Utils
@@ -2162,38 +2671,39 @@ Utils = {}
 ---@return boolean
 function Utils.ExecuteScript(file) end
 
+---@return string
+function Utils.GetClipBoardText() end
+
 --- Returns the last joined player id.
 ---@return integer
----@nodiscard
 function Utils.GetLastJoinedPlayer() end
 
 --- Returns the last joined player id.
 ---@return integer
----@nodiscard
 function Utils.GetLastLeftPlayer() end
 
 --- Returns the current selected player id.
 ---@return integer
----@nodiscard
 function Utils.GetSelectedPlayer() end
 
---- Hashes a string using joaat.
+--- Check if a key is down. Use the Microsoft Virtual Key Codes.
+---@param vk integer
+---@return boolean
+function Utils.IsKeyDown(vk) end
+
+--- Check if a key has been pressed or is hold down for longer time. Use the Microsoft Virtual Key Codes.
+---@param vk integer
+---@return boolean
+function Utils.IsKeyPressed(vk) end
+
+--- Hashes a string using joaat. Returns the hash as unsigned int.
 ---@param str string
 ---@return integer
----@nodiscard
 function Utils.Joaat(str) end
 
---- Hashes a string using joaat. Returns the hash as signed int.
----@param str string
----@return integer
----@nodiscard
-function Utils.sJoaat(str) end
-
---- ~The mciSendString function sends a command string to an MCI device. The device that the command is sent to is specified in the command string. For more information browse it on the internet.~
---- **Deprecated use `Utils.PlaySound` instead**
+--- The mciSendString function sends a command string to an MCI device.
 ---@param str string
 ---@return boolean
----@deprecated
 function Utils.MciSendString(str) end
 
 --- Can be used to play mp3 or wav files.
@@ -2202,278 +2712,53 @@ function Utils.MciSendString(str) end
 ---@return boolean
 function Utils.PlaySound(str, looped) end
 
+--- For no extra notification leave whatNotify empty.
+---@param text string
+---@param whatNotify string
+function Utils.SetClipBoardText(text, whatNotify) end
+
 --- Sets the current selected Player Id. Returns the previous selected player id.
 ---@param playerId integer
 ---@return integer
 function Utils.SetSelectedPlayer(playerId) end
 
----@class GTA
-GTA = {}
-
---- Adds a chat message locally on your pc only. You can specify the sender of the message. The message has a max length of 255 characters.
----@param playerId integer
----@param message string
----@param team boolean
-function GTA.AddChatMessageToPool(playerId, message, team) end
-
---- Adds an item to the Basket Transaction.
----@param items integer[]
----@return boolean
-function GTA.BasketAddItem(items) end
-
---- Initializes a Basket Transaction.
----@param category integer
----@param action integer
----@param flags integer
----@return boolean
-function GTA.BasketStart(category, action, flags) end
-
---- Initializes a new Service Transaction.
----@param type integer
----@param category integer
----@param service integer
----@param action integer
----@param price integer
----@param flags integer
----@return boolean
-function GTA.BeginService(type, category, service, action, price, flags) end
-
---- Starts the checkout of a transaction. Should be used for services and baskets.
----@param transactionId integer
----@return boolean
-function GTA.CheckoutStart(transactionId) end
-
---- Converts the sector pos to world cords.
----@param sectorIn V3
----@param relativePos V3
----@return V3
----@nodiscard
-function GTA.ConvertSectorToWorldPosition(sectorIn, relativePos) end
-
---- Converts the world pos to sector and relative position. This is being used in sync data nodes to sync the actual position of entities. 
----@param pos V3
----@return V3, V3
----@nodiscard
-function GTA.ConvertWorldToSectorPosition(pos) end
-
---- Spawns an object. Should only be executed in a native thread.
----@param hash integer
----@param x number
----@param y number
----@param z number
----@param dynamic boolean
----@param isNetworked? boolean
----|> true
----@return integer
-function GTA.CreateObject(hash, x, y, z, dynamic, isNetworked) end
-
---- Spawns a ped. Should only be executed in a native thread.
----@param hash integer
----@param pedType integer
----@param x number
----@param y number
----@param z number
----@param heading number
----@param isNetworked? boolean
----|> true
----@param autoCleanup? boolean # if set to false entity won't be set as no longer needed
----|> true
----@return integer
-function GTA.CreatePed(hash, pedType, x, y, z, heading, isNetworked, autoCleanup) end
-
---- Creates a random ped. Should only be executed in a native thread.
----@param x number
----@param y number
----@param z number
----@return integer
-function GTA.CreateRandomPed(x, y, z) end
-
---- Spawns a world object using a bypass. Should only be executed in a native thread.
----@param hash integer
----@param x number
----@param y number
----@param z number
----@param dynamic boolean
----@param isNetworked? boolean
----|> true
----@return integer
-function GTA.CreateWorldObject(hash, x, y, z, dynamic, isNetworked) end
-
---- Renders a given CPed on the frontend.
----@param ped CPed
----@param relativeScreen V2
----@param distance number
----@param pitch number
----@param yaw number
----@param lightning number
-function GTA.DrawPedPreview(ped, relativeScreen, distance, pitch, yaw, lightning) end
-
---- Forces yourself to script host of the given script.
----@param scriptHash integer
-function GTA.ForceScriptHost(scriptHash) end
-
---- Does the same as GetBonePos3D and then converts them to normalized screen coordinates.
----@param ped CPed
----@param wMask integer
----@return V2
----@nodiscard
-function GTA.GetBonePos2D(ped, wMask) end
-
---- Gets the bone world position based on the specified ped and mask.
----@param ped CPed
----@param wMask integer
----@return V3
----@nodiscard
-function GTA.GetBonePos3D(ped, wMask) end
-
---- Returns the display name of a specific hash.
----@param hash integer
----@return string
----@nodiscard
-function GTA.GetDisplayNameFromHash(hash) end
-
---- Returns a specific label for a given text entry.
----@param str string
----@return string
----@nodiscard
-function GTA.GetLabelText(str) end
-
---- Returns the local player CPed class.
----@return CPed?
----@nodiscard
-function GTA.GetLocalPed() end
-
---- Returns the local player's current CVehicle. Might be nil.
----@return CVehicle?
----@nodiscard
-function GTA.GetLocalVehicle() end
-
---- Returns the local player id.
----@return integer
----@nodiscard
-function GTA.GetLocalPlayerId() end
-
---- Returns Model Info by hash. Returns nil if no CBaseModelInfo found.
----@param hash integer
----@return CBaseModelInfo?
----@nodiscard
-function GTA.GetModelInfoFromHash(hash) end
-
---- Returns Model Info by index. Returns nil if no CBaseModelInfo found.
----@param index integer
----@return CBaseModelInfo?
----@nodiscard
-function GTA.GetModelInfoFromIndex(index) end
-
---- Returns Model Info Index by hash. Returns -1 if invalid.
----@param hash integer
----@return integer
----@nodiscard
-function GTA.GetModelInfoIndexFromHash(hash) end
-
---- Returns the model name of the model hash.
----@param hash integer
----@return string
----@nodiscard
-function GTA.GetModelNameFromHash(hash) end
-
---- Force another player take control of the given entity.
----@param playerId integer
----@param iEntity integer
-function GTA.GiveControl(playerId, iEntity) end
-
---- Give a sepcific player script host of the given script.
----@param playerId integer
----@param scriptHash integer
-function GTA.GiveScriptHost(playerId, scriptHash) end
-
---- Converts an entity handle into a CPhysical pointer.
----@param handle integer
----@return CPhysical?
----@nodiscard
-function GTA.HandleToPointer(handle) end
-
---- Converts a CPhysical pointer into an entity handle.
----@param ptr CPhysical | CPed | CVehicle
----@return integer
----@nodiscard
-function GTA.PointerToHandle(ptr) end
-
---- Registers the given file for the game so it can be used by natives.
----@param path string
----@return boolean
-function GTA.RegisterFile(path) end
-
----@param label string
-function GTA.RemoveLabelText(label) end
-
---- Sends a chat message to every player in the session. Note: You won't see that message yourself unless you manually add it to the chat pool. The message has a max length of 255 characters.
----@param message string
----@param team boolean
-function GTA.SendChatMessageToEveryone(message, team) end
-
---- Sends a chat message to a given player in the session. Note: You won't see that message yourself unless you manually add it to the chat pool. The message has a max length of 255 characters.
----@param playerId integer
----@param message string
----@param team boolean
-function GTA.SendChatMessageToPlayer(playerId, message, team) end
-
---- Overwrites the text for a specifc label which is being used by the game.
----@param label string
----@param text string
-function GTA.SetLabelText(label, text) end
-
---- Should only be executed in a native thread.
----@param hash integer | string
----@param x number
----@param y number
----@param z number
----@param heading number
----@param isNetworked? boolean
----|> true
----@param autoCleanup? boolean # if set to false entity won't be set as no longer needed
----|> true
----@return integer
-function GTA.SpawnVehicle(hash, x, y, z, heading, isNetworked, autoCleanup) end
-
---- Spawns a vehicle in front of the given player. Should only be executed in a native thread.
----@param hash integer | string
----@param player integer
----@param forward? number
----|> 5.0
----@return integer
-function GTA.SpawnVehicleForPlayer(hash, player, forward) end
-
 --- Stops all currently played sounds.
-function GTA.StopSound() end
+function Utils.StopSound() end
 
---- Triggers a script event for given player(s).
----@overload fun(bitflags: integer, eventId: integer, playerId: integer, recieverFlags: integer, ...?: integer): integer
----@param bitflags integer
----@param arguments integer[]
+--- Hashes a string using joaat. Returns the hash as signed int.
+---@param str string
 ---@return integer
-function GTA.TriggerScriptEvent(bitflags, arguments) end
-
---- Converts a 3D world position to a 2D normalized screen position. To get the actual screen coordinates multiply them with the screen size.
----@param x number
----@param y number
----@param z number
----@return number x, number y
----@nodiscard
-function GTA.WorldToScreen(x, y, z) end
+function Utils.sJoaat(str) end
 
 ---@class V2
 ---@field public x number
 ---@field public y number
 V2 = {}
 
---- Create a new V2. This should not be used for natives and only for memory stuff.
----@overload fun(): V2
----@param x number
----@param y number
+--- Add a value to a V2.
+---@param vector V2
+---@param value number|V2
 ---@return V2
----@nodiscard
-function V2.New(x, y) end
+function V2.Add(vector, value) end
+
+--- Multiply a value with a V2.
+---@param vector V2
+---@param value number|V2
+---@return V2
+function V2.Multiply(vector, value) end
+
+--- Create a new V2 object.
+---@param x? number
+---@param y? number
+---@param z? number
+---@return V2
+function V2.New(x, y, z) end
+
+--- Subtract a value from a V2.
+---@param vector V2
+---@param value number|V2
+---@return V2
+function V2.Subtract(vector, value) end
 
 ---@class V3
 ---@field public x number
@@ -2481,175 +2766,69 @@ function V2.New(x, y) end
 ---@field public z number
 V3 = {}
 
---- Create a new V3. This should not be used for natives and only for memory stuff.
----@overload fun(): V3
----@param x number
----@param y number
----@param z number
+--- Add a value to a V3.
+---@param vector V3
+---@param value number|V3
 ---@return V3
----@nodiscard
+function V3.Add(vector, value) end
+
+--- Takes a direction and returns a rotation.
+---@param vector V3
+---@return V3
+function V3.DirectionToRotation(vector) end
+
+--- Multiply a value with a V3.
+---@param vector V3
+---@param value number|V3
+---@return V3
+function V3.Multiply(vector, value) end
+
+--- Create a new V3 object.
+---@param x? number
+---@param y? number
+---@param z? number
+---@return V3
 function V3.New(x, y, z) end
 
+--- Takes a rotation and returns a direction.
+---@param vector V3
+---@return V3
+function V3.RotationToDirection(vector) end
+
+--- Subtract a value from a V3.
+---@param vector V3
+---@param value number|V3
+---@return V3
+function V3.Subtract(vector, value) end
+
 ---@class V4
+---@field public w number
 ---@field public x number
 ---@field public y number
 ---@field public z number
----@field public w number
 V4 = {}
 
---- Create a new V4. This should not be used for natives and only for memory stuff.
----@overload fun(): V4
----@param x number
----@param y number
----@param z number
----@param w number
+--- Create a new V4 object.
+---@param x? number
+---@param y? number
+---@param z? number
+---@param w? number
 ---@return V4
----@nodiscard
 function V4.New(x, y, z, w) end
-
----@class Widget
----@field public Description string
----@field public Name string
-Widget = {}
-
----@class fwAttachmentEntityExtension
----@field AttachChild? CPhysical
----@field AttachFlags integer
----@field AttachOffset V3
----@field AttachParent? CPhysical
----@field AttachParentOffset V3
----@field AttachSibling? CPhysical
----@field MyAttachBone integer
----@field NoCollisionEntity? CPhysical
----@field OtherAttachBone integer
----@field ThisEntity CPhysical
-fwAttachmentEntityExtension = {}
-
----@return number x, number y, number z, number w
----@nodiscard
-function fwAttachmentEntityExtension:GetRotation() end
-
----@param x number
----@param y number
----@param z number
----@param w number
-function fwAttachmentEntityExtension:SetRotation(x, y, z, w) end
-
----@return boolean
----@nodiscard
-function ShouldUnload() end
-
-function SetShouldUnload() end
-
----@class netSocketAddress
-
----@class D3D11SRV
-D3D11SRV = {}
-
----@enum eLuaEvent
-eLuaEvent = {
-    ON_UNLOAD = 0,
-    ON_PRESENT = 1, 
-    ON_POST_PRESENT = 2, --- gets called after ON_PRESENT
-
-    --- # Example
-    --- ```lua
-    --- ---@param playerId integer
-    --- ---@param pPhysical CPhysical
-    --- ---@return boolean
-    --- function shouldTriggerExclusiveSync(playerId, pPhysical) end
-    ---```
-    SHOULD_TRIGGER_EXCLUSIVE_SYNC = 3,
-
-    --- # Example
-    --- ```lua
-    --- ---@param nodeType eSyncDataNodes
-    --- ---@param node _AnyDataNode
-    --- ---@param pPhysical CPhysical
-    --- ---@param isExclusive boolean
-    --- ---@param exclusivePlayer integer
-    --- function onSyncDataNode(nodeType, node, pPhysical, isExclusive, exclusivePlayer) end
-    ---```
-    ON_SYNC_DATA_NODE = 4,
-
-    --- # Example
-    --- ```lua
-    --- ---@param sender? NetGamePlayer
-    --- ---@param eventId integer
-    --- ---@param buffer DatBitBuffer
-    --- ---@return boolean # return true to block
-    --- function netEvent(sender, eventId, buffer) end
-    ---```
-    NET_EVENT = 5, 
-
-    --- # Example
-    --- ```lua
-    --- ---@param sender? NetGamePlayer
-    --- ---@param args integer[]
-    --- ---@return boolean # return true to block
-    --- function scriptedGameEvent(sender, args) end
-    ---```
-    SCRIPTED_GAME_EVENT = 6,
-
-    --- # Example
-    --- ```lua
-    --- ---@param pEntityA CEntity
-    --- ---@param pEntityB CEntity
-    --- ---@param materialA string
-    --- ---@param materialB string
-    --- ---@param vPointA V3
-    --- ---@param vWorldA V3
-    --- ---@param vPointB V3
-    --- ---@param vWorldB V3
-    --- ---@return boolean # return false to block
-    --- function shouldCollideHandler(pEntityA, pEntityB, materialA, materialB, vPointA, vWorldA, vPointB, vWorldB)
-    --- ```
-    SHOULD_COLLIDE = 7,
-
-    --- # Example
-    --- ```lua
-    --- ---@param playerId integer
-    --- function onPlayerJoin(playerId) end
-    ---```
-    ON_PLAYER_JOIN = 8, 
-
-    --- # Example
-    --- ```lua
-    --- ---@param playerId integer
-    --- function onPlayerLeft(playerId) end
-    ---```
-    ON_PLAYER_LEFT = 9,
-
-    --- # Example
-    --- ```lua
-    --- ---@param sender? NetGamePlayer
-    --- ---@param message string
-    --- ---@param isTeam boolean
-    --- function onChatMessage(sender, message, isTeam) end
-    ---```
-    ON_CHAT_MESSAGE = 10,
-
-    ON_PLAYER_PED_CHANGE = 11,
-    ON_PLAYER_PED_RESPAWN = 12,
-    ON_VEHICLE_CHANGE = 13,
-    ON_WEAPON_CHANGE = 14,
-    ON_WEAPON_RELOADED = 15,
-    ON_SESSION_CHANGE = 16
-}
 
 ---@enum eCallbackTrigger
 eCallbackTrigger = {
-    OnPlayerPedChange = 2,
-    OnPlayerPedRespawn = 4,
     OnNewVehicle = 8,
-    OnWeaponChange = 16,
-    OnWeaponReloaded = 32,
-    OnSessionChange = 64,
     OnPlayerJoin = 128,
     OnPlayerLeave = 256,
-    OnTick = 1024,
+    OnPlayerPedChange = 2,
+    OnPlayerPedRespawn = 4,
+    OnPostPresent = 4096,
     OnPresent = 2048,
-    OnPostPresent = 4096
+    OnSessionChange = 64,
+    OnTick = 1024,
+    OnWeaponChange = 16,
+    OnWeaponReloaded = 32
 }
 
 ---@enum eCurlCode
@@ -2658,18 +2837,19 @@ eCurlCode = {
     CURLE_COULDNT_RESOLVE_HOST = 1,
     CURLE_COULDNT_RESOLVE_PROXY = 2,
     CURLE_FAILED_INIT = 3,
-    CURLE_FTP_WEIRD_SERVER_REPLY = 4,
     CURLE_NOT_BUILT_IN = 5,
     CURLE_OK = 6,
     CURLE_OUT_OF_MEMORY = 7,
     CURLE_REMOTE_ACCESS_DENIED = 8,
     CURLE_UNSUPPORTED_PROTOCOL = 9,
-    CURLE_URL_MALFORMAT = 10
+    CURLE_URL_MALFORMAT = 10,
+    CURLE_WEIRD_SERVER_REPLY = 4
 }
 
 ---@enum eCurlOption
 eCurlOption = {
-    CURLOPT_HTTPAUTH = 0,
+    CURLOPT_CUSTOMREQUEST = 0, -- Note: JSON didn't assign explicit values, usually implied.
+    CURLOPT_HTTPAUTH = 0, -- JSON order mismatch might imply dynamic enums or standard CURL defines.
     CURLOPT_NOPROGRESS = 1,
     CURLOPT_POST = 2,
     CURLOPT_POSTFIELDS = 3,
@@ -2684,50 +2864,134 @@ eCurlOption = {
 
 ---@enum eEntityType
 eEntityType = {
-    GRASS_INSTANCE_LIST = 14,
-    NOTHING = 0,
-    VEHICLEGLASSCOMPONENT = 15,
+    BUILDING = 0,
+    COMPOSITE = 1,
+    DUMMY_OBJECT = 2,
+    GRASS_INSTANCE_LIST = 3,
+    INSTANCE_LIST = 4,
+    LIGHT = 5,
+    MLO = 6,
+    NOTHING = 7,
+    NOTINPOOLS = 8,
+    OBJECT = 9,
     PARTICLESYSTEM = 10,
-    TOTAL = 16,
-    LIGHT = 11,
-    BUILDING = 2,
-    INSTANCE_LIST = 13,
-    PED = 4,
-    COMPOSITE = 12,
-    OBJECT = 5,
-    NOTINPOOLS = 9,
-    MLO = 8,
-    VEHICLE = 3,
-    PORTAL = 7,
-    DUMMY_OBJECT = 6,
+    PED = 11,
+    PORTAL = 12,
+    TOTAL = 13,
+    VEHICLE = 14,
+    VEHICLEGLASSCOMPONENT = 15
+}
+
+---@enum eExplosionTag
+eExplosionTag = {
+    EXP_TAG_AIR_DEFENCE = 0,
+    EXP_TAG_APCSHELL = 1,
+    EXP_TAG_BALANCED_CANNONS = 2,
+    EXP_TAG_BARREL = 3,
+    EXP_TAG_BIKE = 4,
+    EXP_TAG_BIRD_CRAP = 5,
+    EXP_TAG_BLIMP = 6,
+    EXP_TAG_BLIMP2 = 7,
+    EXP_TAG_BOAT = 8,
+    EXP_TAG_BOMBUSHKA_CANNON = 9,
+    EXP_TAG_BOMB_CLUSTER = 10,
+    EXP_TAG_BOMB_CLUSTER_SECONDARY = 11,
+    EXP_TAG_BOMB_GAS = 12,
+    EXP_TAG_BOMB_INCENDIARY = 13,
+    EXP_TAG_BOMB_STANDARD = 14,
+    EXP_TAG_BOMB_STANDARD_WIDE = 15,
+    EXP_TAG_BOMB_WATER = 16,
+    EXP_TAG_BOMB_WATER_SECONDARY = 17,
+    EXP_TAG_BULLET = 18,
+    EXP_TAG_BURIEDMINE = 19,
+    EXP_TAG_BZGAS = 20,
+    EXP_TAG_BZGAS_MK2 = 21,
+    EXP_TAG_CAR = 22,
+    EXP_TAG_CNC_KINETICRAM = 23,
+    EXP_TAG_DIR_FLAME = 24,
+    EXP_TAG_DIR_FLAME_EXPLODE = 25,
+    EXP_TAG_DIR_GAS_CANISTER = 26,
+    EXP_TAG_DIR_STEAM = 27,
+    EXP_TAG_DIR_WATER_HYDRANT = 28,
+    EXP_TAG_DONTCARE = 29,
+    EXP_TAG_EMPLAUNCHER_EMP = 30,
+    EXP_TAG_EXPLOSIVEAMMO = 31,
+    EXP_TAG_EXPLOSIVEAMMO_SHOTGUN = 32,
+    EXP_TAG_EXTINGUISHER = 33,
+    EXP_TAG_FIREWORK = 34,
+    EXP_TAG_FLARE = 35,
+    EXP_TAG_FLASHGRENADE = 36,
+    EXP_TAG_GAS_CANISTER = 37,
+    EXP_TAG_GAS_TANK = 38,
+    EXP_TAG_GRENADE = 39,
+    EXP_TAG_GRENADELAUNCHER = 40,
+    EXP_TAG_HI_OCTANE = 41,
+    EXP_TAG_HUNTER_BARRAGE = 42,
+    EXP_TAG_HUNTER_CANNON = 43,
+    EXP_TAG_MINE_CNCSPIKE = 44,
+    EXP_TAG_MINE_UNDERWATER = 45,
+    EXP_TAG_MOLOTOV = 46,
+    EXP_TAG_MORTAR_KINETIC = 47,
+    EXP_TAG_OPPRESSOR2_CANNON = 48,
+    EXP_TAG_ORBITAL_CANNON = 49,
+    EXP_TAG_PETROL_PUMP = 50,
+    EXP_TAG_PIPEBOMB = 51,
+    EXP_TAG_PLANE = 52,
+    EXP_TAG_PLANE_ROCKET = 53,
+    EXP_TAG_PROGRAMMABLEAR = 54,
+    EXP_TAG_PROPANE = 55,
+    EXP_TAG_PROXMINE = 56,
+    EXP_TAG_RAILGUN = 57,
+    EXP_TAG_RAILGUNXM3 = 58,
+    EXP_TAG_RAYGUN = 59,
+    EXP_TAG_RCTANK_ROCKET = 60,
+    EXP_TAG_ROCKET = 61,
+    EXP_TAG_ROGUE_CANNON = 62,
+    EXP_TAG_SCRIPT_DRONE = 63,
+    EXP_TAG_SCRIPT_MISSILE = 64,
+    EXP_TAG_SCRIPT_MISSILE_LARGE = 65,
+    EXP_TAG_SHIP_DESTROY = 66,
+    EXP_TAG_SMOKE_GRENADE = 67,
+    EXP_TAG_SMOKE_GRENADE_LAUNCHER = 68,
+    EXP_TAG_SNOWBALL = 69,
+    EXP_TAG_STICKYBOMB = 70,
+    EXP_TAG_STUNGRENADE = 71,
+    EXP_TAG_SUBMARINE_BIG = 72,
+    EXP_TAG_TANKER = 73,
+    EXP_TAG_TANKSHELL = 74,
+    EXP_TAG_TORPEDO = 75,
+    EXP_TAG_TORPEDO_UNDERWATER = 76,
+    EXP_TAG_TRAIN = 77,
+    EXP_TAG_TRUCK = 78,
+    EXP_TAG_VALKYRIE_CANNON = 79,
+    EXP_TAG_VEHICLEMINE = 80,
+    EXP_TAG_VEHICLEMINE_EMP = 81,
+    EXP_TAG_VEHICLEMINE_KINETIC = 82,
+    EXP_TAG_VEHICLEMINE_SLICK = 83,
+    EXP_TAG_VEHICLEMINE_SPIKE = 84,
+    EXP_TAG_VEHICLEMINE_TAR = 85,
+    EXP_TAG_VEHICLE_BULLET = 86,
+    NUM_EEXPLOSIONTAG = 87
 }
 
 ---@enum eFeatureType
 eFeatureType = {
     Button = 0,
-    Toggle = 1,
-    SliderInt = 2,
-    SliderFloat = 3,
-    SliderIntToggle = 4,
-    SliderFloatToggle = 5,
-    InputInt = 6,
-    InputFloat = 7,
+    Combo = 1,
+    ComboToggles = 2,
+    Custom = 3,
+    InputColor3 = 4,
+    InputColor4 = 5,
+    InputFloat = 6,
+    InputInt = 7,
     InputText = 8,
-    InputColor3 = 9,
-    InputColor4 = 10,
-    List = 11,
-    ListWithInfo = 12,
-    Combo = 13,
-    ComboToggles = 14,
-    Custom = 16
-}
-
----@enum eToastPos
-eToastPos = {
-    BOTTOM_LEFT = 0,
-    BOTTOM_RIGHT = 1,
-    TOP_LEFT = 2,
-    TOP_RIGHT = 3
+    List = 9,
+    ListWithInfo = 10,
+    SliderFloat = 11,
+    SliderFloatToggle = 12,
+    SliderInt = 13,
+    SliderIntToggle = 14,
+    Toggle = 15
 }
 
 ---@enum eGuiMode
@@ -2757,6 +3021,51 @@ eLogColor = {
     YELLOW = 15
 }
 
+---@enum eLuaEvent
+eLuaEvent = {
+    NET_EVENT = 0,
+    ON_CHAT_MESSAGE = 1,
+    ON_PLAYER_JOIN = 2,
+    ON_PLAYER_LEFT = 3,
+    ON_PLAYER_PED_CHANGE = 4,
+    ON_PLAYER_PED_RESPAWN = 5,
+    ON_POST_PRESENT = 6,
+    ON_PRESENT = 7,
+    ON_REACTION = 8,
+    ON_SESSION_CHANGE = 9,
+    ON_SYNC_DATA_NODE = 10,
+    ON_UNLOAD = 11,
+    ON_VEHICLE_CHANGE = 12,
+    ON_WEAPON_CHANGE = 13,
+    ON_WEAPON_RELOADED = 14,
+    SCRIPTED_GAME_EVENT = 15,
+    SHOULD_COLLIDE = 16,
+    SHOULD_TRIGGER_EXCLUSIVE_SYNC = 17
+}
+
+---@enum ePlayerListSort
+ePlayerListSort = {
+    ALPHABETICAL = 0,
+    DISTANCE = 1,
+    HOST_QUEUE = 2,
+    PLAYER_ID = 3
+}
+
+---@enum eProtectionType
+eProtectionType = {
+    AIMING_AT_YOU = 0,
+    BAD_SCRIPT_EVENT = 1,
+    CHAT_BANNED_WORD = 2,
+    CHAT_SPAM = 3,
+    CRASH = 4,
+    KICK = 5,
+    REPORT = 6,
+    SHOOTING_AT_YOU = 7,
+    SPECTATING_YOU = 8,
+    UNKNOWN = 9,
+    VOTE_KICK = 10
+}
+
 ---@enum eReportReason
 eReportReason = {
     CODE_TAMPERING = 0,
@@ -2773,10 +3082,118 @@ eReportReason = {
     TELEMETRY_BLOCK = 11
 }
 
----@enum ePlayerListSort
-ePlayerListSort = {
-    PLAYER_ID = 0,
-    HOST_QUEUE = 1,
-    ALPHABETICAL = 2,
-    DISTANCE = 3
+---@enum eSyncDataNode
+eSyncDataNode = {
+    CAutomobileCreationDataNode = 0,
+    CBikeGameStateDataNode = 1,
+    CBoatGameStateDataNode = 2,
+    CDoorCreationDataNode = 3,
+    CDoorMovementDataNode = 4,
+    CDoorScriptGameStateDataNode = 5,
+    CDoorScriptInfoDataNode = 6,
+    CDynamicEntityGameStateDataNode = 7,
+    CEntityOrientationDataNode = 8,
+    CEntityScriptGameStateDataNode = 9,
+    CEntityScriptInfoDataNode = 10,
+    CGlobalFlagsDataNode = 11,
+    CHeliControlDataNode = 12,
+    CHeliHealthDataNode = 13,
+    CMigrationDataNode = 14,
+    CObjectCreationDataNode = 15,
+    CObjectGameStateDataNode = 16,
+    CObjectOrientationNode = 17,
+    CObjectScriptGameStateDataNode = 18,
+    CObjectSectorPosNode = 19,
+    CPedAIDataNode = 20,
+    CPedAppearanceDataNode = 21,
+    CPedAttachDataNode = 22,
+    CPedComponentReservationDataNode = 23,
+    CPedCreationDataNode = 24,
+    CPedGameStateDataNode = 25,
+    CPedHealthDataNode = 26,
+    CPedInventoryDataNode = 27,
+    CPedMovementDataNode = 28,
+    CPedMovementGroupDataNode = 29,
+    CPedOrientationDataNode = 30,
+    CPedScriptCreationDataNode = 31,
+    CPedScriptGameStateDataNode = 32,
+    CPedSectorPosMapNode = 33,
+    CPedSectorPosNavMeshNode = 34,
+    CPedTaskSequenceDataNode = 35,
+    CPedTaskSpecificDataNode = 36,
+    CPedTaskTreeDataNode = 37,
+    CPhysicalAngVelocityDataNode = 38,
+    CPhysicalAttachDataNode = 39,
+    CPhysicalGameStateDataNode = 40,
+    CPhysicalHealthDataNode = 41,
+    CPhysicalMigrationDataNode = 42,
+    CPhysicalScriptGameStateDataNode = 43,
+    CPhysicalScriptMigrationDataNode = 44,
+    CPhysicalVelocityDataNode = 45,
+    CPickupCreationDataNode = 46,
+    CPickupPlacementCreationDataNode = 47,
+    CPickupPlacementStateDataNode = 48,
+    CPickupScriptGameStateNode = 49,
+    CPickupSectorPosNode = 50,
+    CPlaneControlDataNode = 51,
+    CPlaneGameStateDataNode = 52,
+    CPlayerAmbientModelStreamingNode = 53,
+    CPlayerAppearanceDataNode = 54,
+    CPlayerCameraDataNode = 55,
+    CPlayerCreationDataNode = 56,
+    CPlayerExtendedGameStateNode = 57,
+    CPlayerGameStateDataNode = 58,
+    CPlayerGamerDataNode = 59,
+    CPlayerPedGroupDataNode = 60,
+    CPlayerSectorPosNode = 61,
+    CPlayerWantedAndLOSDataNode = 62,
+    CSectorDataNode = 63,
+    CSectorPositionDataNode = 64,
+    CSubmarineControlDataNode = 65,
+    CSubmarineGameStateDataNode = 66,
+    CTrainGameStateDataNode = 67,
+    CVehicleAngVelocityDataNode = 68,
+    CVehicleAppearanceDataNode = 69,
+    CVehicleComponentReservationDataNode = 70,
+    CVehicleControlDataNode = 71,
+    CVehicleCreationDataNode = 72,
+    CVehicleDamageStatusDataNode = 73,
+    CVehicleGadgetDataNode = 74,
+    CVehicleGameStateDataNode = 75,
+    CVehicleHealthDataNode = 76,
+    CVehicleProximityMigrationDataNode = 77,
+    CVehicleScriptGameStateDataNode = 78,
+    CVehicleSteeringDataNode = 79,
+    CVehicleTaskDataNode = 80
 }
+
+---@enum eToastPos
+eToastPos = {
+    BOTTOM_LEFT = 0,
+    BOTTOM_RIGHT = 1,
+    TOP_LEFT = 2,
+    TOP_RIGHT = 3
+}
+
+---@class fwAttachmentEntityExtension
+---@field public AttachChild CPhysical
+---@field public AttachFlags integer
+---@field public AttachOffset V3 This is world pos for constraints with world
+---@field public AttachParent CPhysical
+---@field public AttachParentOffset V3 Attachment offset on parent
+---@field public AttachSibling CPhysical
+---@field public MyAttachBone integer
+---@field public NoCollisionEntity CPhysical
+---@field public OtherAttachBone integer
+---@field public ThisEntity CPhysical
+fwAttachmentEntityExtension = {}
+
+---@return number x, number y, number z, number w
+---@nodiscard
+function fwAttachmentEntityExtension:GetRotation() end
+
+---@param x number
+---@param y number
+---@param z number
+---@param w number
+function fwAttachmentEntityExtension:SetRotation(x, y, z, w) end

@@ -7,6 +7,7 @@
 ---| CEntityScriptGameStateDataNode
 ---| CHeliControlDataNode
 ---| CObjectCreationDataNode
+---| CObjectGameStateDataNode
 ---| CPedAppearanceDataNode
 ---| CPedAttachDataNode
 ---| CPedCreationDataNode
@@ -15,6 +16,10 @@
 ---| CPedMovementDataNode
 ---| CPedOrientationDataNode
 ---| CPedScriptCreationDataNode
+---| CPedScriptGameStateDataNode
+---| CPedTaskSequenceDataNode
+---| CPedTaskSpecificDataNode
+---| CPedTaskTreeDataNode
 ---| CPhysicalAttachDataNode
 ---| CPhysicalGameStateDataNode
 ---| CPhysicalMigrationDataNode
@@ -27,14 +32,17 @@
 ---| CPlayerGameStateDataNode
 ---| CSectorDataNode
 ---| CSectorPositionDataNode
+---| CSubmarineControlDataNode
 ---| CSubmarineGameStateDataNode
 ---| CTrainGameStateDataNode
 ---| CVehicleAppearanceDataNode
 ---| CVehicleControlDataNode
 ---| CVehicleCreationDataNode
+---| CVehicleGadgetDataNode
 ---| CVehicleGameStateDataNode
 ---| CVehicleHealthDataNode
 ---| CVehicleProximityMigrationDataNode
+---| CVehicleScriptGameStateDataNode
 ---| CVehicleTaskDataNode
 
 ---@class CDoorCreationDataNode
@@ -123,6 +131,18 @@ CHeliControlDataNode = {}
 ---@field public ownershipToken integer # used when there is no associated prop (and sync data) for this network object
 ---@field public playerWantsControl boolean # does the creating player want control of this object
 CObjectCreationDataNode = {}
+
+---@class CObjectGameStateDataNode
+---@field public HasBeenPickedUpByHook boolean
+---@field public brokenFlags integer
+---@field public hasAddedPhysics boolean
+---@field public objectHasExploded boolean
+---@field public popTires boolean
+---@field public taskDataSize integer
+---@field public taskSpecificData integer[]
+---@field public taskType integer
+---@field public visible boolean
+CObjectGameStateDataNode = {}
 
 ---@class CObjectSectorPosNode
 ---@field public SectorPosX number # X position of this object within the current sector
@@ -269,12 +289,79 @@ CPedOrientationDataNode = {}
 ---@field public StayInCarWhenJacked boolean
 CPedScriptCreationDataNode = {}
 
+---@class CPedScriptGameStateDataNode
+---@field public AngledDefensiveAreaV1 V3
+---@field public AngledDefensiveAreaV2 V3
+---@field public AngledDefensiveAreaWidth number
+---@field public DefensiveAreaCentre V3
+---@field public DefensiveAreaRadius number
+---@field public DefensiveAreaType integer
+---@field public FiringPatternHash integer
+---@field public HasDefensiveArea boolean
+---@field public HasInVehicleContextHash boolean
+---@field public NavCapabilityFlags integer
+---@field public SeatIndexToUseInAGroup integer
+---@field public UseCentreAsGotoPos boolean
+---@field public ammoToDrop integer
+---@field public combatMovement integer
+---@field public fAccuracy number
+---@field public fBlindFireChance number
+---@field public fBurstDurationInCover number
+---@field public fHomingRocketBreakLockAngle number
+---@field public fHomingRocketBreakLockAngleClose number
+---@field public fHomingRocketBreakLockCloseDistance number
+---@field public fMaxInformFriendDistance number
+---@field public fMaxShootingDistance number
+---@field public fMaxVehicleTurretFiringRange number
+---@field public fStrafeWhenMovingChance number
+---@field public fTimeBetweenAggressiveMovesDuringVehicleChase number
+---@field public fTimeBetweenBurstsInCover number
+---@field public fTimeBetweenPeeks number
+---@field public fWeaponDamageModifier number
+---@field public fleeBehaviorFlags integer
+---@field public hasPedType boolean
+---@field public inVehicleContextHash integer
+---@field public isAmbientSpeechDisabled boolean
+---@field public isPainAudioDisabled boolean
+---@field public isTargettableByTeam integer
+---@field public minOnGroundTimeForStun integer
+---@field public pedCash integer
+---@field public pedHasCash boolean
+---@field public pedType integer
+---@field public popType integer
+---@field public ragdollBlockingFlags integer
+---@field public shootRate number
+---@field public targetLossResponse integer
+---@field public uMaxNumFriendsToInform integer
+---@field public vehicleweaponindex integer
+CPedScriptGameStateDataNode = {}
+
 ---@class CPedSectorPosMapNode
 ---@field public IsRagdolling boolean
 ---@field public IsStandingOnNetworkObject boolean
 ---@field public LocalOffset V3
 ---@field public StandingOnNetworkObjectID integer
 CPedSectorPosMapNode = {}
+
+---@class CPedTaskSequenceDataNode
+---@field public hasSequence boolean
+---@field public numTasks integer
+---@field public repeatMode integer
+---@field public sequenceResourceId integer
+---@field public taskData CTaskData[]
+CPedTaskSequenceDataNode = {}
+
+---@class CPedTaskSpecificDataNode
+---@field public taskData CTaskData
+---@field public taskIndex integer
+CPedTaskSpecificDataNode = {}
+
+---@class CPedTaskTreeDataNode
+---@field public scriptCommand integer
+---@field public taskSlotsUsed integer
+---@field public taskStage integer
+---@field public taskTreeData TaskSlotData[]
+CPedTaskTreeDataNode = {}
 
 ---@class CPhysicalAttachDataNode
 ---@field public InvMassScaleA number # inv mass scale A
@@ -527,9 +614,29 @@ CSectorDataNode = {}
 ---@field public sectorPosZ number # Z position of this object within the current sector
 CSectorPositionDataNode = {}
 
+---@class CSubmarineControlDataNode
+---@field public dive number # the current value of the dive control.
+---@field public pitch number # the current value of the pitch control.
+---@field public yaw number # the current value of the yaw control.
+CSubmarineControlDataNode = {}
+
 ---@class CSubmarineGameStateDataNode
 ---@field public IsAnchored boolean # is this submarine anchored?
 CSubmarineGameStateDataNode = {}
+
+---@class CTaskData
+---@field public TaskData integer[]
+---@field public TaskDataSize integer
+---@field public TaskType integer
+CTaskData = {}
+
+---@class TaskSlotData
+---@field public taskActive boolean
+---@field public taskPriority integer
+---@field public taskSequenceId integer
+---@field public taskTreeDepth integer
+---@field public taskType integer
+TaskSlotData = {}
 
 ---@class CTrainGameStateDataNode
 ---@field public AllowRemovalByPopulation boolean # used by stationary trains in missions
@@ -649,6 +756,18 @@ CVehicleControlDataNode = {}
 ---@field public tyresDontBurst boolean # are the tyres impervious to damage?
 ---@field public usesVerticalFlightMode boolean # true when it's a plane and uses special flight mode
 CVehicleCreationDataNode = {}
+
+---@class GadgetData
+---@field public Data integer[]
+---@field public Type integer
+GadgetData = {}
+
+---@class CVehicleGadgetDataNode
+---@field public GadgetData GadgetData[]
+---@field public IsAttachedTrailer boolean
+---@field public NumGadgets integer
+---@field public OffsetFromParentVehicle V3
+CVehicleGadgetDataNode = {}
 
 ---@class CVehicleGameStateDataNode
 ---@field public AICanUseExclusiveSeats boolean # AI can use driver seat even if marked exclusive
@@ -770,6 +889,60 @@ CVehicleHealthDataNode = {}
 ---@field public taskType integer # the current AI task type 0x0134
 CVehicleProximityMigrationDataNode = {}
 
+---@class CVehicleScriptGameStateDataNode
+---@field public AllowSpecialFlightMode boolean
+---@field public BombAmmoCount integer
+---@field public BuoyancyForceMultiplier number # shows us how much the boat wants to float back up. 0 when the boat is sinking the fastest.
+---@field public CanEngineMissFire boolean
+---@field public CollisionWithMapDamageScale number
+---@field public CountermeasureAmmoCount integer
+---@field public DamageThreshold integer
+---@field public DisableBreaking boolean
+---@field public DisableHoverModeFlight boolean
+---@field public DisableVericalFlightModeTransition boolean
+---@field public ExtraBoundAttachAllowance number
+---@field public GarageInstanceIndex integer
+---@field public HasOutriggerDeployed boolean
+---@field public HeliRopeLength number
+---@field public InSubmarineMode boolean
+---@field public IsCarParachuting boolean
+---@field public PopType integer
+---@field public RadioEnabledByScript boolean
+---@field public ScriptForceHd boolean
+---@field public ScriptMaxSpeed number
+---@field public SpecialFlightModeUsed boolean
+---@field public TeamLockOverrides integer
+---@field public TeamLocks integer
+---@field public TransformInstantly boolean
+---@field public UsingAutoPilot boolean
+---@field public VehicleProducingSlipstream integer
+---@field public bBlockWeaponSelection boolean
+---@field public bBoatIgnoreLandProbes boolean
+---@field public bIncreaseWheelCrushDamage boolean
+---@field public canPickupEntitiesThatHavePickupDisabled boolean
+---@field public disableCollisionUponCreation boolean # Disable collision for 1 frame upon creation
+---@field public disablePlayerCanStandOnTop boolean
+---@field public disableRampCarImpactDamage boolean
+---@field public fOverrideArriveDistForVehPersuitAttack number
+---@field public fRampImpulseScale number
+---@field public fScriptDamageScale number
+---@field public fScriptWeaponDamageScale number
+---@field public gliderState integer
+---@field public hasHeliRopeLengthSet boolean
+---@field public hasParachuteObject boolean
+---@field public homingCanLockOnToObjects boolean
+---@field public isBeastVehicle boolean
+---@field public isinair boolean # is the vehicle in the air
+---@field public lockedToXY boolean # is this amphibious locked in the XY plane (anchored)
+---@field public parachuteObjectId integer
+---@field public parachuteStickX number
+---@field public parachuteStickY number
+---@field public restrictedAmmoCount integer[]
+---@field public rocketBoostRechargeRate number
+---@field public tuckInWheelsForQuadBike boolean
+---@field public vehicleParachuteTintIndex integer
+CVehicleScriptGameStateDataNode = {}
+
 ---@class CVehicleTaskDataNode
 ---@field public taskData integer[]
 ---@field public taskDataSize integer
@@ -839,85 +1012,85 @@ PlayerGameStateFlags = {}
 ---@enum eSyncDataNode
 eSyncDataNode =
 {
-    CVehicleGameStateDataNode = -3327179917638037453,
+    CAutomobileCreationDataNode = 5904393404341586450,
+    CBikeGameStateDataNode = -6592745043405278378,
     CBoatGameStateDataNode = -9163678683428259062,
-    CPlayerAmbientModelStreamingNode = -1262657217393524803,
-    CVehicleGadgetDataNode = 467091292702059588,
-    CPlayerGameStateDataNode = -4656243067172536933,
-    CEntityOrientationDataNode = 9209420611532113089,
-    CVehicleScriptGameStateDataNode = 1909093387792567410,
-    CPlayerCameraDataNode = -8777312774682338835,
-    CPedOrientationDataNode = -5392089341392112441,
-    CPhysicalHealthDataNode = -1867382375032189118,
-    CPickupPlacementStateDataNode = -3531716527572024603,
+    CDoorCreationDataNode = 6005073372661696113,
+    CDoorMovementDataNode = 807765650430333775,
+    CDoorScriptGameStateDataNode = -5410680991188395522,
     CDoorScriptInfoDataNode = 4381239728731408299,
-    CVehicleDamageStatusDataNode = 5604219613491726154,
-    CVehicleAppearanceDataNode = 2446824136736411778,
-    CPedMovementDataNode = -1559831437258684604,
-    CPlayerCreationDataNode = 8570162245514484061,
-    CPedSectorPosNavMeshNode = -6223332282331191660,
+    CDynamicEntityGameStateDataNode = 3510997700422771605,
+    CEntityOrientationDataNode = 9209420611532113089,
+    CEntityScriptGameStateDataNode = -3321396366949439193,
+    CEntityScriptInfoDataNode = 5501409603415454348,
+    CGlobalFlagsDataNode = 8032902634871186270,
+    CHeliControlDataNode = -2933589451112766372,
+    CHeliHealthDataNode = -6322236843480366682,
+    CMigrationDataNode = 6021269530255844142,
+    CObjectCreationDataNode = -4331200343593982556,
+    CObjectGameStateDataNode = 5319460279012202364,
+    CObjectOrientationNode = -4276229952258566334,
+    CObjectScriptGameStateDataNode = 5439752859618573386,
+    CObjectSectorPosNode = -8377853373502357687,
+    CPedAIDataNode = 8679540341254472825,
     CPedAppearanceDataNode = 2275064106146948273,
-    CPhysicalScriptGameStateDataNode = -5880091134592188929,
-    CPlayerExtendedGameStateNode = 2803335738927412009,
-    CSectorPositionDataNode = -3824838344051002039,
-    CPhysicalAngVelocityDataNode = 449637651761148433,
+    CPedAttachDataNode = -3197278861141224902,
+    CPedComponentReservationDataNode = 6738931265065028827,
+    CPedCreationDataNode = 193313267506037482,
+    CPedGameStateDataNode = 5170080458249895734,
+    CPedHealthDataNode = 5494935925195851321,
+    CPedInventoryDataNode = -3245761823282766500,
+    CPedMovementDataNode = -1559831437258684604,
+    CPedMovementGroupDataNode = -8964098868335733649,
+    CPedOrientationDataNode = -5392089341392112441,
+    CPedScriptCreationDataNode = -1059182043506812602,
+    CPedScriptGameStateDataNode = -4371312310486394754,
+    CPedSectorPosMapNode = 4781603739955214873,
+    CPedSectorPosNavMeshNode = -6223332282331191660,
+    CPedTaskSequenceDataNode = 4892896272100637543,
     CPedTaskSpecificDataNode = -472405422521561261,
+    CPedTaskTreeDataNode = 8822712277062939176,
+    CPhysicalAngVelocityDataNode = 449637651761148433,
+    CPhysicalAttachDataNode = 1039065826991701247,
+    CPhysicalGameStateDataNode = 5184833448198397514,
+    CPhysicalHealthDataNode = -1867382375032189118,
+    CPhysicalMigrationDataNode = -1066936718293166456,
+    CPhysicalScriptGameStateDataNode = -5880091134592188929,
+    CPhysicalScriptMigrationDataNode = -6204451150241065127,
+    CPhysicalVelocityDataNode = -7788006530499528526,
+    CPickupCreationDataNode = -1145589329101458704,
+    CPickupPlacementCreationDataNode = -701192001929508658,
+    CPickupPlacementStateDataNode = -3531716527572024603,
+    CPickupScriptGameStateNode = 1218595623978173907,
+    CPickupSectorPosNode = 3172599622288496662,
+    CPlaneControlDataNode = -4948698852851294319,
+    CPlaneGameStateDataNode = -3207477573494262229,
+    CPlayerAmbientModelStreamingNode = -1262657217393524803,
+    CPlayerAppearanceDataNode = 3093548782381335807,
+    CPlayerCameraDataNode = -8777312774682338835,
+    CPlayerCreationDataNode = 8570162245514484061,
+    CPlayerExtendedGameStateNode = 2803335738927412009,
+    CPlayerGameStateDataNode = -4656243067172536933,
+    CPlayerGamerDataNode = 5740398756052011828,
+    CPlayerPedGroupDataNode = 6396278374041525629,
+    CPlayerSectorPosNode = 6621624132831582469,
+    CPlayerWantedAndLOSDataNode = 7622806965071702653,
+    CSectorDataNode = 4049682525933715209,
+    CSectorPositionDataNode = -3824838344051002039,
+    CSubmarineControlDataNode = 8666139107031300245,
     CSubmarineGameStateDataNode = -1278459264081213457,
     CTrainGameStateDataNode = -922304054679815950,
-    CPedHealthDataNode = 5494935925195851321,
-    CPlaneGameStateDataNode = -3207477573494262229,
-    CSectorDataNode = 4049682525933715209,
-    CEntityScriptGameStateDataNode = -3321396366949439193,
-    CPlayerPedGroupDataNode = 6396278374041525629,
-    CVehicleComponentReservationDataNode = 3273357527049782710,
-    CEntityScriptInfoDataNode = 5501409603415454348,
-    CVehicleSteeringDataNode = -7681442130791573283,
-    CPlayerSectorPosNode = 6621624132831582469,
-    CPedAttachDataNode = -3197278861141224902,
-    CObjectSectorPosNode = -8377853373502357687,
-    CDoorMovementDataNode = 807765650430333775,
-    CPickupScriptGameStateNode = 1218595623978173907,
-    CObjectScriptGameStateDataNode = 5439752859618573386,
-    CDoorScriptGameStateDataNode = -5410680991188395522,
-    CPlayerAppearanceDataNode = 3093548782381335807,
-    CPlaneControlDataNode = -4948698852851294319,
-    CPedTaskSequenceDataNode = 4892896272100637543,
-    CPedTaskTreeDataNode = 8822712277062939176,
-    CHeliHealthDataNode = -6322236843480366682,
     CVehicleAngVelocityDataNode = 4353383233771262641,
+    CVehicleAppearanceDataNode = 2446824136736411778,
+    CVehicleComponentReservationDataNode = 3273357527049782710,
     CVehicleControlDataNode = -7668635803903012766,
-    CPedScriptCreationDataNode = -1059182043506812602,
-    CPhysicalMigrationDataNode = -1066936718293166456,
-    CPickupSectorPosNode = 3172599622288496662,
-    CPickupCreationDataNode = -1145589329101458704,
-    CObjectGameStateDataNode = 5319460279012202364,
-    CPedCreationDataNode = 193313267506037482,
-    CPedMovementGroupDataNode = -8964098868335733649,
-    CBikeGameStateDataNode = -6592745043405278378,
     CVehicleCreationDataNode = -2690163201605007719,
-    CPedSectorPosMapNode = 4781603739955214873,
-    CHeliControlDataNode = -2933589451112766372,
+    CVehicleDamageStatusDataNode = 5604219613491726154,
+    CVehicleGadgetDataNode = 467091292702059588,
+    CVehicleGameStateDataNode = -3327179917638037453,
     CVehicleHealthDataNode = -3240843251615673313,
-    CObjectCreationDataNode = -4331200343593982556,
-    CPedInventoryDataNode = -3245761823282766500,
-    CDynamicEntityGameStateDataNode = 3510997700422771605,
-    CObjectOrientationNode = -4276229952258566334,
-    CPedScriptGameStateDataNode = -4371312310486394754,
-    CPhysicalAttachDataNode = 1039065826991701247,
     CVehicleProximityMigrationDataNode = -5670424608501187627,
-    CPlayerWantedAndLOSDataNode = 7622806965071702653,
-    CPhysicalScriptMigrationDataNode = -6204451150241065127,
-    CPickupPlacementCreationDataNode = -701192001929508658,
-    CPhysicalVelocityDataNode = -7788006530499528526,
+    CVehicleScriptGameStateDataNode = 1909093387792567410,
+    CVehicleSteeringDataNode = -7681442130791573283,
     CVehicleTaskDataNode = -2647487383975098761,
-    CPedAIDataNode = 8679540341254472825,
-    CSubmarineControlDataNode = 8666139107031300245,
-    CGlobalFlagsDataNode = 8032902634871186270,
-    CPedComponentReservationDataNode = 6738931265065028827,
-    CPedGameStateDataNode = 5170080458249895734,
-    CPhysicalGameStateDataNode = 5184833448198397514,
-    CPlayerGamerDataNode = 5740398756052011828,
-    CDoorCreationDataNode = 6005073372661696113,
-    CAutomobileCreationDataNode = 5904393404341586450,
-    CMigrationDataNode = 6021269530255844142,
 }
